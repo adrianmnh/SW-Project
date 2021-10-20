@@ -1,0 +1,5 @@
+git branch -a : shows all branches
+git remote : shows all remotes from this repo
+git remote -v : verbose
+git branch -d name : delete branch
+git branch -D name : DELETE branch
