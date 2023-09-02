@@ -1,0 +1,65 @@
+# IntelliJ IDEA
+.idea/
+out/
+
+# Compiled class files
+*.class
+
+# Compiled Java files
+*.java~
+
+# Compiled JSP files
+*.jspx
+*.jsp
+
+# Compiled JAR files
+#mssql-11.2.jar
+
+# Compiled WAR files
+*.war
+
+# Compiled EAR files
+*.ear
+
+# Compiled ZIP files
+*.zip
+
+# Log files
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# User-specific files
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/inspectionProfiles
+.idea/scope
+.idea/vcs.xml
+.idea/jsLibraryMappings.xml
+
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+build/
+.gradle/
+gradle-wrapper.jar
+
+# Eclipse
+.settings/
+.project
+.classpath
+.wst
+bin/
+.metadata/
+
+# NetBeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
