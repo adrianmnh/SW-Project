@@ -1,19 +1,12 @@
 package panels;
 
-import classes.Database;
 import classes.UserDB;
-import panels.MainFrame;
-import panels.MyPanels;
 import classes.User;
 
 import javax.swing.*;
 import java.awt.event.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Arrays;
 
-public class LoginPanel extends JPanel implements MyPanels {
+public class LoginPanel extends JPanel implements MyPanel {
 
     public MainFrame parentFrame;
     private JPanel mainPanel;

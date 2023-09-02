@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class CreateRunePanel extends JPanel implements MyPanels {
+public class CreateRunePanel extends JPanel implements MyPanel {
     private MainAppPanel mainAppPanel;
     private MainFrame parentFrame;
     private JPanel mainPanel;

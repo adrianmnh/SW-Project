@@ -1,7 +1,18 @@
 package panels;
 
 import javax.swing.*;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class MainFrame extends JFrame {
 
@@ -13,8 +24,8 @@ public class MainFrame extends JFrame {
 
     public LoginPanel login_panel = new LoginPanel(this);
     public CreateRunePanel rune_panel;
+    public ArrayList<String> localAssetList;
     public MainAppPanel mainApp_panel = new MainAppPanel(this);
-
 
     public int getCurrentUserID(){
         return this.currentUserID;
@@ -99,16 +110,77 @@ public class MainFrame extends JFrame {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 //        this.framepanel = login_panel.getMain();
         this.framepanel = mainApp_panel.getMain();
-//
-//
-//
+
 //        this.framepanel = rune_panel.getMain();
 
         //this.framepanel = engrave_panel.getMain();
         this.setContentPane(framepanel);
         this.pack();
         this.setLocation(750, 250);
+    }
+    public ArrayList<String> loadLocalAssetsInJAR(String s){
 
+        ArrayList<String> assetList= new ArrayList<>();
+        String message = null;
+
+
+
+        if(true){
+            try {
+                Path root = null;
+                String jarPath = null;
+                jarPath = MainFrame.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+//                if(this.OS == "windows"){
+                    jarPath = jarPath.replace("/", "\\");
+                    jarPath = jarPath.substring(1, jarPath.length());
+//                }
+                root = Paths.get(jarPath);
+                System.out.println("Reading From :: "+ root);
+                var fileIn = Files.newInputStream(root);
+                ZipInputStream zip = new ZipInputStream(fileIn);
+                for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
+                    String content = new String(zip.readAllBytes(), StandardCharsets.UTF_8);
+//                    byte[] data = content.getBytes();
+                    if(entry.getName().startsWith("assets/monsters/") && entry.getName().endsWith(".jpg")){
+//                        map.put(entry.getName(), content.getBytes());
+//                        map.put(entry.getName(), data);
+                        assetList.add(entry.getName());
+//                    System.out.println(entry.getName() + ": " + data.length + " bytes");
+
+                    }
+                }
+                message = "Assets read from "+root;
+//            JOptionPane.showMessageDialog(this, "Correct!", "login", JOptionPane.INFORMATION_MESSAGE, new ImageIcon(assetList.get(5)));
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+
+        } else {
+
+            File folder = new File(getClass().getClassLoader().getResource("assets/monsters/").getFile());
+//                File[] files = folder.listFiles((dir, name) -> name.endsWith(".jpg"));
+            System.out.println("Reading From :: "+ folder.getPath());
+            File[] files = folder.listFiles();
+            for (File file : files) {
+                try (InputStream is = new FileInputStream(file)) {
+//                    byte[] data = is.readAllBytes();
+//                    String a = data.toString();
+//                    System.out.println(file.getName() + ": " + data.length + " bytes");
+//                    map.put("assets/monsters/"+file.getName(), data);
+                    assetList.add("assets/monsters/"+file.getName());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            File[] imageFiles = new File("src/assets/monsters").listFiles();
+            message = "Assets read from "+folder.getPath();
+        }
+
+        return assetList;
     }
 
 

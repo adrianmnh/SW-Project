@@ -1,32 +1,20 @@
 package panels;
 
-import classes.CellRenderer;
 import classes.Monster;
 import classes.MonsterDB;
 import classes.RuneDB;
 import runes.Rune;
 import runes.SubStat;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageFilter;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
-public class MainAppPanel extends JPanel implements MyPanels {
+public class MainAppPanel extends JPanel implements MyPanel {
 
     public MainFrame parentFrame;
-
     private JPanel mainPanel;
     private JPanel monsterPanel;
     private JLabel pos1;
