@@ -183,21 +183,16 @@ public class RuneDB extends Database {
                 for(int i=3; i<=result.getMetaData().getColumnCount(); i++){
                     if(result.getObject(i) != null )
                         r += result.getObject(i) + " ";
-                    System.out.println(r);
+//                    System.out.println(r);
                 }
-                System.out.println("Creating rune from: " + r);
+//                System.out.println("Creating rune from: " + r);
                 runes.add(new Rune(r));
             }
-
-            System.out.println(runes.size() + " runes created from user_runes table");
-            System.out.println("\n------------------List of existing Runes:-----------------------\n\n");
+//            System.out.println(runes.size() + " runes created from user_runes table");
+//            System.out.println("\n------------------List of existing Runes:-----------------------\n\n");
             for (int i = 0; i < runes.size() ; i++) {
                 Rune r = runes.get(i);
-                System.out.println("000000000000000000000000000000Rune: ");
-                System.out.println(r);
             }
-
-            System.out.println("----------Done--------");
             return runes;
         }catch(Exception e){
             System.out.println("Error found. " + e);

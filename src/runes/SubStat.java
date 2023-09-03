@@ -36,7 +36,7 @@ public class SubStat {
     }
 
     public String toString(){
-        System.out.println("runeStat: " + runeStat + " value: " + value);
+//        System.out.println("runeStat: " + runeStat + " value: " + value);
         if(this.runeStat == RuneStat.ATK ||this.runeStat == RuneStat.DEF ||this.runeStat == RuneStat.HP )
             return runeStat + ": +" + value + "%";
         else

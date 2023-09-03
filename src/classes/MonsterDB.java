@@ -11,7 +11,6 @@ public class MonsterDB extends Database implements DatabaseCommands{
     public MonsterDB(){
         super();
         setTable("GameTool.Monster");
-        System.out.println("here");
     }
 
     public void changeColumnName(String from, String to, int i){
@@ -72,13 +71,13 @@ public class MonsterDB extends Database implements DatabaseCommands{
 //            printResultSet(result);
 
 
-            System.out.println("Retrieved rows: " + result.getFetchSize());
+//            System.out.println("Retrieved rows: " + result.getFetchSize());
             while(result.next()) {
                 String r = "";
                 for (int col = 1; col <= result.getMetaData().getColumnCount(); col++)
                     r += result.getObject(col) + " ";
                 data.add(r);
-            System.out.println(r);
+//            System.out.println(r);
             }
 
             return data;

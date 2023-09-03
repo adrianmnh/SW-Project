@@ -2,7 +2,6 @@ package classes;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
@@ -26,7 +25,7 @@ public class CellRenderer {
                 } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                 }
 
-                File file = new File("gal.png");
+                File file = new File("ui/gal.png");
                 File[] files = {file, file, file,file, file};
                 ImageTableModel model = new ImageTableModel();
                 for (File f : files) {

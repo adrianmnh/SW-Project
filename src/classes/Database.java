@@ -30,17 +30,17 @@ public abstract class Database {
                     "password=admin$%#@29174$%#@;" +
                     "encrypt=true;" +
                     "trustServerCertificate=true;";
-            System.out.println(connectionString);
+//            System.out.println(connectionString);
 
-            System.out.println("Database.Connection");
+//            System.out.println("Database.Connection");
 
             connection = DriverManager.getConnection(connectionString);
 
 //            connection = DriverManager
 
-            System.out.println("\n -- Connection established -- \n\n --" + connection);
+//            System.out.println("\n -- Connection established -- \n\n --" + connection);
             System.out.println(connection.getClientInfo());
-            System.out.println("Connection established");
+            System.out.println("\n -- Connection established -- \n\n --");
 
             query = connection.createStatement();
 

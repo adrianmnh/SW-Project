@@ -56,17 +56,11 @@ public class Rune implements Comparable<Rune> {
     public String toString() {
         StringBuilder s = new StringBuilder();
         s.append(this.getGradeString() +" ");
-        System.out.println("Grade");
         s.append(this.getSetString() +" ");
-        System.out.println("Set");
         s.append(this.getPositionString() +" ");
-        System.out.println("Pos");
         s.append(this.getInnateString() +" ");
-        System.out.println("Innate");
         s.append(this.getMainstatString() +" ");
-        System.out.println("Mainstat");
         s.append(this.getSubstatString() +" ");
-        System.out.println("Substat");
         return s.toString();
     }
     public String getGradeString(){ return this.getGrade().toString();}
@@ -75,8 +69,6 @@ public class Rune implements Comparable<Rune> {
     public String getInnateString(){ return this.getRuneInnate() ? "yes" : "no"; }
     public String getMainstatString(){ return this.mainStat.getMainStatAttribute(); }
     public String getSubstatString(){ String s = "";
-        System.out.println(subs);
-        System.out.println("-------------------------------------------------");
         for(int i = 0; i<this.subs.size(); i++){
             SubStat sub = subs.get(i);
             s += sub.getSubStat() + " " +

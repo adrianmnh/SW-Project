@@ -3,8 +3,10 @@ package panels;
 import classes.Monster;
 import classes.MonsterDB;
 import classes.RuneDB;
+import classes.subclasses.MyImageIcon;
 import runes.Rune;
 import runes.SubStat;
+import subpanel.CustomScrollPanel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -12,9 +14,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-public class MainAppPanel extends JPanel implements MyPanel {
+public class MainAppPanel extends MyPanel {
 
-    public MainFrame parentFrame;
     private JPanel mainPanel;
     private JPanel monsterPanel;
     private JLabel pos1;
@@ -30,7 +31,7 @@ public class MainAppPanel extends JPanel implements MyPanel {
     private JComboBox p3;
     private JComboBox p2;
     private JComboBox p1;
-    private JLabel monsterPanelLabel;
+    public JLabel monsterPanelLabel;
     private JButton equipRuneButton;
     private JButton removeAllButton;
     private JButton findBestSetButton;
@@ -39,20 +40,23 @@ public class MainAppPanel extends JPanel implements MyPanel {
     public JScrollPane rune_scroll_panel;
     private JButton selectMonsterButton;
     private JPanel after_load_panel;
-    public JTable monster_table;
+    public JTable OLDmonster_table;
     public JPanel bottom_panel;
     private JButton load_monsters_button;
-    private JScrollPane monster_scroll_panel;
-    private JPanel monster_panel;
+    private JScrollPane OLDmonster_scroll_panel;
+    private JPanel OLDmonster_panel;
     private JPanel rune_panel;
     private JLabel monster_name_label;
     private JTextPane current_stats_label;
-    private ImageIcon runeoff = getImg("runeoff.png");
-    private ImageIcon left_panel_cover_img = getImg("ifrit.png");
-    private ImageIcon thumbs = getImg("thumbs.png");
-    private ImageIcon runeon = getImg("runeon.png");
+    private JScrollPane monster_scroll_pane;
+    private JPanel monster_pane;
+    private JPanel center_panel;
+    private ImageIcon runeoff = getImg("ui/runeoff.png");
+    private ImageIcon left_panel_cover_img = getImg("ui/ifrit.png");
+    private ImageIcon thumbs = getImg("ui/thumbs.png");
+    private ImageIcon runeon = getImg("ui/runeon.png");
 
-    private ArrayList<Monster> monsterBox;
+    public ArrayList<Monster> monsterBox;
     private Monster currentMonster = new Monster();
 
     private int currentRune = 0;
@@ -68,6 +72,225 @@ public class MainAppPanel extends JPanel implements MyPanel {
     public ArrayList<Integer> indexOfRunePositions = new ArrayList();
 
     public ArrayList<Rune> offlineRuneBag;
+    private void startSetup(){
+        parentFrame.setSizeTo(0,0);
+
+//        parentFrame.setCurrentUserID(1);
+        parentFrame.setCurrentUserID(10);
+
+        setImagesNText("", runeoff);
+        after_load_panel.setVisible(false);
+
+        add_new_rune_button.setVisible(false);
+        rune_scroll_panel.setVisible(false);
+
+        createMonsterImages();
+        createMonsterTable(createMonsterImages());
+
+        current_stats_label.setFocusable(false);
+        current_stats_label.setBackground(new Color(242,242,242));
+        rune_scroll_panel.getVerticalScrollBar().setUnitIncrement(12);
+        OLDmonster_scroll_panel.getHorizontalScrollBar().setUnitIncrement(8);
+        rune_table.setBackground(new Color(242,242,242));
+        getMonsterData();
+        selectMonsterButton.setVisible(false);
+    }
+    public MainAppPanel(MainFrame f){
+        super(f);
+        System.out.println("Starting Main App panel...");
+//        setParent(f);
+
+        startSetup();
+        createRuneTable();
+
+        OLDmonster_table.setFocusable(false);
+        OLDmonster_table.setSelectionMode(0);
+
+
+        load_runes_button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                addAllUserRunes(parentFrame.getCurrentUserID());
+                load_runes_button.setVisible(false);
+                after_load_panel.setVisible(true);
+                add_new_rune_button.setVisible(true);
+                System.out.println(parentFrame.monsterAssetFiles);
+                rune_scroll_panel.setVisible(true);
+//                System.out.println(offlineRuneBag);
+//                System.out.println(String.format("%s%s%s%s%s%s",runesEquipped[0],runesEquipped[1]
+//                        ,runesEquipped[2],runesEquipped[3],runesEquipped[4],runesEquipped[5] ));
+                selectMonsterButton.setVisible(true);
+
+                parentFrame.pack();
+//                parentFrame.setSizeTo(0, 0);
+            }
+        });
+        add_new_rune_button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                parentFrame.changePanel_NewRune();
+                parentFrame.pack();
+            }
+        });
+        selectMonsterButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if(monsterFocusedString.equals(""))
+                    JOptionPane.showMessageDialog(parentFrame, "Please select a monster first", "Monster Selected", JOptionPane.OK_OPTION);
+                else{
+
+                    JOptionPane.showMessageDialog(parentFrame, "Selected " + monsterFocusedString.toUpperCase(), "Monster Selected", JOptionPane.OK_OPTION, thumbs);
+                    monsterPanelLabel.setIcon(thumbs);
+                    System.out.println(monsterList.get(monsterSelected));
+                    currentMonster = monsterBox.get(monsterSelected);
+                    monster_name_label.setText(monsterFocusedString);
+//                    setMonsterLabelText(false);
+                }
+
+
+            }
+        });
+        findBestSetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if(currentMonster.getID()==0){
+                    JOptionPane.showMessageDialog(parentFrame, "Please select a monster", "Not enough data", 2, thumbs);
+                }else{
+                    if(p1.getSelectedIndex()>0 && p2.getSelectedIndex()>0
+                            && p3.getSelectedIndex()>0) {
+                        optimize();
+                        for(int i = 0; i<6;i++){
+                            System.out.print(runesEquipped[i]+" ");
+                        }
+                    }
+
+                    else JOptionPane.showMessageDialog(parentFrame, "Please select all attribute priorities", "Not enough data", 2, thumbs);
+                }
+
+
+            }
+        });
+
+//        OLDmonster_table.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//                super.mouseClicked(e);
+//
+//                System.out.println(e.getClickCount());
+//
+//
+//                JTable target = (JTable)e.getSource();
+//                int row = target.getSelectedRow();
+//                int column = target.getSelectedColumn();
+//                resetMonsterImg(row, column);
+//                setMonsterFocused(row*8+column);
+//                monsterSelected = row*8 + column;
+//
+//            }
+//        });
+
+        equipRuneButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if(currentRunePosition>0){
+                    if(currentRunePosition==1)pos1.setIcon(runeon);
+                    if(currentRunePosition==2)pos2.setIcon(runeon);
+                    if(currentRunePosition==3)pos3.setIcon(runeon);
+                    if(currentRunePosition==4)pos4.setIcon(runeon);
+                    if(currentRunePosition==5)pos5.setIcon(runeon);
+                    if(currentRunePosition==6)pos6.setIcon(runeon);
+
+                    currentRunePosition--;
+
+
+                    if (runesEquipped[currentRunePosition] != -1) {
+                        int c = runesEquipped[currentRunePosition];
+                        offlineRuneBag.get(c).setIsEquipped(false);
+                        rune_table.setValueAt(runeon,runesEquipped[currentRunePosition],0);
+                    }
+                    offlineRuneBag.get(currentRune).setIsEquipped(true);
+                    rune_table.setValueAt(runeoff,currentRune,0);
+                    runesEquipped[currentRunePosition] = currentRune;
+                    setMonsterLabelText(false);
+                }
+
+
+            }
+        });
+
+        removeAllButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                unselectAllRunes();
+                for(int y=0; y<rune_table.getRowCount(); y++){
+                    rune_table.setValueAt(runeon, y, 0);
+                }
+            }
+        });
+        rune_table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                JTable t = (JTable)e.getSource();
+                int r = t.getSelectedRow();
+                resetRuneImage(r);
+                setRuneFocused(r);
+                currentRunePosition = indexOfRunePositions.get(r);
+                currentRune = r;
+
+            }
+        });
+        OLDmonster_table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                OLDmonster_table.setSurrendersFocusOnKeystroke(false);
+
+                super.mousePressed(e);
+                System.out.println(e.getClickCount());
+                if(e.getClickCount() == 2){
+                    if(monsterFocusedString.equals(""))
+                        JOptionPane.showMessageDialog(parentFrame, "Please select a monster first", "Monster Selected", JOptionPane.OK_OPTION);
+                    else{
+                        JOptionPane.showMessageDialog(parentFrame, "Selected " + monsterFocusedString.toUpperCase(), "Monster Selected", JOptionPane.OK_OPTION, thumbs);
+                        monsterPanelLabel.setIcon(thumbs);
+                        System.out.println(monsterList.get(monsterSelected));
+                        currentMonster = monsterBox.get(monsterSelected);
+                        monster_name_label.setText(monsterFocusedString);
+                        setMonsterLabelText(false);
+                        JTable target = (JTable)e.getSource();
+                        int row = target.getSelectedRow();
+                        int column = target.getSelectedColumn();
+                        resetMonsterImg(row, column);
+
+                    }
+
+                }
+
+            }
+        });
+
+
+        OLDmonster_table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                OLDmonster_table.setSelectionBackground(Color.BLACK);
+                OLDmonster_table.setSelectionForeground(Color.BLACK);
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                resetMonsterImg(row, column);
+                setMonsterFocused(row*8+column);
+                monsterSelected = row*8 + column;
+                System.out.println("Reseting");
+            }
+        });
+    }
+
 
     private String createImages(int a){
         String s="";
@@ -97,7 +320,7 @@ public class MainAppPanel extends JPanel implements MyPanel {
         System.out.println(s);
 
         ImageIcon l = getMonsterImage(s);
-        monster_table.setValueAt(l,r,c);
+        OLDmonster_table.setValueAt(l,r,c);
         monsterFocusedString = s;
 
     }
@@ -173,11 +396,15 @@ public class MainAppPanel extends JPanel implements MyPanel {
             }
         };
 
-        monster_table.setRowHeight(60);
+        OLDmonster_table.setRowHeight(60);
 
-        monster_table.setModel(model);
+        OLDmonster_table.setModel(model);
 
-        monster_table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
+        OLDmonster_table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
+    }
+
+    public void setMonsterPaneImage(MyImageIcon myImageIcon){
+        monsterPanelLabel.setIcon(myImageIcon.img);
     }
 
     private void addAllUserRunes(int userid){
@@ -187,7 +414,7 @@ public class MainAppPanel extends JPanel implements MyPanel {
         offlineRuneBag = connct.getUserRunes(userid);
         System.out.println(offlineRuneBag);
         for(Rune r: offlineRuneBag){
-            System.out.println(r);
+//            System.out.println(r);
             addRowToTable(r);
         }
         connct.closeConnection();
@@ -438,12 +665,7 @@ public class MainAppPanel extends JPanel implements MyPanel {
             offlineRuneBag.get(runeID).setIsEquipped(true);
             runesEquipped[runePosition] = runeID;
             equipRuneImage(runePosition+1, true);
-
-
         }
-
-
-
     }
 
 
@@ -522,7 +744,7 @@ public class MainAppPanel extends JPanel implements MyPanel {
                 mon.setCR(mon.getCR()+12*a);
             }
 
-            System.out.println("CURRENT\n"+currentMonster);
+//            System.out.println("CURRENT\n"+currentMonster);
 
             String plus = " + ";
             StringBuilder sb = new StringBuilder();
@@ -552,9 +774,9 @@ public class MainAppPanel extends JPanel implements MyPanel {
         return runeFocused;
     }
 
-    private int monsterSelected;
+    public int monsterSelected;
 
-    private ArrayList<Object> monsterList;
+    public ArrayList<Object> monsterList;
 
     private void getMonsterData(){
         MonsterDB connect = new MonsterDB();
@@ -595,39 +817,11 @@ public class MainAppPanel extends JPanel implements MyPanel {
     }
 
     private void setParent(MainFrame f) {
-        parentFrame = f;
+        this.parentFrame = f;
     }
 
     public MainFrame getParentFrame(){
         return this.parentFrame;
-    }
-
-    private void startSetup(){
-
-//        parentFrame.setCurrentUserID(1);
-        parentFrame.setCurrentUserID(10);
-
-        setImagesNText("", runeoff);
-        after_load_panel.setVisible(false);
-
-
-        add_new_rune_button.setVisible(false);
-        rune_scroll_panel.setVisible(false);
-
-
-        createMonsterImages();
-        createMonsterTable(createMonsterImages());
-
-        current_stats_label.setFocusable(false);
-        current_stats_label.setBackground(new Color(242,242,242));
-        rune_scroll_panel.getVerticalScrollBar().setUnitIncrement(12);
-        monster_scroll_panel.getHorizontalScrollBar().setUnitIncrement(8);
-        rune_table.setBackground(new Color(242,242,242));
-        getMonsterData();
-        selectMonsterButton.setVisible(false);
-
-
-
     }
 
     private void testScript1(){
@@ -642,218 +836,19 @@ public class MainAppPanel extends JPanel implements MyPanel {
         selectMonsterButton.doClick();
     }
 
-    public MainAppPanel(MainFrame f){
-        super();
-        System.out.println("Starting Main App panel...");
-        setParent(f);
-
-
-        this.parentFrame.setResizable(false);
-
-        startSetup();
-        createRuneTable();
-
-        monster_table.setFocusable(false);
-        monster_table.setSelectionMode(0);
-
-
-
-
-        load_runes_button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                addAllUserRunes(parentFrame.getCurrentUserID());
-                load_runes_button.setVisible(false);
-                after_load_panel.setVisible(true);
-                add_new_rune_button.setVisible(true);
-                monster_scroll_panel.setVisible(false);
-                getParentFrame().pack();
-                parentFrame.pack();
-                monster_scroll_panel.setVisible(true);
-                rune_scroll_panel.setVisible(true);
-                parentFrame.setSizeTo(0, 0);
-                System.out.println(offlineRuneBag);
-                System.out.println(String.format("%s%s%s%s%s%s",runesEquipped[0],runesEquipped[1]
-                        ,runesEquipped[2],runesEquipped[3],runesEquipped[4],runesEquipped[5] ));
-                selectMonsterButton.setVisible(true);
-
-            }
-        });
-        add_new_rune_button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                parentFrame.changePanel_NewRune();
-                parentFrame.pack();
-            }
-        });
-        selectMonsterButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                if(monsterFocusedString.equals(""))
-                JOptionPane.showMessageDialog(parentFrame, "Please select a monster first", "Monster Selected", JOptionPane.OK_OPTION);
-                else{
-
-                    JOptionPane.showMessageDialog(parentFrame, "Selected " + monsterFocusedString.toUpperCase(), "Monster Selected", JOptionPane.OK_OPTION, thumbs);
-                    monsterPanelLabel.setIcon(thumbs);
-                    System.out.println(monsterList.get(monsterSelected));
-                    currentMonster = monsterBox.get(monsterSelected);
-                    monster_name_label.setText(monsterFocusedString);
-
-
-                    setMonsterLabelText(false);
-
-
-                }
-
-
-            }
-        });
-        findBestSetButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                if(currentMonster.getID()==0){
-                    JOptionPane.showMessageDialog(parentFrame, "Please select a monster", "Not enough data", 2, thumbs);
-                }else{
-                    if(p1.getSelectedIndex()>0 && p2.getSelectedIndex()>0
-                            && p3.getSelectedIndex()>0) {
-                        optimize();
-                        for(int i = 0; i<6;i++){
-                            System.out.print(runesEquipped[i]+" ");
-                        }
-                    }
-
-                    else JOptionPane.showMessageDialog(parentFrame, "Please select all attribute priorities", "Not enough data", 2, thumbs);
-                }
-
-
-            }
-        });
-
-//        monster_table.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                super.mouseClicked(e);
-//
-//                System.out.println(e.getClickCount());
-//
-//
-//                JTable target = (JTable)e.getSource();
-//                int row = target.getSelectedRow();
-//                int column = target.getSelectedColumn();
-//                resetMonsterImg(row, column);
-//                setMonsterFocused(row*8+column);
-//                monsterSelected = row*8 + column;
-//
-//            }
-//        });
-
-        equipRuneButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                if(currentRunePosition>0){
-                    if(currentRunePosition==1)pos1.setIcon(runeon);
-                    if(currentRunePosition==2)pos2.setIcon(runeon);
-                    if(currentRunePosition==3)pos3.setIcon(runeon);
-                    if(currentRunePosition==4)pos4.setIcon(runeon);
-                    if(currentRunePosition==5)pos5.setIcon(runeon);
-                    if(currentRunePosition==6)pos6.setIcon(runeon);
-
-                    currentRunePosition--;
-
-
-                    if (runesEquipped[currentRunePosition] != -1) {
-                        int c = runesEquipped[currentRunePosition];
-                        offlineRuneBag.get(c).setIsEquipped(false);
-                        rune_table.setValueAt(runeon,runesEquipped[currentRunePosition],0);
-                    }
-                    offlineRuneBag.get(currentRune).setIsEquipped(true);
-                    rune_table.setValueAt(runeoff,currentRune,0);
-                    runesEquipped[currentRunePosition] = currentRune;
-                    setMonsterLabelText(false);
-                }
-
-
-            }
-        });
-
-        removeAllButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                unselectAllRunes();
-                for(int y=0; y<rune_table.getRowCount(); y++){
-                        rune_table.setValueAt(runeon, y, 0);
-                }
-            }
-        });
-        rune_table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                JTable t = (JTable)e.getSource();
-                int r = t.getSelectedRow();
-                resetRuneImage(r);
-                setRuneFocused(r);
-                currentRunePosition = indexOfRunePositions.get(r);
-                currentRune = r;
-
-            }
-        });
-        monster_table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                monster_table.setSurrendersFocusOnKeystroke(false);
-
-                super.mousePressed(e);
-                System.out.println(e.getClickCount());
-                if(e.getClickCount() == 2){
-                    if(monsterFocusedString.equals(""))
-                        JOptionPane.showMessageDialog(parentFrame, "Please select a monster first", "Monster Selected", JOptionPane.OK_OPTION);
-                    else{
-                        JOptionPane.showMessageDialog(parentFrame, "Selected " + monsterFocusedString.toUpperCase(), "Monster Selected", JOptionPane.OK_OPTION, thumbs);
-                        monsterPanelLabel.setIcon(thumbs);
-                        System.out.println(monsterList.get(monsterSelected));
-                        currentMonster = monsterBox.get(monsterSelected);
-                        monster_name_label.setText(monsterFocusedString);
-                        setMonsterLabelText(false);
-                        JTable target = (JTable)e.getSource();
-                        int row = target.getSelectedRow();
-                        int column = target.getSelectedColumn();
-                        resetMonsterImg(row, column);
-
-                    }
-
-                }
-
-            }
-        });
-
-
-        monster_table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                super.mouseReleased(e);
-                monster_table.setSelectionBackground(Color.BLACK);
-                monster_table.setSelectionForeground(Color.BLACK);
-                JTable target = (JTable)e.getSource();
-                int row = target.getSelectedRow();
-                int column = target.getSelectedColumn();
-                resetMonsterImg(row, column);
-                setMonsterFocused(row*8+column);
-                monsterSelected = row*8 + column;
-                System.out.println("Reseting");
-            }
-        });
-    }
 
     private int currentRunePosition;
 
     private int[] runesEquipped = new int[] {-1,-1,-1,-1,-1,-1};
 
 
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+//        System.out.println(this.parentFrame.localAssetList);
+        monster_pane = new JPanel();
+        monster_scroll_pane = new CustomScrollPanel(this, monster_pane);
+
+    }
 }
 
 

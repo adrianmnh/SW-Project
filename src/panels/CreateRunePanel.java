@@ -7,9 +7,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class CreateRunePanel extends JPanel implements MyPanel {
+public class CreateRunePanel extends  MyPanel {
     private MainAppPanel mainAppPanel;
-    private MainFrame parentFrame;
     private JPanel mainPanel;
     private JComboBox setList;
     private JButton enterButton;
@@ -52,10 +51,10 @@ public class CreateRunePanel extends JPanel implements MyPanel {
     private JLabel innatelabel;
     private JLabel rune_main_stat_label;
     private JButton backButton;
-    private ImageIcon leftPanelImg = new ImageIcon(this.getClass().getClassLoader().getResource("gal.png"));
-    private ImageIcon runeImage = new ImageIcon(this.getClass().getClassLoader().getResource("rune.png"));
-    private ImageIcon substatPanelImg = new ImageIcon(this.getClass().getClassLoader().getResource("poker.png"));
-    private ImageIcon no = new ImageIcon(this.getClass().getClassLoader().getResource("no.png"));
+    private ImageIcon leftPanelImg = new ImageIcon(this.getClass().getClassLoader().getResource("ui/gal.png"));
+    private ImageIcon runeImage = new ImageIcon(this.getClass().getClassLoader().getResource("ui/rune.png"));
+    private ImageIcon substatPanelImg = new ImageIcon(this.getClass().getClassLoader().getResource("ui/poker.png"));
+    private ImageIcon no = new ImageIcon(this.getClass().getClassLoader().getResource("ui/no.png"));
     private void setParent(MainFrame p) {
         parentFrame = p;
     }
@@ -551,7 +550,8 @@ public class CreateRunePanel extends JPanel implements MyPanel {
     }
 
     public CreateRunePanel(MainFrame f){
-        setParent(f);
+        super(f);
+//        setParent(f);
 
         //System.out.println("Rune Creator Panel created...");
         setImages();

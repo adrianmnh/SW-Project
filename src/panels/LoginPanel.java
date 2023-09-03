@@ -6,9 +6,8 @@ import classes.User;
 import javax.swing.*;
 import java.awt.event.*;
 
-public class LoginPanel extends JPanel implements MyPanel {
+public class LoginPanel extends MyPanel {
 
-    public MainFrame parentFrame;
     private JPanel mainPanel;
     private JPasswordField user_password;
     private JFormattedTextField user_login;
@@ -28,9 +27,9 @@ public class LoginPanel extends JPanel implements MyPanel {
     private JButton resetButton;
     private JButton cancelButton;
     private JButton submitButton;
-    private ImageIcon iconYes = new ImageIcon(getClass().getClassLoader().getResource("ok.png"));
-    private ImageIcon iconNo = new ImageIcon(getClass().getClassLoader().getResource("no2.png"));
-    private ImageIcon load = new ImageIcon(getClass().getClassLoader().getResource("load.png"));
+    private ImageIcon iconYes = new ImageIcon(getClass().getClassLoader().getResource("ui/ok.png"));
+    private ImageIcon iconNo = new ImageIcon(getClass().getClassLoader().getResource("ui/no2.png"));
+    private ImageIcon load = new ImageIcon(getClass().getClassLoader().getResource("ui/load.png"));
 
     private String login;
     private char[] password;
@@ -86,7 +85,7 @@ public class LoginPanel extends JPanel implements MyPanel {
     public void initialSetup(){
         parentFrame.pack();
         System.out.println("Entering logging panel...");
-        left_panel_label.setIcon(new ImageIcon(getClass().getClassLoader().getResource("yes2.png")));
+        left_panel_label.setIcon(new ImageIcon(getClass().getClassLoader().getResource("ui/yes2.png")));
         this.newRunePageButton.setVisible(false);
         createNew_panel.setVisible(false);
         //testScript();
@@ -98,8 +97,8 @@ public class LoginPanel extends JPanel implements MyPanel {
     }
 
     public LoginPanel(MainFrame frame){
-        super();
-        setParent(frame);
+        super(frame);
+//        setParent(frame);
         initialSetup();
 
         //this is added to the username and password fields to execute "enterButton" by pressing Enter
