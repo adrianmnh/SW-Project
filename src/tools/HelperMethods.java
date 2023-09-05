@@ -25,7 +25,12 @@ public class HelperMethods {
         jp.setMinimumSize(new Dimension(width, height));
         jp.setPreferredSize(new Dimension(width, height));
         jp.setMaximumSize(jp.getPreferredSize());
-        jp.setMinimumSize(jp.getPreferredSize());
+    }
+
+    public static void increaseHeight(Component jp, int height){
+        int currentHeight = jp.getPreferredSize().height;
+        int currentWidth = jp.getPreferredSize().width;
+        resizeComponent(jp, currentWidth, currentHeight+height);
     }
 
     public static ImageIcon scaleImage(ImageIcon img, int width, int height){

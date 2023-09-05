@@ -642,7 +642,7 @@ public class CreateRunePanel extends  MyPanel {
             public void actionPerformed(ActionEvent e) {
                 parentFrame.changePanel_BackToMainApp();
 //                parentFrame.engrave_panel.bottom_panel.setVisible(false);
-//                parentFrame.engrave_panel.rune_scroll_panel.setVisible(false);
+//                parentFrame.engrave_panel.OLDrune_scroll_panel.setVisible(false);
 //                parentFrame.pack();
 
             }

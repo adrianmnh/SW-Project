@@ -169,29 +169,17 @@ public class RuneDB extends Database {
 //
     public ArrayList<Rune> getUserRunes(int userid){
         ArrayList<Rune> runes = null;
-        // return and arrayList of Runes in the correct format, no null
         try{
-//            String sqlQuery = "select runegrade, runeset, position, innate, mainstat, sub0, val0, sub1, val1, sub2, val2, sub3, val3, sub4, val4 from user_runes where userid = 10";
             String sqlQuery = "SELECT * FROM " + getTable() + " WHERE AccountId = " + userid;
-//            System.out.println(sqlQuery);
             ResultSet result = getStatement().executeQuery(sqlQuery);
-            //System.out.println("\nThis is existing user TABLE user_runes data fixed without NULL");
-//            printResultSet(result);
             runes = new ArrayList();
             while(result.next()){
                 String r = "";
                 for(int i=3; i<=result.getMetaData().getColumnCount(); i++){
                     if(result.getObject(i) != null )
                         r += result.getObject(i) + " ";
-//                    System.out.println(r);
                 }
-//                System.out.println("Creating rune from: " + r);
                 runes.add(new Rune(r));
-            }
-//            System.out.println(runes.size() + " runes created from user_runes table");
-//            System.out.println("\n------------------List of existing Runes:-----------------------\n\n");
-            for (int i = 0; i < runes.size() ; i++) {
-                Rune r = runes.get(i);
             }
             return runes;
         }catch(Exception e){

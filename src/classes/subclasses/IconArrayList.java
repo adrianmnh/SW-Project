@@ -15,14 +15,24 @@ public class IconArrayList<MyImageIcon> extends ArrayList<MyImageIcon> implement
         super.add((MyImageIcon) myImage);
     }
 
-    public MyImageIcon get(String name) {
+    public ImageIcon getImage(String name) {
         for (int i = 0; i < super.size(); i++) {
             if (((classes.subclasses.MyImageIcon) super.get(i)).name.equals(name)) {
-                return (MyImageIcon) ((classes.subclasses.MyImageIcon) super.get(i)).img;
+                return ((classes.subclasses.MyImageIcon) super.get(i)).img;
             }
         }
         return null;
     }
+
+    public MyImageIcon get(String name) {
+        for (int i = 0; i < super.size(); i++) {
+            if (((classes.subclasses.MyImageIcon) super.get(i)).name.equals(name)) {
+                return (MyImageIcon) ((classes.subclasses.MyImageIcon) super.get(i));
+            }
+        }
+        return null;
+    }
+
 
     @Override
     public Iterator<MyImageIcon> iterator() {
