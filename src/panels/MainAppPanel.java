@@ -80,8 +80,8 @@ public class MainAppPanel extends MyPanel {
     private void startSetup(){
         parentFrame.setSizeTo(0,0);
 
-//        parentFrame.setCurrentUserID(1);
-        parentFrame.setCurrentUserID(10);
+        parentFrame.setCurrentUserID(1);
+//        parentFrame.setCurrentUserID(10);
 
         setImagesNText("", runeoff);
         after_load_panel.setVisible(false);

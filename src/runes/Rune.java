@@ -36,18 +36,13 @@ public class Rune implements Comparable<Rune> {
         setRuneInnate(arr[3]);
         setRuneMainStat(arr[4], arr[0]);
         subs = new ArrayList<>();
-        if(this.getRuneInnate()){
-            addRuneSubstat(arr[13], arr[14]);
-            addRuneSubstat(arr[5], arr[6]);
-            addRuneSubstat(arr[7], arr[8]);
-            addRuneSubstat(arr[9], arr[10]);
-            addRuneSubstat(arr[11], arr[12]);
-        }else{
-            addRuneSubstat(arr[5], arr[6]);
-            addRuneSubstat(arr[7], arr[8]);
-            addRuneSubstat(arr[9], arr[10]);
-            addRuneSubstat(arr[11], arr[12]);
-        }
+
+        addRuneSubstat(arr[5], arr[6]);
+        addRuneSubstat(arr[7], arr[8]);
+        addRuneSubstat(arr[9], arr[10]);
+        addRuneSubstat(arr[11], arr[12]);
+        if(this.getRuneInnate()) addRuneSubstat(arr[13], arr[14]);
+
         this.isEquipped = false;
         System.out.println("********************Rune created********************");
     }

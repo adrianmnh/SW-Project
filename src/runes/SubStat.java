@@ -22,7 +22,6 @@ public class SubStat {
     }
 
     public String getSubStat(){
-//        return this.runeStat.name();
         return this.runeStat.toString();
     }
     public String getSubValue(){
@@ -36,11 +35,10 @@ public class SubStat {
     }
 
     public String toString(){
-//        System.out.println("runeStat: " + runeStat + " value: " + value);
-        if(this.runeStat == RuneStat.ATK ||this.runeStat == RuneStat.DEF ||this.runeStat == RuneStat.HP )
-            return runeStat + ": +" + value + "%";
+        if(this.runeStat == RuneStat.ATK ||this.runeStat == RuneStat.DEF ||this.runeStat == RuneStat.HP || this.runeStat == RuneStat.RES || this.runeStat == RuneStat.ACC || this.runeStat == RuneStat.CRte || this.runeStat == RuneStat.CDmg)
+            return runeStat.getStat() + ": +" + value + "%";
         else
-            return runeStat + ": +" + value;
+            return runeStat.getStat() + ": +" + value;
     }
 
     public boolean equals(SubStat s){

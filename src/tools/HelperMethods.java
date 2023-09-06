@@ -22,9 +22,8 @@ public class HelperMethods {
     }
 
     public static void resizeComponent(Component jp, int width, int height){
-        jp.setMinimumSize(new Dimension(width, height));
         jp.setPreferredSize(new Dimension(width, height));
-        jp.setMaximumSize(jp.getPreferredSize());
+        jp.setMinimumSize(new Dimension(width, height));
     }
 
     public static void increaseHeight(Component jp, int height){
