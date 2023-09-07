@@ -5,6 +5,8 @@ import classes.subclasses.MonsterImageIcon;
 import classes.subclasses.MyImageIcon;
 
 import javax.swing.*;
+import javax.swing.plaf.FontUIResource;
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -25,16 +27,17 @@ public class MainFrame extends JFrame {
 
     private JPanel framepanel;
 
-//    private ImageIcon logo = new ImageIcon(getClass().getClassLoader().getResource("rune.png"));
+    private GraphicsDevice[] outputDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+    //    private ImageIcon logo = new ImageIcon(getClass().getClassLoader().getResource("rune.png"));
     private ImageIcon logo = getImageIcon("ui/rune.png");
 
     public LoginPanel login_panel;
     //= new LoginPanel(this);
     public CreateRunePanel rune_panel;
-    public ArrayList<String> monsterAssetFiles;
-    public ArrayList<String> resourceAssetFiles;
-    public IconArrayList<MonsterImageIcon> monsterAssetIcons;
-    public IconArrayList<MyImageIcon> resourceAssetIcons;
+    public ArrayList<String> monsterFiles;
+    public ArrayList<String> uiFiles;
+    public IconArrayList<MonsterImageIcon> monsterResources;
+    public IconArrayList<MyImageIcon> uiResources;
     public MainAppPanel mainApp_panel;
 
     private String OS;
@@ -63,15 +66,51 @@ public class MainFrame extends JFrame {
     public void setSizeTo(int a, int b){
         this.setSize(1265-a, 740-b);
     }
+
+    public static void setUIFont(FontUIResource font) {
+        UIDefaults defaults = UIManager.getDefaults();
+        for (Object key : defaults.keySet()) {
+            Object value = defaults.get(key);
+            if (value instanceof FontUIResource) {
+                defaults.put(key, font);
+            }
+        }
+    }
+
+    public void reframe(){
+
+        this.pack();
+
+        // Check if there are at least two monitors
+        if (outputDevice.length >= 2) {
+            GraphicsDevice secondMonitor = outputDevice[1];
+            Rectangle bounds = secondMonitor.getDefaultConfiguration().getBounds();
+            int centerX = bounds.x + bounds.width / 2;
+//            int centerY = bounds.y + bounds.height / 2;
+            int centerY = bounds.y + bounds.height / 3;
+
+            // Calculate the position to center the JFrame on the second monitor
+            int frameX = centerX - this.getWidth() / 2;
+//            int frameY = centerY - this.getHeight() / 2;
+            int frameY = centerY + this.getHeight() / 4;
+            this.setLocation(frameX, frameY);
+//            this.setLocation(secondMonitor.getDefaultConfiguration().getBounds().x, 0);
+        } else {
+            this.setLocationRelativeTo(null);
+            System.out.println("There is no second monitor available.");
+        }
+
+    }
     public MainFrame() throws IOException, InterruptedException {
         super("Main Application");
         setEXEType();
         setOS();
 
-//        monsterAssetList = loadLocalAssetsInJAR();
-        loadLocalAssets();
+//        setUIFont(new FontUIResource(new Font("Segoe UI", Font.BOLD, 12)));
 
-        loadImageIcons();
+        loadAssets();
+
+        createResources();
 
         mainApp_panel = new MainAppPanel(this);
         login_panel = new LoginPanel(this);
@@ -91,8 +130,10 @@ public class MainFrame extends JFrame {
 
         //this.framepanel = engrave_panel.getMain();
         this.setContentPane(framepanel);
-        this.pack();
-        this.setLocation(750, 250);
+//        this.setLocationRelativeTo(null);
+
+        this.reframe();
+//        this.setLocation(750, 250);
     }
 
     public void changePanel(JPanel jp){
@@ -110,7 +151,7 @@ public class MainFrame extends JFrame {
         this.framepanel = rune_panel.getMain();
         this.setContentPane(framepanel);
         this.pack();
-        this.setLocation(this.getX()+350, this.getY()+100);
+//        this.setLocation(this.getX()+350, this.getY()+100);
     }
     public void changePanel_MainApp() {
 //        mainApp_panel = new MainAppPanel(this);
@@ -125,7 +166,7 @@ public class MainFrame extends JFrame {
 //        setSizeTo(200,0);
         this.pack();
 
-        this.setLocation(this.getX()-450, this.getY()-100);
+//        this.setLocation(this.getX()-450, this.getY()-100);
     }
     public void changePanel_BackToMainApp() {
         //engrave_panel = new MainAppPanel(this);
@@ -139,7 +180,7 @@ public class MainFrame extends JFrame {
 //        setSizeTo(0,0);
         this.pack();
 
-        this.setLocation(this.getX()-350, this.getY()-100);
+//        this.setLocation(this.getX()-350, this.getY()-100);
         //engrave_panel.getLoadRunes().doClick();
     }
 
@@ -152,40 +193,45 @@ public class MainFrame extends JFrame {
     }
 
 //    public ArrayList<String> loadLocalAssetsInJAR(){
-    public void loadLocalAssets(){
+    public void loadAssets(){
 
-        this.resourceAssetFiles = new ArrayList<>();
-        this.monsterAssetFiles = new ArrayList<>();
+        this.uiFiles = new ArrayList<>();
+        this.monsterFiles = new ArrayList<>();
         String message = null;
 
         if(this.EXEType == "jar"){
             try {
                 Path root = null;
-                String jarPath = null;
-                jarPath = MainFrame.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-//                if(this.OS == "windows"){
-                    jarPath = jarPath.replace("/", "\\");
-                    jarPath = jarPath.substring(1, jarPath.length());
-//                }
-                System.out.println("Jar Path :: "+ jarPath);
-                root = Paths.get(jarPath);
+                String monterJarPath = null;
+                monterJarPath = MainFrame.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+                if(this.OS == "windows"){
+                    monterJarPath = monterJarPath.replace("/", "\\");
+                    monterJarPath = monterJarPath.substring(1, monterJarPath.length());
+                }
+                System.out.println("Jar Path :: "+ monterJarPath);
+                root = Paths.get(monterJarPath);
                 System.out.println("Reading From :: "+ root);
-                var fileIn = Files.newInputStream(root);
-                ZipInputStream zip = new ZipInputStream(fileIn);
-                for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
-                    String content = new String(zip.readAllBytes(), StandardCharsets.UTF_8);
+                var monsterFileIn = Files.newInputStream(root);
+                ZipInputStream monsterZippedStream = new ZipInputStream(monsterFileIn);
+                for (ZipEntry monsterEntry = monsterZippedStream.getNextEntry(); monsterEntry != null; monsterEntry = monsterZippedStream.getNextEntry()) {
+                    String content = new String(monsterZippedStream.readAllBytes(), StandardCharsets.UTF_8);
 //                    byte[] data = content.getBytes();
-                    if(entry.getName().startsWith("monsters/") && entry.getName().endsWith(".jpg")){
+                    if(monsterEntry.getName().startsWith("monsters/") && monsterEntry.getName().endsWith(".jpg")){
 //                        map.put(entry.getName(), content.getBytes());
 //                        map.put(entry.getName(), data);
-                        this.monsterAssetFiles.add(entry.getName());
+                        this.monsterFiles.add(monsterEntry.getName());
 //                    System.out.println(entry.getName() + ": " + data.length + " bytes");
 
                     }
                 }
-                message = "Assets read from "+root;
-//            JOptionPane.showMessageDialog(this, "Correct!", "login", JOptionPane.INFORMATION_MESSAGE, new ImageIcon(monsterAssetList.get(5)));
-
+                var fileIn = Files.newInputStream(root);
+                ZipInputStream uiZipStream = new ZipInputStream(fileIn);
+                for (ZipEntry uiEntry = uiZipStream.getNextEntry(); uiEntry != null; uiEntry = uiZipStream.getNextEntry()) {
+                    String content = new String(uiZipStream.readAllBytes(), StandardCharsets.UTF_8);
+                    if(uiEntry.getName().startsWith("ui/") ){
+                        this.uiFiles.add(uiEntry.getName());
+                    }
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             } catch (URISyntaxException e) {
@@ -196,11 +242,9 @@ public class MainFrame extends JFrame {
 
             System.out.println("production Path :: ");
             File monsterResourceFolder = new File(getClass().getClassLoader().getResource("monsters/").getFile());
-            File resourceFolder = new File(getClass().getClassLoader().getResource("ui/").getFile());
 //                File[] files = folder.listFiles((dir, name) -> name.endsWith(".jpg"));
             System.out.println("Reading From :: "+ monsterResourceFolder.getPath());
             File[] monsterFolderFiles = monsterResourceFolder.listFiles();
-            File[] resourceFolderFiles = resourceFolder.listFiles();
             for (File file : monsterFolderFiles) {
 //                System.out.println(file.getName());
                 try (InputStream is = new FileInputStream(file)) {
@@ -208,18 +252,15 @@ public class MainFrame extends JFrame {
 //                    String a = data.toString();
 //                    System.out.println(file.getName() + ": " + data.length + " bytes");
 //                    map.put("assets/monsters/"+file.getName(), data);
-                    this.monsterAssetFiles.add("monsters/" + file.getName());
+                    this.monsterFiles.add("monsters/" + file.getName());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
+            File resourceFolder = new File(getClass().getClassLoader().getResource("ui/").getFile());
+            File[] resourceFolderFiles = resourceFolder.listFiles();
             for (File file : resourceFolderFiles) {
-                try (InputStream is = new FileInputStream(file)) {
-//                    System.out.println(file.getName() + ": " + is.readAllBytes().length + " bytes");
-                    resourceAssetFiles.add("ui/" + file.getName());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                    uiFiles.add("ui/" + file.getName());
             }
 
 //            System.out.println("monsterAssetList size :: "+monsterAssetList.size());
@@ -231,19 +272,20 @@ public class MainFrame extends JFrame {
 
 //        return monsterAssetList;
     }
-    private void loadImageIcons(){
-        this.monsterAssetIcons = new IconArrayList();
-        for ( String monsterAssetFile : this.monsterAssetFiles) {
+    private void createResources(){
+        System.out.println("Creating Resources should be first\n\n***********************");
+
+        this.monsterResources = new IconArrayList();
+        for ( String monsterAssetFile : this.monsterFiles) {
             MonsterImageIcon icon = new MonsterImageIcon(monsterAssetFile);
-//            ImageIcon icon = getImageIcon(monsterAssetFile);
-            this.monsterAssetIcons.add(icon);
+            this.monsterResources.add(icon);
         }
-        this.resourceAssetIcons = new IconArrayList();
-        for ( String resourceAssetFile : this.resourceAssetFiles) {
+        this.uiResources = new IconArrayList();
+        for ( String resourceAssetFile : this.uiFiles) {
             MyImageIcon icon = new MyImageIcon(resourceAssetFile);
-            System.out.println("icon :: "+icon.name);
+//            System.out.println("icon :: "+icon.name);
 //            ImageIcon icon = getImageIcon(resourceAssetFile);
-            this.resourceAssetIcons.add(icon);
+            this.uiResources.add(icon);
         }
     }
 

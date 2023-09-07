@@ -57,11 +57,11 @@ public class MonsterDB extends Database implements DatabaseCommands{
 
     }
 
-    public ArrayList<Object> getAllMonsters(){
+    public ArrayList<String> getAllMonsters(){
 
 
         try{
-            ArrayList<Object> data = new ArrayList<Object>();
+            ArrayList<String> data = new ArrayList<>();
 
             String sqlQuery = "";
             sqlQuery = String.format("SELECT * from %s ", getTable());

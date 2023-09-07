@@ -35,10 +35,17 @@ public class SubStat {
     }
 
     public String toString(){
-        if(this.runeStat == RuneStat.ATK ||this.runeStat == RuneStat.DEF ||this.runeStat == RuneStat.HP || this.runeStat == RuneStat.RES || this.runeStat == RuneStat.ACC || this.runeStat == RuneStat.CRte || this.runeStat == RuneStat.CDmg)
-            return runeStat.getStat() + ": +" + value + "%";
-        else
-            return runeStat.getStat() + ": +" + value;
+        if(this.runeStat == RuneStat.ATK ||this.runeStat == RuneStat.DEF ||this.runeStat == RuneStat.HP  )
+            return runeStat.getStat() + "  : +" + value + "%";
+        else if( this.runeStat == RuneStat.CRte )
+            return runeStat.getStat() + " : +" + value + "%";
+        else if(this.runeStat == RuneStat.CDmg)
+            return runeStat.getStat() +": +" + value + "%";
+        else if(this.runeStat == RuneStat.hp)
+            return runeStat.getStat() + "     : +" + value;
+        else if(this.runeStat == RuneStat.SPD || this.runeStat == RuneStat.RES || this.runeStat == RuneStat.ACC)
+            return runeStat.getStat() + "  : +" + value;
+        else return runeStat.getStat() + "   : +" + value;
     }
 
     public boolean equals(SubStat s){

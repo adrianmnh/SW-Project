@@ -39,7 +39,7 @@ public class LoginPanel extends MyPanel {
     public int counter = 0;
 
     public void setParent(MainFrame p){
-        parentFrame = p;
+        frame = p;
     }
 
     public JPanel getMain(){
@@ -79,11 +79,11 @@ public class LoginPanel extends MyPanel {
         loggedlabel.setText("Welcome " + user_login.getText() + "!");
         mainPanel.setVisible(true);
         newAccountButton.setVisible(false);
-        parentFrame.repackAfterLogin();
+        frame.repackAfterLogin();
     }
 
     public void initialSetup(){
-        parentFrame.pack();
+        frame.pack();
         System.out.println("Entering logging panel...");
         left_panel_label.setIcon(new ImageIcon(getClass().getClassLoader().getResource("ui/yes2.png")));
         this.newRunePageButton.setVisible(false);
@@ -135,20 +135,20 @@ public class LoginPanel extends MyPanel {
 //                ex.printStackTrace();
 //                System.out.println("NOOOOOOOOOOOOO\n\n\n\n\n");
 //            }
-            parentFrame.setCurrentUserID(-404);
+            this.frame.setCurrentUserID(-404);
             login = user_login.getText();
             password = user_password.getPassword();
             User user = new User(login, password);
 
-            parentFrame.setCurrentUserID(connct.userExists(user));
-            boolean match = parentFrame.getCurrentUserID() != -404? true: false;
+            this.frame.setCurrentUserID(connct.userExists(user));
+            boolean match = this.frame.getCurrentUserID() != -404? true: false;
             if (match) {
-                JOptionPane.showMessageDialog(parentFrame, "Correct!", "login", JOptionPane.ERROR_MESSAGE, iconYes);
+                JOptionPane.showMessageDialog(this.frame, "Correct!", "login", JOptionPane.ERROR_MESSAGE, iconYes);
                 System.out.println("Login successful...");
                 setLabelVisibleOff();
                 connct.closeConnection();
             }else {
-                JOptionPane.showMessageDialog(parentFrame, "Incorrect username or password.", "login", JOptionPane.ERROR_MESSAGE, iconNo);
+                JOptionPane.showMessageDialog(this.frame, "Incorrect username or password.", "login", JOptionPane.ERROR_MESSAGE, iconNo);
                 connct.closeConnection();
             }
 
@@ -168,9 +168,9 @@ public class LoginPanel extends MyPanel {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("moving to 'Create New Rune Panel'...");
                 System.out.println("********************");
-                System.out.println("currnt userid: " + parentFrame.getCurrentUserID());
+                System.out.println("currnt userid: " + LoginPanel.this.frame.getCurrentUserID());
                 System.out.println("********************");
-                parentFrame.changePanel_MainApp();
+                LoginPanel.this.frame.changePanel_MainApp();
 
             }
         });
@@ -199,7 +199,7 @@ public class LoginPanel extends MyPanel {
 //                }
                 login_panel.setVisible(false);
                 createNew_panel.setVisible(true);
-                parentFrame.pack();
+                LoginPanel.this.frame.pack();
             }
         });
         resetButton.addActionListener(new ActionListener() {
@@ -215,7 +215,7 @@ public class LoginPanel extends MyPanel {
             public void actionPerformed(ActionEvent e) {
                 login_panel.setVisible(true);
                 createNew_panel.setVisible(false);
-                parentFrame.pack();
+                LoginPanel.this.frame.pack();
             }
         });
         submitButton.addActionListener(new ActionListener() {
@@ -228,25 +228,25 @@ public class LoginPanel extends MyPanel {
                 UserDB newacc = new UserDB();
                 String query = String.format("INSERT INTO GameTool.Account VALUES ('%s', '%s', '%s');", u, p, email);
                 if( !u.equals("") && u.length()>5 && p.length()>5 && !p.equals("") && email.length()>=5 && !email.equals("")){
-                    Object o = JOptionPane.showInputDialog(parentFrame, "Please re-enter password", "New Account",1, load, null, "");
+                    Object o = JOptionPane.showInputDialog(LoginPanel.this.frame, "Please re-enter password", "New Account",1, load, null, "");
                     if(o!=null){
                         if(o.toString().equals(p)){
-                            JOptionPane.showMessageDialog(parentFrame,"Success! Your username is: " + u, "Account created", 2, load);
+                            JOptionPane.showMessageDialog(LoginPanel.this.frame,"Success! Your username is: " + u, "Account created", 2, load);
                             newacc.execQuery(query);
                             System.out.println("New account created");
                             login_panel.setVisible(true);
                             createNew_panel.setVisible(false);
-                            parentFrame.pack();
-                        }else JOptionPane.showMessageDialog(parentFrame,"Incorrect password", "Error", 2, iconNo);
+                            LoginPanel.this.frame.pack();
+                        }else JOptionPane.showMessageDialog(LoginPanel.this.frame,"Incorrect password", "Error", 2, iconNo);
                     }
                 }
                 else{
                     if(u.length()<5)
-                    JOptionPane.showMessageDialog(parentFrame,"Username must be at least 5 characters", "Error", 2, iconNo);
+                    JOptionPane.showMessageDialog(LoginPanel.this.frame,"Username must be at least 5 characters", "Error", 2, iconNo);
                     else if(p.length()<5)
-                        JOptionPane.showMessageDialog(parentFrame,"Password is too short", "Error", 2, iconNo);
+                        JOptionPane.showMessageDialog(LoginPanel.this.frame,"Password is too short", "Error", 2, iconNo);
                     else if(email.length()<12)
-                    JOptionPane.showMessageDialog(parentFrame,"Email must be 5 characters or longer", "Error", 2, iconNo);
+                    JOptionPane.showMessageDialog(LoginPanel.this.frame,"Email must be 5 characters or longer", "Error", 2, iconNo);
 
                 }
                 newacc.closeConnection();

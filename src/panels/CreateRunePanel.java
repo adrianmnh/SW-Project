@@ -56,7 +56,7 @@ public class CreateRunePanel extends  MyPanel {
     private ImageIcon substatPanelImg = new ImageIcon(this.getClass().getClassLoader().getResource("ui/poker.png"));
     private ImageIcon no = new ImageIcon(this.getClass().getClassLoader().getResource("ui/no.png"));
     private void setParent(MainFrame p) {
-        parentFrame = p;
+        frame = p;
     }
     public JPanel getMain(){
         return mainPanel;
@@ -156,7 +156,7 @@ public class CreateRunePanel extends  MyPanel {
     private void hide_addSubsPanel(){
         substat_panel.setVisible(false);
         substat_buttons.setVisible(false);
-        parentFrame.repack();
+        frame.repack();
     }
     private void show_addSubsPanel(){
         if(innate_no.isSelected()){
@@ -176,7 +176,7 @@ public class CreateRunePanel extends  MyPanel {
         mainstat_panel.setVisible(false);
         mainstat_buttons.setVisible(false);
 
-        parentFrame.repack();
+        frame.repack();
 
         //testScript2();
 
@@ -186,29 +186,29 @@ public class CreateRunePanel extends  MyPanel {
         int x;
         if(getInnateSelected()){
             if(sub0.getSelectedIndex()==0 || sub_val0.getText().equals("")){
-                JOptionPane.showMessageDialog(parentFrame, "Please input innate property and value", "Not enough data", JOptionPane.OK_OPTION, no);
+                JOptionPane.showMessageDialog(frame, "Please input innate property and value", "Not enough data", JOptionPane.OK_OPTION, no);
                 return false;
             }
             if(!sub_val0.equals("")){
                 try{
                     x = Integer.parseInt(sub_val0.getText());
                     if(x <= 0){
-                        JOptionPane.showMessageDialog(parentFrame, "Innate value cannot be zero or negative", "Wrong input", JOptionPane.OK_OPTION, no);
+                        JOptionPane.showMessageDialog(frame, "Innate value cannot be zero or negative", "Wrong input", JOptionPane.OK_OPTION, no);
                         return false;
                     }
                 }catch(NumberFormatException e){
-                    JOptionPane.showMessageDialog(parentFrame, "Innate value must be an integer", "Wrong input", JOptionPane.OK_OPTION, no);
+                    JOptionPane.showMessageDialog(frame, "Innate value must be an integer", "Wrong input", JOptionPane.OK_OPTION, no);
                     return false;
                 }
             }
         }
         // if innate selected is NO
         if(sub1.getSelectedIndex()==0 || sub2.getSelectedIndex()==0 ||sub3.getSelectedIndex()==0 ||sub4.getSelectedIndex()==0){
-            JOptionPane.showMessageDialog(parentFrame, "Please select all substat properties", "Not enough data", JOptionPane.OK_OPTION, no);
+            JOptionPane.showMessageDialog(frame, "Please select all substat properties", "Not enough data", JOptionPane.OK_OPTION, no);
             return false;
         }
         if(sub_val1.getText().equals("") || sub_val2.getText().equals("") || sub_val3.getText().equals("") || sub_val4.getText().equals("")){
-            JOptionPane.showMessageDialog(parentFrame, "Please input all substat values", "Not enough data", JOptionPane.OK_OPTION, no);
+            JOptionPane.showMessageDialog(frame, "Please input all substat values", "Not enough data", JOptionPane.OK_OPTION, no);
             return false;
         }
         else if(!sub_val1.getText().equals("") || !sub_val2.getText().equals("") || !sub_val3.getText().equals("") || !sub_val4.getText().equals("")){
@@ -216,11 +216,11 @@ public class CreateRunePanel extends  MyPanel {
                 String[] subvals = {sub_val1.getText(), sub_val2.getText(), sub_val3.getText(), sub_val4.getText()};
                 for(String s : subvals)
                     if(Integer.parseInt(s) <= 0){
-                        JOptionPane.showMessageDialog(parentFrame, "Substat values cannot be zero or negative", "Wrong input", JOptionPane.OK_OPTION, no);
+                        JOptionPane.showMessageDialog(frame, "Substat values cannot be zero or negative", "Wrong input", JOptionPane.OK_OPTION, no);
                         return false;
                     }
             }catch(NumberFormatException e){
-                JOptionPane.showMessageDialog(parentFrame, "A substat value must be an integer", "Wrong input", JOptionPane.OK_OPTION, no);
+                JOptionPane.showMessageDialog(frame, "A substat value must be an integer", "Wrong input", JOptionPane.OK_OPTION, no);
                 return false;
             }
         }
@@ -229,13 +229,13 @@ public class CreateRunePanel extends  MyPanel {
 
         if(getInnateSelected()){
             if(failsIntegerRestriction(0) || failsIntegerRestriction(1) || failsIntegerRestriction(2) || failsIntegerRestriction(3) || failsIntegerRestriction(4) ) {
-                JOptionPane.showMessageDialog(parentFrame, new String[]{"SPD and CR max sub-stat value is 35", "hp max sub-stat value is 2375", "atk and def max sub-stat value is 130", "All other substats max value is 50"}, "Wrong input", JOptionPane.OK_OPTION, no);
+                JOptionPane.showMessageDialog(frame, new String[]{"SPD and CR max sub-stat value is 35", "hp max sub-stat value is 2375", "atk and def max sub-stat value is 130", "All other substats max value is 50"}, "Wrong input", JOptionPane.OK_OPTION, no);
                 return false;
             }
         }
         else{
             if(failsIntegerRestriction(1) || failsIntegerRestriction(2) || failsIntegerRestriction(3) || failsIntegerRestriction(4)){
-                JOptionPane.showMessageDialog(parentFrame, new String[]{"SPD and CR max sub-stat value is 35","hp max sub-stat value is 2375", "atk and def max sub-stat value is 130", "All other substats max value is 50"}, "Wrong input", JOptionPane.OK_OPTION, no);
+                JOptionPane.showMessageDialog(frame, new String[]{"SPD and CR max sub-stat value is 35","hp max sub-stat value is 2375", "atk and def max sub-stat value is 130", "All other substats max value is 50"}, "Wrong input", JOptionPane.OK_OPTION, no);
                 return false;
             }
         }
@@ -247,17 +247,17 @@ public class CreateRunePanel extends  MyPanel {
         if(innate){
             if(sub0.getSelectedIndex() == sub1.getSelectedIndex() || sub0.getSelectedIndex() == sub2.getSelectedIndex()
                     || sub0.getSelectedIndex() == sub3.getSelectedIndex() || sub0.getSelectedIndex() == sub4.getSelectedIndex()){
-                JOptionPane.showMessageDialog(parentFrame, "Substats cannot be the same as innate property", "Not enough data", JOptionPane.OK_OPTION, no);
+                JOptionPane.showMessageDialog(frame, "Substats cannot be the same as innate property", "Not enough data", JOptionPane.OK_OPTION, no);
                 return false;
             }
             if(sub0.getSelectedIndex() == statList.getSelectedIndex()){
-                JOptionPane.showMessageDialog(parentFrame, "Innate property cannot be the same as main stat", "Not enough data", JOptionPane.OK_OPTION, no);
+                JOptionPane.showMessageDialog(frame, "Innate property cannot be the same as main stat", "Not enough data", JOptionPane.OK_OPTION, no);
                 return false;
             }
         }
         if(statList.getSelectedIndex() == sub1.getSelectedIndex() || statList.getSelectedIndex() == sub2.getSelectedIndex()
                 || statList.getSelectedIndex() == sub3.getSelectedIndex() || statList.getSelectedIndex() == sub4.getSelectedIndex()){
-            JOptionPane.showMessageDialog(parentFrame, "Substats cannot be the same as main stat", "Not enough data", JOptionPane.OK_OPTION, no);
+            JOptionPane.showMessageDialog(frame, "Substats cannot be the same as main stat", "Not enough data", JOptionPane.OK_OPTION, no);
             return false;
         }
         if(sub1.getSelectedIndex() == sub2.getSelectedIndex() || sub1.getSelectedIndex() == sub3.getSelectedIndex()
@@ -265,7 +265,7 @@ public class CreateRunePanel extends  MyPanel {
         if(sub2.getSelectedIndex() == sub3.getSelectedIndex() || sub2.getSelectedIndex() == sub4.getSelectedIndex()) test = false;
         if(sub3.getSelectedIndex() == sub4.getSelectedIndex()) test =  false;
         if(test == false){
-            JOptionPane.showMessageDialog(parentFrame, "Substat properties can't be the same", "Not enough data", JOptionPane.OK_OPTION, no);
+            JOptionPane.showMessageDialog(frame, "Substat properties can't be the same", "Not enough data", JOptionPane.OK_OPTION, no);
             return false;
         }
         return true;
@@ -286,21 +286,21 @@ public class CreateRunePanel extends  MyPanel {
 
         switch(posIndex){
             case 1: if(statList.getSelectedIndex() != 9){
-                        JOptionPane.showMessageDialog(parentFrame, "Slot 1 main stat is always Att", "Rune property error", JOptionPane.OK_OPTION, no);
+                        JOptionPane.showMessageDialog(frame, "Slot 1 main stat is always Att", "Rune property error", JOptionPane.OK_OPTION, no);
                         statList.setSelectedIndex(9);
                         return false;
                     }
                     break;
 
             case 3: if(statList.getSelectedIndex() != 10){
-                        JOptionPane.showMessageDialog(parentFrame, "Slot 3 main stat is always Def", "Rune property error", JOptionPane.OK_OPTION, no);
+                        JOptionPane.showMessageDialog(frame, "Slot 3 main stat is always Def", "Rune property error", JOptionPane.OK_OPTION, no);
                         statList.setSelectedIndex(10);
                         return false;
                     }
                     break;
 
             case 5: if(statList.getSelectedIndex() != 11){
-                        JOptionPane.showMessageDialog(parentFrame, "Slot 5 main stat is always HP", "Rune property error", JOptionPane.OK_OPTION, no);
+                        JOptionPane.showMessageDialog(frame, "Slot 5 main stat is always HP", "Rune property error", JOptionPane.OK_OPTION, no);
                         statList.setSelectedIndex(11);
                         return false;
                     }
@@ -317,7 +317,7 @@ public class CreateRunePanel extends  MyPanel {
 //                    }
 //                    break;
                     if(statList.getSelectedIndex() == 5 || statList.getSelectedIndex() == 6 || statList.getSelectedIndex() == 7 || statList.getSelectedIndex() == 8) {
-                        JOptionPane.showMessageDialog(parentFrame, "Invalid slot 2 main stat\nCRte% and CDmg% are exclusive to slot 4\nACC% and RES% are exclusive to slot 6", "Rune property error", JOptionPane.OK_OPTION, no);
+                        JOptionPane.showMessageDialog(frame, "Invalid slot 2 main stat\nCRte% and CDmg% are exclusive to slot 4\nACC% and RES% are exclusive to slot 6", "Rune property error", JOptionPane.OK_OPTION, no);
                         return false;
                     }
                     break;
@@ -333,7 +333,7 @@ public class CreateRunePanel extends  MyPanel {
 //                    }
 //                    break;
                     if(statList.getSelectedIndex() == 1 || statList.getSelectedIndex() == 7 || statList.getSelectedIndex() == 8) {
-                        JOptionPane.showMessageDialog(parentFrame, "Invalid slot 4 main stat\nSPD is exclusive to slot 2\nACC% and RES% are exclusive to slot 6", "Rune property error", JOptionPane.OK_OPTION, no);
+                        JOptionPane.showMessageDialog(frame, "Invalid slot 4 main stat\nSPD is exclusive to slot 2\nACC% and RES% are exclusive to slot 6", "Rune property error", JOptionPane.OK_OPTION, no);
                         return false;
                     }
                     break;
@@ -348,7 +348,7 @@ public class CreateRunePanel extends  MyPanel {
 //                    }
 //                    break;
                     if(statList.getSelectedIndex() == 1 || statList.getSelectedIndex() == 5 || statList.getSelectedIndex() == 6) {
-                        JOptionPane.showMessageDialog(parentFrame, "Invalid slot 6 main stat\nSPD is exclusive to slot 2\nCRte% and CDmg% are exclusive to slot 4", "Rune property error", JOptionPane.OK_OPTION, no);
+                        JOptionPane.showMessageDialog(frame, "Invalid slot 6 main stat\nSPD is exclusive to slot 2\nCRte% and CDmg% are exclusive to slot 4", "Rune property error", JOptionPane.OK_OPTION, no);
                         return false;
                     }
                     break;
@@ -372,13 +372,13 @@ public class CreateRunePanel extends  MyPanel {
         if(getInnateSelected()){
             if(posList.getSelectedIndex() == 1){
                 if(sub0.getSelectedIndex() == 4){
-                    JOptionPane.showMessageDialog(parentFrame, "Slot 1 rune cannot have DEF% innate property", "Rune sub-property error", JOptionPane.OK_OPTION, no);
+                    JOptionPane.showMessageDialog(frame, "Slot 1 rune cannot have DEF% innate property", "Rune sub-property error", JOptionPane.OK_OPTION, no);
                     return false;
                 }
             }
             if(posList.getSelectedIndex() == 3){
                 if(sub0.getSelectedIndex() == 2){
-                    JOptionPane.showMessageDialog(parentFrame, "Slot 3 rune cannot have ATT% innate property", "Rune sub-property error", JOptionPane.OK_OPTION, no);
+                    JOptionPane.showMessageDialog(frame, "Slot 3 rune cannot have ATT% innate property", "Rune sub-property error", JOptionPane.OK_OPTION, no);
                     return false;
                 }
             }
@@ -386,13 +386,13 @@ public class CreateRunePanel extends  MyPanel {
         // if innate is false...
         if(posList.getSelectedIndex() == 1){
             if(sub1.getSelectedIndex() == 4 || sub2.getSelectedIndex() == 4 || sub3.getSelectedIndex() == 4 || sub4.getSelectedIndex() == 4){
-                JOptionPane.showMessageDialog(parentFrame, "Slot 1 rune cannot have DEF% substat", "Rune sub-property error", JOptionPane.OK_OPTION, no);
+                JOptionPane.showMessageDialog(frame, "Slot 1 rune cannot have DEF% substat", "Rune sub-property error", JOptionPane.OK_OPTION, no);
                 return false;
             }
         }
         if(posList.getSelectedIndex() == 3){
             if(sub1.getSelectedIndex() == 2 || sub2.getSelectedIndex() == 2 || sub3.getSelectedIndex() == 2 || sub4.getSelectedIndex() == 2){
-                JOptionPane.showMessageDialog(parentFrame, "Slot 3 rune cannot have ATT% substat", "Rune sub-property error", JOptionPane.OK_OPTION, no);
+                JOptionPane.showMessageDialog(frame, "Slot 3 rune cannot have ATT% substat", "Rune sub-property error", JOptionPane.OK_OPTION, no);
                 return false;
             }
         }
@@ -571,15 +571,15 @@ public class CreateRunePanel extends  MyPanel {
                 }
 
             }else{
-                if(!grade1.isSelected() && !grade2.isSelected()) JOptionPane.showMessageDialog(parentFrame, "Please choose the star grade", "Not enough data", JOptionPane.OK_OPTION, no);
-                else if(!innate_no.isSelected() && !innate_yes.isSelected()) JOptionPane.showMessageDialog(parentFrame, "Please choose an innate option", "Not enough data", JOptionPane.OK_OPTION, no);
-                else JOptionPane.showMessageDialog(parentFrame, "Please input main rune properties", "Not enough data", JOptionPane.OK_OPTION, no);
+                if(!grade1.isSelected() && !grade2.isSelected()) JOptionPane.showMessageDialog(frame, "Please choose the star grade", "Not enough data", JOptionPane.OK_OPTION, no);
+                else if(!innate_no.isSelected() && !innate_yes.isSelected()) JOptionPane.showMessageDialog(frame, "Please choose an innate option", "Not enough data", JOptionPane.OK_OPTION, no);
+                else JOptionPane.showMessageDialog(frame, "Please input main rune properties", "Not enough data", JOptionPane.OK_OPTION, no);
             }
         });
         clearButton.addActionListener(e -> {
                 clearSelection();
                 substatButton.setVisible(false);
-                parentFrame.repack();
+                frame.repack();
         });
         substatButton.addActionListener(e -> {
 
@@ -595,20 +595,20 @@ public class CreateRunePanel extends  MyPanel {
                 if(checkSubRestrictions()){
 
                     System.out.println("Main stats and Subs selected");
-                    int selection = JOptionPane.showOptionDialog(parentFrame, new Object[] {"Is this correct?", "Rune:", printRuneDataObject()},
+                    int selection = JOptionPane.showOptionDialog(frame, new Object[] {"Is this correct?", "Rune:", printRuneDataObject()},
                             "CreateOrNot", JOptionPane.YES_OPTION, JOptionPane.INFORMATION_MESSAGE, runeImage, null, null);
 
                     if(selection == 0){
                         System.out.println("Enter pressed, checking if rune exists in database...");
                         RuneDB cnnct = new RuneDB();
-                        System.out.println("currentuserid: " + parentFrame.getCurrentUserID());
+                        System.out.println("currentuserid: " + frame.getCurrentUserID());
                         Rune r = createRune();
-                        boolean accept = cnnct.addRuneToUser(parentFrame.getCurrentUserID(), r);
+                        boolean accept = cnnct.addRuneToUser(frame.getCurrentUserID(), r);
                         cnnct.closeConnection();
                         if(accept){
-                            parentFrame.mainApp_panel.offlineRuneBag.add(r);
-                            parentFrame.mainApp_panel.addRowToTable(r);
-                            parentFrame.changePanel_BackToMainApp();
+                            frame.mainApp_panel.offlineRuneBag.add(r);
+                            frame.mainApp_panel.addRowToTable(r);
+                            frame.changePanel_BackToMainApp();
                         }
                     }
                     else{
@@ -640,7 +640,7 @@ public class CreateRunePanel extends  MyPanel {
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                parentFrame.changePanel_BackToMainApp();
+                frame.changePanel_BackToMainApp();
 //                parentFrame.engrave_panel.bottom_panel.setVisible(false);
 //                parentFrame.engrave_panel.OLDrune_scroll_panel.setVisible(false);
 //                parentFrame.pack();

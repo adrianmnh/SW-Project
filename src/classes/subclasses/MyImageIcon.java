@@ -8,7 +8,13 @@ public class MyImageIcon extends ImageIcon {
     public ImageIcon img;
 
     public MyImageIcon(String path){
-        this.name = path.replace("ui/", "");
+        if(path.contains("ui/"))
+            this.name = path.replace("ui/", "");
+        else if(path.contains("monsters/")){
+            this.name = path.replace("monsters/", "");
+            this.name = this.name.replace(".png", "");
+            this.name = this.name.replace(".jpg", "");
+        }
         this.img = new ImageIcon(getClass().getClassLoader().getResource(path));
     }
 

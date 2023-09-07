@@ -26,7 +26,7 @@ public class Rune implements Comparable<Rune> {
         this.isEquipped = false;
     }
     public Rune(String longstring){
-        System.out.println(longstring);
+//        System.out.println(longstring);
         String[] arr;
         arr = longstring.split(" ");
 //        System.out.println(Arrays.toString(arr));
@@ -44,7 +44,7 @@ public class Rune implements Comparable<Rune> {
         if(this.getRuneInnate()) addRuneSubstat(arr[13], arr[14]);
 
         this.isEquipped = false;
-        System.out.println("********************Rune created********************");
+//        System.out.println("********************Rune created********************");
     }
 
     @Override
