@@ -42,7 +42,9 @@ else
     fi
 
     # Execute any additional setup commands here
-		echo "Running additional setup commands..."
+		echo "No additional setup commands..."
+
+		echo "Gracefull exit..."
 		exit 1
 
 fi
