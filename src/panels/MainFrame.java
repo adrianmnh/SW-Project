@@ -79,13 +79,13 @@ public class MainFrame extends JFrame {
             GraphicsDevice secondMonitor = outputDevice[1];
             Rectangle bounds = secondMonitor.getDefaultConfiguration().getBounds();
             int centerX = bounds.x + bounds.width / 2;
-//            int centerY = bounds.y + bounds.height / 2;
-            int centerY = bounds.y + bounds.height / 3;
+            int centerY = bounds.y + bounds.height / 2;
+//            int centerY = bounds.y + bounds.height / 3;
 
             // Calculate the position to center the JFrame on the second monitor
             int frameX = centerX - this.getWidth() / 2;
-//            int frameY = centerY - this.getHeight() / 2;
-            int frameY = centerY + this.getHeight() / 4;
+            int frameY = centerY - this.getHeight() / 2;
+//            int frameY = centerY + this.getHeight() / 4;
             this.setLocation(frameX, frameY);
 //            this.setLocation(secondMonitor.getDefaultConfiguration().getBounds().x, 0);
         } else {
@@ -177,7 +177,7 @@ public class MainFrame extends JFrame {
         this.setContentPane(framepanel);
 //        this.setSize(1290,720);
 //        setSizeTo(0,0);
-        this.pack();
+        this.reframe();
 
 //        this.setLocation(this.getX()-350, this.getY()-100);
         //engrave_panel.getLoadRunes().doClick();

@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class Rune implements Comparable<Rune> {
 
-    private RuneGrade runeGrade;
+    public RuneGrade runeGrade;
     private RuneSet runeSet;
     public RunePosition runePosition;
     private boolean runeInnate;
@@ -104,7 +104,6 @@ public class Rune implements Comparable<Rune> {
     private void setRuneInnate(String inn){
         if(Integer.parseInt(inn) == 0) this.runeInnate = false;
         else this.runeInnate = true;
-
     }
     private void setRuneMainStat(String stat, String grade){
           this.mainStat = new MainStat(stat, grade);
@@ -198,12 +197,10 @@ public class Rune implements Comparable<Rune> {
         //Innate
         b.append(String.format("%s %s ★\nSlot %s %s\n", this.getSet().toString().toUpperCase(),
                 this.getGrade(), this.getPos(), this.getMainStat().toString().toUpperCase()));
-        if(getRuneInnate()){
-            b.append(String.format("%s\n%s\n%s\n%s\n%s",this.getSubStats().get(0),
-                    this.getSubStats().get(1),this.getSubStats().get(2),this.getSubStats().get(3)
-                    ,this.getSubStats().get(4)).toUpperCase());
-        }
-        else{
+        if(subs.size()>0){
+            if(getRuneInnate()){
+                b.append(String.format("innate %s\n",this.getSubStats().get(4)));
+            }
             b.append(String.format("%s\n%s\n%s\n%s",this.getSubStats().get(0),
                     this.getSubStats().get(1),this.getSubStats().get(2),this.getSubStats().get(3)).toUpperCase());
         }

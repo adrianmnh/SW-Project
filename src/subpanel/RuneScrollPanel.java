@@ -26,7 +26,7 @@ public class RuneScrollPanel extends JScrollPane{
     public MainAppPanel parentPanel;
     public MainFrame parentFrame;
 
-    final int REPEAT = 2;
+    final int REPEAT = 1;
     int ICON_DIMENSION = 80;
     final int ROW_HEIGHT = 140;
     final int LEFT_WIDTH = 130;
@@ -78,18 +78,16 @@ public class RuneScrollPanel extends JScrollPane{
     public void loadAssetsIntoPanels() {
 
         int size = this.parentPanel.offlineRuneBag.size();
-        int count = -1;
 
         for (int i = 0; i < REPEAT; i++) {
             for (Rune r : this.parentPanel.offlineRuneBag ) {
-                runeCount++;
-                addRow(left, right, r);
+                addRow(r);
             }
         }
-        this.ROWS = size * REPEAT;
-        resizeComponent(left, LEFT_WIDTH, ROW_HEIGHT * runeCount);
-        resizeComponent(right, RIGHT_WIDTH, ROW_HEIGHT * runeCount);
-        parentFrame.pack();
+//        this.ROWS = size * REPEAT;
+//        resizeComponent(left, LEFT_WIDTH, ROW_HEIGHT * runeCount);
+//        resizeComponent(right, RIGHT_WIDTH, ROW_HEIGHT * runeCount);
+//        parentFrame.pack();
 
         runePanel.addMouseListener(new MouseAdapter() {
             @Override
@@ -187,15 +185,23 @@ public class RuneScrollPanel extends JScrollPane{
 
 
     }
-    public void addRow(JPanel left, JPanel right, Rune r){
+    public void addRow(Rune r){
 //        JLabel rune = new JLabel(image);
         RuneLabel rune = new RuneLabel(r, image);
         rune.setBorder(BorderFactory.createLineBorder(FONT_COLOR));
-        left.add(rune);
+        this.left.add(rune);
 //        right.add(addRuneBox(r));
 //        RuneBox runeBox = new RuneBox(r, FONT_COLOR, RIGHT_WIDTH, ROW_HEIGHT);
 //        right.add(runeBox);
-        right.add(new RuneBox(r, FONT_COLOR, RIGHT_WIDTH, ROW_HEIGHT));
+        this.right.add(new RuneBox(r, FONT_COLOR, RIGHT_WIDTH, ROW_HEIGHT));
+        changeSize();
+    }
+
+    public void changeSize() {
+        this.runeCount++;
+        resizeComponent(left, LEFT_WIDTH, ROW_HEIGHT * runeCount);
+        resizeComponent(right, RIGHT_WIDTH, ROW_HEIGHT * runeCount);
+        parentFrame.reframe();
     }
 
 //    public Box addRuneBox(Rune r){
@@ -235,8 +241,5 @@ public class RuneScrollPanel extends JScrollPane{
 //        return outerBox;
 //    }
 
-    public void test() {
-        System.out.println("test");
-    }
 
 }

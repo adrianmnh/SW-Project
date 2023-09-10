@@ -39,6 +39,7 @@ enum RuneStat {
                 return null;
         }
     }
+    public String toString(){ return this.runeStat; }
 }
 
 enum RuneSet {
@@ -52,7 +53,7 @@ enum RuneSet {
 
 enum RuneGrade {
     five("5"), six("6");
-    private String runeGrade;
+    public String runeGrade;
     RuneGrade(String grade){
         this.runeGrade = grade;
     }

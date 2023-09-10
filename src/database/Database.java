@@ -25,7 +25,7 @@ public abstract class Database {
         try{
 
             String connectionString = "" +
-                    "jdbc:sqlserver://localhost:20023;" +
+                    "jdbc:sqlserver://localhost:20000;" +
                     "database=SummonersWar;user=admin;" +
                     "password=admin$%#@29174$%#@;" +
                     "encrypt=true;" +

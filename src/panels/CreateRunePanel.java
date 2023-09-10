@@ -2,6 +2,7 @@ package panels;
 
 import runes.Rune;
 import database.RuneDB;
+import subpanel.RuneScrollPanel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -26,7 +27,7 @@ public class CreateRunePanel extends  MyPanel {
     private JLabel top_panel_label;
     private JPanel top_panel;
     private JButton substatButton;
-    private JComboBox sub0;
+    private JComboBox sub_innate;
     private JPanel bottom_panel;
     private JLabel bottom_panel_label;
     private JComboBox sub1;
@@ -37,7 +38,7 @@ public class CreateRunePanel extends  MyPanel {
     private JLabel right_panel_label;
     private JPanel substat_panel;
     private JPanel mainstat_panel;
-    private JTextField sub_val0;
+    private JTextField sub_innateval;
     private JTextField sub_val1;
     private JTextField sub_val2;
     private JTextField sub_val3;
@@ -68,6 +69,8 @@ public class CreateRunePanel extends  MyPanel {
             return false;
         return true;
     }
+
+
     private void printSelection(){
         String grade=null;
         if(grade1.isSelected())grade = grade1.getText();
@@ -89,11 +92,11 @@ public class CreateRunePanel extends  MyPanel {
         else if(grade1.isSelected())return 5;
         else return 6;
     }
-    private Boolean getInnateSelected(){
-        if(!innate_yes.isSelected()&&!innate_no.isSelected())return null;
-        if(innate_yes.isSelected())return true;
-        if(innate_no.isSelected())return false;
-        return null;
+    private int getInnateSelected(){
+        if(!innate_yes.isSelected()&&!innate_no.isSelected())return -1;
+        if(innate_yes.isSelected())return 1;
+        if(innate_no.isSelected())return 0;
+        return -1;
     }
 
     private void clearSelection(){
@@ -103,12 +106,12 @@ public class CreateRunePanel extends  MyPanel {
         undoRadioBut(); //does nada
     }
     private void clearSubSelections(){
-        sub0.setSelectedIndex(0);
+        sub_innate.setSelectedIndex(0);
         sub1.setSelectedIndex(0);
         sub2.setSelectedIndex(0);
         sub3.setSelectedIndex(0);
         sub4.setSelectedIndex(0);
-        sub_val0.setText(null);
+        sub_innateval.setText(null);
         sub_val1.setText(null);
         sub_val2.setText(null);
         sub_val3.setText(null);
@@ -116,8 +119,8 @@ public class CreateRunePanel extends  MyPanel {
     }
     private void clearOneSubSelection(int a){
         switch (a){
-            case 0: sub0.setSelectedIndex(0);
-                    sub_val0.setText(null);
+            case 0: sub_innate.setSelectedIndex(0);
+                    sub_innateval.setText(null);
                     break;
             case 1: sub1.setSelectedIndex(0);
                 sub_val1.setText(null);
@@ -162,13 +165,13 @@ public class CreateRunePanel extends  MyPanel {
     }
     private void show_addSubsPanel(){
         if(innate_no.isSelected()){
-            sub0.setVisible(false);
-            sub_val0.setVisible(false);
+            sub_innate.setVisible(false);
+            sub_innateval.setVisible(false);
             innatelabel.setVisible(false);
             clearOneSubSelection(0);
         } else {
-            sub0.setVisible(true);
-            sub_val0.setVisible(true);
+            sub_innate.setVisible(true);
+            sub_innateval.setVisible(true);
             innatelabel.setVisible(true);
         }
         String current_data = getGradeSelected() + " star " + setList.getSelectedItem().toString() + " " + statList.getSelectedItem().toString() + " slot " +  posList.getSelectedItem().toString();
@@ -180,20 +183,20 @@ public class CreateRunePanel extends  MyPanel {
 
         frame.reframe();
 
-        //testScript2();
+        testScript2();
 
 
     }
     private boolean checkSubstatsInput(){
         int x;
-        if(getInnateSelected()){
-            if(sub0.getSelectedIndex()==0 || sub_val0.getText().equals("")){
+        if(getInnateSelected()==1){
+            if(sub_innate.getSelectedIndex()==0 || sub_innateval.getText().equals("")){
                 JOptionPane.showMessageDialog(frame, "Please input innate property and value", "Not enough data", JOptionPane.OK_OPTION, no);
                 return false;
             }
-            if(!sub_val0.equals("")){
+            if(!sub_innateval.equals("")){
                 try{
-                    x = Integer.parseInt(sub_val0.getText());
+                    x = Integer.parseInt(sub_innateval.getText());
                     if(x <= 0){
                         JOptionPane.showMessageDialog(frame, "Innate value cannot be zero or negative", "Wrong input", JOptionPane.OK_OPTION, no);
                         return false;
@@ -229,7 +232,7 @@ public class CreateRunePanel extends  MyPanel {
         if(!isExclusiveSubstats(getInnateSelected())) return false;
 
 
-        if(getInnateSelected()){
+        if(getInnateSelected()==1){
             if(failsIntegerRestriction(0) || failsIntegerRestriction(1) || failsIntegerRestriction(2) || failsIntegerRestriction(3) || failsIntegerRestriction(4) ) {
                 JOptionPane.showMessageDialog(frame, new String[]{"SPD and CR max sub-stat value is 35", "hp max sub-stat value is 2375", "atk and def max sub-stat value is 130", "All other substats max value is 50"}, "Wrong input", JOptionPane.OK_OPTION, no);
                 return false;
@@ -244,15 +247,15 @@ public class CreateRunePanel extends  MyPanel {
 
         return true;
     }
-    private boolean isExclusiveSubstats(Boolean innate){
+    private boolean isExclusiveSubstats(int innate){
         boolean test = true;
-        if(innate){
-            if(sub0.getSelectedIndex() == sub1.getSelectedIndex() || sub0.getSelectedIndex() == sub2.getSelectedIndex()
-                    || sub0.getSelectedIndex() == sub3.getSelectedIndex() || sub0.getSelectedIndex() == sub4.getSelectedIndex()){
+        if(innate == 1){
+            if(sub_innate.getSelectedIndex() == sub1.getSelectedIndex() || sub_innate.getSelectedIndex() == sub2.getSelectedIndex()
+                    || sub_innate.getSelectedIndex() == sub3.getSelectedIndex() || sub_innate.getSelectedIndex() == sub4.getSelectedIndex()){
                 JOptionPane.showMessageDialog(frame, "Substats cannot be the same as innate property", "Not enough data", JOptionPane.OK_OPTION, no);
                 return false;
             }
-            if(sub0.getSelectedIndex() == statList.getSelectedIndex()){
+            if(sub_innate.getSelectedIndex() == statList.getSelectedIndex()){
                 JOptionPane.showMessageDialog(frame, "Innate property cannot be the same as main stat", "Not enough data", JOptionPane.OK_OPTION, no);
                 return false;
             }
@@ -371,15 +374,15 @@ public class CreateRunePanel extends  MyPanel {
 //Def
 //HP
 
-        if(getInnateSelected()){
+        if(getInnateSelected()==1){
             if(posList.getSelectedIndex() == 1){
-                if(sub0.getSelectedIndex() == 4){
+                if(sub_innate.getSelectedIndex() == 4){
                     JOptionPane.showMessageDialog(frame, "Slot 1 rune cannot have DEF% innate property", "Rune sub-property error", JOptionPane.OK_OPTION, no);
                     return false;
                 }
             }
             if(posList.getSelectedIndex() == 3){
-                if(sub0.getSelectedIndex() == 2){
+                if(sub_innate.getSelectedIndex() == 2){
                     JOptionPane.showMessageDialog(frame, "Slot 3 rune cannot have ATT% innate property", "Rune sub-property error", JOptionPane.OK_OPTION, no);
                     return false;
                 }
@@ -409,14 +412,14 @@ public class CreateRunePanel extends  MyPanel {
     private boolean failsIntegerRestriction(int a) {
 
             if (a == 0) {
-            if (sub0.getSelectedIndex() == 11)
-                if (Integer.parseInt(sub_val0.getText()) > 2375) return true;
-                if (sub0.getSelectedIndex() == 10 || sub0.getSelectedIndex() == 9)
-                    if (Integer.parseInt(sub_val0.getText()) > 130) return true;
-                if (sub0.getSelectedIndex() == 1 || sub0.getSelectedIndex() == 5)
-                    if (Integer.parseInt(sub_val0.getText()) > 35) return true;
-                if (sub0.getSelectedIndex() == 2 || sub0.getSelectedIndex() == 2 || sub0.getSelectedIndex() == 4 || sub0.getSelectedIndex() == 6 || sub0.getSelectedIndex() == 8)
-                    if (Integer.parseInt(sub_val0.getText()) > 50) return true;
+            if (sub_innate.getSelectedIndex() == 11)
+                if (Integer.parseInt(sub_innateval.getText()) > 2375) return true;
+                if (sub_innate.getSelectedIndex() == 10 || sub_innate.getSelectedIndex() == 9)
+                    if (Integer.parseInt(sub_innateval.getText()) > 130) return true;
+                if (sub_innate.getSelectedIndex() == 1 || sub_innate.getSelectedIndex() == 5)
+                    if (Integer.parseInt(sub_innateval.getText()) > 35) return true;
+                if (sub_innate.getSelectedIndex() == 2 || sub_innate.getSelectedIndex() == 2 || sub_innate.getSelectedIndex() == 4 || sub_innate.getSelectedIndex() == 6 || sub_innate.getSelectedIndex() == 8)
+                    if (Integer.parseInt(sub_innateval.getText()) > 50) return true;
             }
 
             if (a == 1) {
@@ -426,7 +429,7 @@ public class CreateRunePanel extends  MyPanel {
                     if (Integer.parseInt(sub_val1.getText()) > 130) return true;
                 if (sub1.getSelectedIndex() == 1 || sub1.getSelectedIndex() == 5)
                     if (Integer.parseInt(sub_val1.getText()) > 35) return true;
-                if (sub0.getSelectedIndex() == 2 || sub0.getSelectedIndex() == 2 || sub0.getSelectedIndex() == 4 || sub0.getSelectedIndex() == 6 || sub0.getSelectedIndex() == 8)
+                if (sub_innate.getSelectedIndex() == 2 || sub_innate.getSelectedIndex() == 2 || sub_innate.getSelectedIndex() == 4 || sub_innate.getSelectedIndex() == 6 || sub_innate.getSelectedIndex() == 8)
                     if (Integer.parseInt(sub_val1.getText()) > 50) return true;
             }
             if (a == 2) {
@@ -436,7 +439,7 @@ public class CreateRunePanel extends  MyPanel {
                     if (Integer.parseInt(sub_val2.getText()) > 130) return true;
                 if (sub2.getSelectedIndex() == 1 || sub2.getSelectedIndex() == 5)
                     if (Integer.parseInt(sub_val2.getText()) > 35) return true;
-                if (sub0.getSelectedIndex() == 2 || sub0.getSelectedIndex() == 2 || sub0.getSelectedIndex() == 4 || sub0.getSelectedIndex() == 6 || sub0.getSelectedIndex() == 8)
+                if (sub_innate.getSelectedIndex() == 2 || sub_innate.getSelectedIndex() == 2 || sub_innate.getSelectedIndex() == 4 || sub_innate.getSelectedIndex() == 6 || sub_innate.getSelectedIndex() == 8)
                     if (Integer.parseInt(sub_val2.getText()) > 50) return true;
             }
             if (a == 3) {
@@ -446,7 +449,7 @@ public class CreateRunePanel extends  MyPanel {
                     if (Integer.parseInt(sub_val3.getText()) > 130) return true;
                 if (sub3.getSelectedIndex() == 1 || sub3.getSelectedIndex() == 5)
                     if (Integer.parseInt(sub_val3.getText()) > 35) return true;
-                if (sub0.getSelectedIndex() == 2 || sub0.getSelectedIndex() == 2 || sub0.getSelectedIndex() == 4 || sub0.getSelectedIndex() == 6 || sub0.getSelectedIndex() == 8)
+                if (sub_innate.getSelectedIndex() == 2 || sub_innate.getSelectedIndex() == 2 || sub_innate.getSelectedIndex() == 4 || sub_innate.getSelectedIndex() == 6 || sub_innate.getSelectedIndex() == 8)
                     if (Integer.parseInt(sub_val3.getText()) > 50) return true;
             }
             if (a == 4) {
@@ -456,7 +459,7 @@ public class CreateRunePanel extends  MyPanel {
                     if (Integer.parseInt(sub_val4.getText()) > 130) return true;
                 if (sub4.getSelectedIndex() == 1 || sub4.getSelectedIndex() == 5)
                     if (Integer.parseInt(sub_val4.getText()) > 35) return true;
-                if (sub0.getSelectedIndex() == 2 || sub0.getSelectedIndex() == 2 || sub0.getSelectedIndex() == 4 || sub0.getSelectedIndex() == 6 || sub0.getSelectedIndex() == 8)
+                if (sub_innate.getSelectedIndex() == 2 || sub_innate.getSelectedIndex() == 2 || sub_innate.getSelectedIndex() == 4 || sub_innate.getSelectedIndex() == 6 || sub_innate.getSelectedIndex() == 8)
                     if (Integer.parseInt(sub_val4.getText()) > 50) return true;
             }
 
@@ -468,8 +471,8 @@ public class CreateRunePanel extends  MyPanel {
         StringBuilder subs = new StringBuilder();
         runedata[0] = setList.getSelectedItem().toString() + " " + getGradeSelected() + " star";
         runedata[1] = statList.getSelectedItem().toString() + " slot " +  posList.getSelectedItem().toString();
-        if(getInnateSelected()!= null && getInnateSelected())
-            subs.append("Innate: " + sub0.getSelectedItem() + " " + sub_val0.getText() + "\n");
+        if(getInnateSelected()!= -1 && getInnateSelected()==1)
+            subs.append("Innate: " + sub_innate.getSelectedItem() + " " + sub_innateval.getText() + "\n");
         subs.append(sub1.getSelectedItem().toString() + " " + sub_val1.getText() + "\n");
         subs.append(sub2.getSelectedItem().toString() + " " + sub_val2.getText() + "\n");
         subs.append(sub3.getSelectedItem().toString() + " " + sub_val3.getText() + "\n");
@@ -494,8 +497,8 @@ public class CreateRunePanel extends  MyPanel {
     }
 
     private void testScript2(){
-        sub0.setSelectedIndex(4);
-        sub_val0.setText("8");
+        sub_innate.setSelectedIndex(4);
+        sub_innateval.setText("8");
         sub1.setSelectedIndex(7);
         sub_val1.setText("11");
         sub2.setSelectedIndex(1);
@@ -508,46 +511,29 @@ public class CreateRunePanel extends  MyPanel {
 
     private String convertStatToEnum(String s){
 
-        switch(s){
-            case "SPD": return "spd";
-            case "ATK%" : return "ATK";
-            case "HP%" : return "HP";
-            case "DEF%" : return "DEF";
-            case "CRte%" : return "crte";
-            case "CDmg%" : return "cdmg";
-            case "ACC%" :  return "acc";
-            case "RES%" : return "res";
-            case "Att" : return "atk";
-            case "Def" : return "def";
-            case "HP" : return "hp";
-        }
+        if(s.equals("CRte%") || s.equals("CDmg%")) s = s.replace("%","");
+
         return s;
     }
 
     private Rune createRune(){
         Rune rune;
-        // grade set pos innate stat...
-        String r = "";
         String set, pos, stat, grade, innate;
-        set = setList.getSelectedItem().toString().toLowerCase();
+        set = setList.getSelectedItem().toString();
         pos = posList.getSelectedItem().toString();
-        stat = statList.getSelectedItem().toString().replace("%","");
-        if(stat.equals("CDmg") || stat.equals("CRte") || stat.equals("RES") || stat.equals("ACC"))stat = stat.toLowerCase();
+        stat = convertStatToEnum(statList.getSelectedItem().toString());
         grade = String.valueOf(getGradeSelected());
-        innate = getInnateSelected()? "yes" : "no";
-        //r += String.format("%s %s %s %s %s ", grade, set, pos, innate, stat);
+        innate = getInnateSelected() == 1 ? "1" : "0";
         rune = new Rune(grade, set, pos, innate, stat);
-        //Rune r = new Rune("Violent", "3", "Def", "6", "yes");
-        System.out.println("created");
-        if (getInnateSelected()) {
-            rune.addRuneSubstat(convertStatToEnum(sub0.getSelectedItem().toString()), sub_val0.getText());
-        }
+
         rune.addRuneSubstat(convertStatToEnum(sub1.getSelectedItem().toString()), sub_val1.getText());
         rune.addRuneSubstat(convertStatToEnum(sub2.getSelectedItem().toString()), sub_val2.getText());
         rune.addRuneSubstat(convertStatToEnum(sub3.getSelectedItem().toString()), sub_val3.getText());
         rune.addRuneSubstat(convertStatToEnum(sub4.getSelectedItem().toString()), sub_val4.getText());
-        System.out.println(rune);
-        //r.printJSON();
+        if (innate == "1") {
+            rune.addRuneSubstat(convertStatToEnum(sub_innate.getSelectedItem().toString()), sub_innateval.getText());
+        }
+        System.out.println(rune.toStringGUI());
         return rune;
     }
 
@@ -562,7 +548,7 @@ public class CreateRunePanel extends  MyPanel {
 
         hide_addSubsPanel();
         substatButton.setVisible(false);
-//        testScript1();
+        testScript1();
 
         enterButton.addActionListener(e -> {
             boolean test_completeness = (applySelections()) ? true : false;
@@ -591,7 +577,7 @@ public class CreateRunePanel extends  MyPanel {
         enterSubsButton.addActionListener(e -> {
 
             if(!checkSubstatsInput()){
-                //JOptionPane.showMessageDialog(parentFrame, "Please enter all substat properties and their values");
+                JOptionPane.showMessageDialog(frame, "Please enter all substat properties and their values");
 
             }else{
                 if(checkSubRestrictions()){
@@ -609,7 +595,8 @@ public class CreateRunePanel extends  MyPanel {
                         cnnct.closeConnection();
                         if(accept){
                             frame.mainApp_panel.offlineRuneBag.add(r);
-                            frame.mainApp_panel.addRowToTable(r);
+                            RuneScrollPanel temp = (RuneScrollPanel) frame.mainApp_panel.rune_scroll_panel;
+                            temp.addRow(r);
                             frame.changePanel_BackToMainApp();
                         }
                     }

@@ -52,7 +52,7 @@ public class MainAppPanel extends MyPanel {
     private JScrollPane monster_scroll_pane;
     private JPanel monster_pane;
     private JPanel center_panel;
-    private JScrollPane rune_scroll_panel;
+    public JScrollPane rune_scroll_panel;
     private JPanel rune_pane;
     private JPanel rune_left;
     private JPanel rune_right;
@@ -81,7 +81,7 @@ public class MainAppPanel extends MyPanel {
         frame.setSizeTo(0,0);
 
         frame.setCurrentUserID(1);
-//        parentFrame.setCurrentUserID(10);
+//        frame.setCurrentUserID(10);
 
         setImagesNText("", runeoff);
         after_load_panel.setVisible(false);
@@ -141,7 +141,7 @@ public class MainAppPanel extends MyPanel {
         });
         add_new_rune_button.addActionListener( e-> {
                 frame.changePanel_NewRune();
-                frame.reframe();
+//                frame.reframe();
 
         });
 //        selectMonsterButton.addActionListener(e -> {

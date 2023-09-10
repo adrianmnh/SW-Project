@@ -71,7 +71,7 @@ public class MainStat{
 
     public String toString(){
         String toReturn = "";
-        if(this.percent == true) toReturn = mainstat + ": " + value + "%";
+        if(this.percent == true ||  this.mainstat == RuneStat.CRte || this.mainstat == RuneStat.CDmg) toReturn = mainstat + ": " + value + "%";
         else if(this.percent == false)toReturn = mainstat + ": " + value;
         return toReturn;
     }
