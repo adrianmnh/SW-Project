@@ -1,6 +1,6 @@
 package panels;
 
-import DBdrivers.UserDB;
+import database.UserDB;
 import classes.User;
 
 import javax.swing.*;

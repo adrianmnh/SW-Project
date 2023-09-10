@@ -6,7 +6,7 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import DBdrivers.RuneDB;
+import database.RuneDB;
 
 public class Main {
 

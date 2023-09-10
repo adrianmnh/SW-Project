@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Define container and image names
-CONTAINER_NAME=test-container
-IMAGE_NAME=test-image
+CONTAINER_NAME=sw-base-container
+IMAGE_NAME=sw-base-image
 
 # Check if the container is already running
 if [ "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then

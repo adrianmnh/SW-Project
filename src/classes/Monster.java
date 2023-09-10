@@ -1,6 +1,6 @@
 package classes;
 
-import DBdrivers.MonsterDB;
+import database.MonsterDB;
 
 import java.util.ArrayList;
 

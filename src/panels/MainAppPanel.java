@@ -1,8 +1,8 @@
 package panels;
 
 import classes.Monster;
-import DBdrivers.MonsterDB;
-import DBdrivers.RuneDB;
+import database.MonsterDB;
+import database.RuneDB;
 import classes.subclasses.MonsterImageIcon;
 import runes.Rune;
 import runes.SubStat;

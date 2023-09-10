@@ -1,7 +1,7 @@
 package panels;
 
 import runes.Rune;
-import DBdrivers.RuneDB;
+import database.RuneDB;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
