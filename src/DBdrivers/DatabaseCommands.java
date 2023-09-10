@@ -1,4 +1,4 @@
-package classes;
+package database;
 
 import javax.management.Query;
 import java.sql.ResultSet;

@@ -1,6 +1,6 @@
-package classes;
+package database;
 
-import runes.Rune;
+import classes.User;
 //import classes.User;
 
 import java.sql.*;

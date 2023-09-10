@@ -1,4 +1,4 @@
-package classes;
+package database;
 import runes.Rune;
 
 import java.sql.*;
@@ -25,7 +25,7 @@ public abstract class Database {
         try{
 
             String connectionString = "" +
-                    "jdbc:sqlserver://localhost:20003;" +
+                    "jdbc:sqlserver://localhost:1433;" +
                     "database=SummonersWar;user=admin;" +
                     "password=admin$%#@29174$%#@;" +
                     "encrypt=true;" +

@@ -1,4 +1,4 @@
-package classes;
+package database;
 import runes.Rune;
 
 import java.sql.ResultSet;
