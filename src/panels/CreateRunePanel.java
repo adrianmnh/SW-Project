@@ -1,7 +1,7 @@
 package panels;
 
 import runes.Rune;
-import classes.RuneDB;
+import DBdrivers.RuneDB;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -147,7 +147,9 @@ public class CreateRunePanel extends  MyPanel {
         mainstat_panel.setVisible(true);
         substatButton.setVisible(true);
         mainstat_buttons.setVisible(true);
-        hide_addSubsPanel();
+//        hide_addSubsPanel();
+//        frame.reframe();
+
 
     }
     private void hide_mainStatPanel(){
@@ -156,7 +158,7 @@ public class CreateRunePanel extends  MyPanel {
     private void hide_addSubsPanel(){
         substat_panel.setVisible(false);
         substat_buttons.setVisible(false);
-        frame.repack();
+//        frame.reframe();
     }
     private void show_addSubsPanel(){
         if(innate_no.isSelected()){
@@ -176,7 +178,7 @@ public class CreateRunePanel extends  MyPanel {
         mainstat_panel.setVisible(false);
         mainstat_buttons.setVisible(false);
 
-        frame.repack();
+        frame.reframe();
 
         //testScript2();
 
@@ -579,7 +581,7 @@ public class CreateRunePanel extends  MyPanel {
         clearButton.addActionListener(e -> {
                 clearSelection();
                 substatButton.setVisible(false);
-                frame.repack();
+                frame.reframe();
         });
         substatButton.addActionListener(e -> {
 
@@ -622,6 +624,7 @@ public class CreateRunePanel extends  MyPanel {
         backSubsButton.addActionListener(e -> {
             hide_addSubsPanel();
             show_mainStatPanel();
+            frame.reframe();
         });
         posList.addActionListener(e -> {
             switch(posList.getSelectedIndex()){
@@ -643,7 +646,7 @@ public class CreateRunePanel extends  MyPanel {
                 frame.changePanel_BackToMainApp();
 //                parentFrame.engrave_panel.bottom_panel.setVisible(false);
 //                parentFrame.engrave_panel.OLDrune_scroll_panel.setVisible(false);
-//                parentFrame.pack();
+                frame.reframe();
 
             }
         });

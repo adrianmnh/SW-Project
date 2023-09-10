@@ -1,8 +1,8 @@
 package panels;
 
 import classes.Monster;
-import classes.MonsterDB;
-import classes.RuneDB;
+import DBdrivers.MonsterDB;
+import DBdrivers.RuneDB;
 import classes.subclasses.MonsterImageIcon;
 import runes.Rune;
 import runes.SubStat;
@@ -19,7 +19,6 @@ import java.util.ArrayList;
 public class MainAppPanel extends MyPanel {
 
     private JPanel mainPanel;
-    private JPanel monsterPanel;
     private JLabel pos1;
     private JLabel pos2;
     private JLabel pos3;
@@ -30,10 +29,9 @@ public class MainAppPanel extends MyPanel {
     private JPanel left_panel;
     private JButton load_runes_button;
     private JButton add_new_rune_button;
-    private JComboBox p3;
-    private JComboBox p2;
-    private JComboBox p1;
-    public JLabel selected_monster_label;
+    private JComboBox statPriority1;
+    private JComboBox statPrioritry2;
+    private JComboBox statPriority3;
     private JButton equipRuneButton;
     private JButton removeAllButton;
     private JButton findBestSetButton;
@@ -42,12 +40,13 @@ public class MainAppPanel extends MyPanel {
     public JScrollPane OLDrune_scroll_panel;
     private JButton selectMonsterButton;
     private JPanel after_load_panel;
-    public JTable OLDmonster_table;
     public JPanel bottom_panel;
     private JButton load_monsters_button;
-    private JScrollPane OLDmonster_scroll_panel;
+    public JTable OLDmonster_table;
     private JPanel OLDmonster_panel;
+    private JScrollPane OLDmonster_scroll_panel;
     private JPanel OLDrune_panel;
+    public JLabel selected_monster_label;
     public JLabel monster_name_label;
     private JTextPane current_stats_label;
     private JScrollPane monster_scroll_pane;
@@ -59,6 +58,7 @@ public class MainAppPanel extends MyPanel {
     private JPanel rune_right;
     private JPanel stat_opt_pane;
     private JPanel OLD;
+    private JPanel pos2_3pane;
     private ImageIcon runeoff = getImg("ui/runeoff.png");
     private ImageIcon left_panel_cover_img = getImg("ui/ifrit.png");
     private ImageIcon thumbs = getImg("ui/thumbs.png");
@@ -105,7 +105,7 @@ public class MainAppPanel extends MyPanel {
         OLDrune_table.setBackground(new Color(242,242,242));
         selectMonsterButton.setVisible(false);
     }
-    public MainAppPanel(MainFrame f){
+    public MainAppPanel(MainFrame f, int userID){
         super(f);
         System.out.println("Starting Main App panel...");
 //        setParent(f);
@@ -162,8 +162,8 @@ public class MainAppPanel extends MyPanel {
             if(currentMonster.getID()==0){
                 JOptionPane.showMessageDialog(frame, "Please select a monster", "Not enough data", 2, thumbs);
             }else{
-                if(p1.getSelectedIndex()>0 && p2.getSelectedIndex()>0
-                        && p3.getSelectedIndex()>0) {
+                if(statPriority1.getSelectedIndex()>0 && statPrioritry2.getSelectedIndex()>0
+                        && statPriority3.getSelectedIndex()>0) {
                     optimize();
                     for(int i = 0; i<6;i++){
                         System.out.print(runesEquipped[i]+" ");
@@ -411,9 +411,9 @@ public class MainAppPanel extends MyPanel {
 
     private void optimize(){
 
-        String p1s = subStatFormat(p1);
-        String p2s = subStatFormat(p2);
-        String p3s = subStatFormat(p3);
+        String p1s = subStatFormat(statPriority1);
+        String p2s = subStatFormat(statPrioritry2);
+        String p3s = subStatFormat(statPriority3);
         String set = subStatFormat(s1);
         int i;
         i = checkPos(1, p1s,p2s, p3s, set);
@@ -763,8 +763,6 @@ public class MainAppPanel extends MyPanel {
                 mon.setCR(mon.getCR()+12*a);
             }
 
-//            System.out.println("CURRENT\n"+currentMonster);
-
             String plus = " + ";
             StringBuilder sb = new StringBuilder();
             if(!booleanVariable){
@@ -805,9 +803,9 @@ public class MainAppPanel extends MyPanel {
     }
 
     private void testScript1(){
-        p1.setSelectedIndex(1);
-        p2.setSelectedIndex(2);
-        p3.setSelectedIndex(3);
+        statPriority1.setSelectedIndex(1);
+        statPrioritry2.setSelectedIndex(2);
+        statPriority3.setSelectedIndex(3);
         monsterSelectedID = 10;
         selectMonsterButton.doClick();
     }

@@ -1,6 +1,6 @@
 package panels;
 
-import classes.UserDB;
+import DBdrivers.UserDB;
 import classes.User;
 
 import javax.swing.*;
@@ -79,7 +79,7 @@ public class LoginPanel extends MyPanel {
         loggedlabel.setText("Welcome " + user_login.getText() + "!");
         mainPanel.setVisible(true);
         newAccountButton.setVisible(false);
-        frame.repackAfterLogin();
+        frame.reframe();
     }
 
     public void initialSetup(){

@@ -40,12 +40,9 @@ public class MainFrame extends JFrame {
     public IconArrayList<MyImageIcon> uiResources;
     public MainAppPanel mainApp_panel;
 
-    private String OS;
+    private String OperatingSystem;
 
-    private String EXEType;
-
-    private String rootDir;
-    //= new MainAppPanel(this);
+    private String ExecutableType;
 
     public int getCurrentUserID(){
         return this.currentUserID;
@@ -54,10 +51,6 @@ public class MainFrame extends JFrame {
         this.currentUserID = id;
     }
     public boolean parentBool = false;
-
-    public void setBut(){
-        parentBool = parentBool ? true : false;
-    }
 
     public JPanel getMainAppPanel(){
         return this.mainApp_panel;
@@ -103,17 +96,21 @@ public class MainFrame extends JFrame {
     }
     public MainFrame() throws IOException, InterruptedException {
         super("Main Application");
-        setEXEType();
+        setEXECType();
         setOS();
 
 //        setUIFont(new FontUIResource(new Font("Segoe UI", Font.BOLD, 12)));
+//        UIManager.put("Panel.background", Color.YELLOW);
+//        UIManager.put("OptionPane.background", Color.YELLOW);
+
 
         loadAssets();
 
         createResources();
 
-        mainApp_panel = new MainAppPanel(this);
         login_panel = new LoginPanel(this);
+        login_panel = new LoginPanel(this);
+        mainApp_panel = new MainAppPanel(this, 1);
         rune_panel = new CreateRunePanel(this);
 
         this.setAlwaysOnTop(true);
@@ -140,7 +137,7 @@ public class MainFrame extends JFrame {
         this.setSize(1,1);
         this.framepanel = jp;
         this.setContentPane(framepanel);
-        this.pack();
+        this.reframe();
     }
     public void changePanel_NewRune() {
         rune_panel = new CreateRunePanel(this);
@@ -150,7 +147,8 @@ public class MainFrame extends JFrame {
         this.setSize(1,1);
         this.framepanel = rune_panel.getMain();
         this.setContentPane(framepanel);
-        this.pack();
+
+        this.reframe();
 //        this.setLocation(this.getX()+350, this.getY()+100);
     }
     public void changePanel_MainApp() {
@@ -164,7 +162,8 @@ public class MainFrame extends JFrame {
 //        this.pack();
 //        this.setSize(1042, 720);
 //        setSizeTo(200,0);
-        this.pack();
+        this.reframe();
+
 
 //        this.setLocation(this.getX()-450, this.getY()-100);
     }
@@ -184,27 +183,17 @@ public class MainFrame extends JFrame {
         //engrave_panel.getLoadRunes().doClick();
     }
 
-    public void repackAfterLogin(){
-        this.pack();
-    }
-
-    public void repack(){
-        this.pack();
-    }
-
-//    public ArrayList<String> loadLocalAssetsInJAR(){
     public void loadAssets(){
 
         this.uiFiles = new ArrayList<>();
         this.monsterFiles = new ArrayList<>();
-        String message = null;
 
-        if(this.EXEType == "jar"){
+        if(this.ExecutableType == "jar"){
             try {
                 Path root = null;
                 String monterJarPath = null;
                 monterJarPath = MainFrame.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-                if(this.OS == "windows"){
+                if(this.OperatingSystem == "windows"){
                     monterJarPath = monterJarPath.replace("/", "\\");
                     monterJarPath = monterJarPath.substring(1, monterJarPath.length());
                 }
@@ -270,7 +259,6 @@ public class MainFrame extends JFrame {
 //            message = "Assets read from "+folder.getPath();
         }
 
-//        return monsterAssetList;
     }
     private void createResources(){
         System.out.println("Creating Resources should be first\n\n***********************");
@@ -293,25 +281,25 @@ public class MainFrame extends JFrame {
         System.out.print("Setting OS to: ");
         String os = System.getProperty("os.name").toUpperCase();
         if(os.contains("LINUX")){
-            this.OS = "linux";
+            this.OperatingSystem = "linux";
         } else if(os.contains("WINDOWS")){
-            this.OS = "windows";
-        } else this.OS = "mac";
+            this.OperatingSystem = "windows";
+        } else this.OperatingSystem = "mac";
         System.out.println(os);
     }
 
     public String getEXEType(){
-        return this.EXEType;
+        return this.ExecutableType;
     }
 
-    private void setEXEType(){
+    private void setEXECType(){
         String jarPath = getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
         if (jarPath.endsWith(".jar")) {
             System.out.println("RUNNING FROM JAR");
-            this.EXEType = "jar";
+            this.ExecutableType = "jar";
         } else {
             System.out.println("RUNNING FORM EXEcute class");
-            this.EXEType = "class";
+            this.ExecutableType = "class";
         }
     }
 

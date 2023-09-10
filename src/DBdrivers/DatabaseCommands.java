@@ -1,10 +1,4 @@
-package database;
-
-import javax.management.Query;
-import java.sql.ResultSet;
-import java.sql.Connection;
-import java.sql.Statement;
-import java.util.ArrayList;
+package DBdrivers;
 
 public interface DatabaseCommands {
 
