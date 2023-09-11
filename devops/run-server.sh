@@ -18,18 +18,19 @@ fi
 if [ "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
   echo "Container '$CONTAINER_NAME' is already running."
 else
-  # Prompt the user for SA password
-  read -sp "Enter SA password: " SA_PASSWORD
+  # Prompt the user for SA password for the user container
+  read -sp "Enter SA password for the user container: " SA_PASSWORD
   echo
 
   # Prompt the user for the port number
-  read -p "Enter port number (default is 1433): " PORT_NUMBER
+  read -p "Enter port number for the user container (default is 1433): " PORT_NUMBER
   PORT_NUMBER=${PORT_NUMBER:-1433}
 
   # Create the full image name
   IMAGE_NAME="$DOCKERHUB_USERNAME/$REPO_NAME:$TAG"
 
-  # Run the SQL Server container
+
+  # Run the SQL Server container with user-defined SA_PASSWORD and port number
   docker run -d -e 'ACCEPT_EULA=Y' -e "SA_PASSWORD=$SA_PASSWORD" -p $PORT_NUMBER:1433 --name $CONTAINER_NAME $IMAGE_NAME
 
   # Check if the container started successfully

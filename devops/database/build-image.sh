@@ -33,6 +33,12 @@ if [ "$(docker ps -a -q -f name=$CONTAINER_NAME)" ]; then
         if [ $? -eq 0 ]; then
             echo "Image '$IMAGE_NAME:$IMAGE_TAG' pushed to Docker Hub successfully."
             echo "Image '$IMAGE_NAME:latest' pushed to Docker Hub successfully."
+
+						# Remove the container
+						docker rm $CONTAINER_NAME
+						
+
+						exit 0
         else
             echo "Failed to push image to Docker Hub."
             exit 1

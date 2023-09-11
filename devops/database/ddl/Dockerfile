@@ -10,7 +10,6 @@ COPY . /usr/src/app
              
 # Set environment variables, not have to write them with the docker run command
 # Note: make sure that your password matches what is in the run-initialization script 
-# ENV SA_PASSWORD Legion1@#$
 ENV ACCEPT_EULA Y
 # ENV MSSQL_PID Express
 
@@ -19,4 +18,4 @@ ENV ACCEPT_EULA Y
 EXPOSE 1433
 
 # Run Microsoft SQL Server and initialization script (at the same time)
-CMD /bin/bash ./entry-point.sh $SA_PASSWORD
+CMD /bin/bash ./entrypoint.sh $SA_PASSWORD
