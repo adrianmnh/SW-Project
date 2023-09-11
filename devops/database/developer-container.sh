@@ -14,10 +14,10 @@ else
         echo "Using existing image '$IMAGE_NAME'."
     else
         echo "Building image '$IMAGE_NAME'..."
-        docker build -t $IMAGE_NAME ./ddl
+        docker build -t $IMAGE_NAME /database/ddl
     fi
 
-    Prompt the user to enter SA_PASSWORD
+    # Prompt the user to enter SA_PASSWORD
     read -sp "Enter SA password for the base container: " SA_PASSWORD
     echo
 
@@ -31,7 +31,7 @@ else
         exit 1
     fi
 
-    Run the SQL Server container with user-defined SA_PASSWORD and port number
+    # Run the SQL Server container with user-defined SA_PASSWORD and port number
     docker run -d -e 'ACCEPT_EULA=Y' -e "SA_PASSWORD=$SA_PASSWORD" -p $PORT_NUMBER:1433 --name $CONTAINER_NAME $IMAGE_NAME
     # docker run -d -e 'ACCEPT_EULA=Y' -p $PORT_NUMBER:1433 --name $CONTAINER_NAME $IMAGE_NAME
 
