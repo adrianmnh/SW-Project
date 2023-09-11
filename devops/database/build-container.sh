@@ -14,7 +14,7 @@ else
         echo "Using existing image '$IMAGE_NAME'."
     else
         echo "Building image '$IMAGE_NAME'..."
-        docker build -t $IMAGE_NAME /database/ddl
+        docker build -t $IMAGE_NAME ./database/ddl
     fi
 
 
