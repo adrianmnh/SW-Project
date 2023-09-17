@@ -25,10 +25,10 @@ fi
 
 if [[ $REMOVE == "Y" || $REMOVE == "y" ]]; then
     # Build the SQL Server image (if not already built)
-    if [ "$(docker images -q $IMAGE_NAME)" ]; then
-        echo "
-    Using existing image '$IMAGE_NAME'."
-    else
+#    if [ "$(docker images -q $IMAGE_NAME)" ]; then
+#        echo "
+#    Using existing image '$IMAGE_NAME'."
+#    else
         echo "
     Building image '$IMAGE_NAME'..."
         docker build -t $IMAGE_NAME ./database/ddl
