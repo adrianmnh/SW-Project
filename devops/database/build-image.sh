@@ -5,7 +5,7 @@ CONTAINER_NAME="sw-base-container"
 
 # Define the name and tag for the new Docker image
 IMAGE_NAME="adriannoa91/sw-tool"
-IMAGE_TAG="v2.0"
+IMAGE_TAG="v2.1"
 
 # Check if the container with the given name exists
 if [ "$(docker ps -a -q -f name=$CONTAINER_NAME)" ]; then

@@ -2,11 +2,11 @@
 USE [Master];
 GO
 
-ALTER DATABASE [SummonersWar] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
-go
-
-DROP DATABASE [SummonersWar];
-go
+-- ALTER DATABASE [SummonersWar] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+-- go
+--
+-- DROP DATABASE [SummonersWar];
+-- go
 
 CREATE DATABASE [SummonersWar];
 go
@@ -16,7 +16,6 @@ SET
 MULTI_USER ,
 READ_WRITE
 go
-
 
 USE [SummonersWar]
 
@@ -106,7 +105,7 @@ CREATE TYPE [GameTool].[Email]
     FROM VARCHAR(50) NOT NULL
     go
 
-CREATE TYPE [GameTool].[PrimaryKey6]
+CREATE TYPE [GameTool].[PrimaryKey4]
     FROM INT NOT NULL
     go
 
@@ -126,8 +125,16 @@ CREATE TYPE [GameTool].[MonsterStatValue]
     FROM INTEGER NOT NULL
     go
 
-CREATE TYPE [GameTool].[ForeignKey]
+CREATE TYPE [GameTool].[SurrogateKey]
     FROM INT NOT NULL
+    go
+
+CREATE TYPE [PrimaryKey2]
+    FROM INT NOT NULL
+    go
+
+CREATE TYPE [BooleanInt]
+    FROM TINYINT NOT NULL
     go
 
     sp_addsrvrolemember 'admin', 'sysadmin'
@@ -139,13 +146,15 @@ CREATE TABLE [GameTool].[Account]
     [AccountUsername]    [GameTool].[Username] ,
     [AccountPassword]    [GameTool].[Password] ,
     [AccountEmail]       [GameTool].[Email] ,
-    CONSTRAINT [XPKAccount] PRIMARY KEY  CLUSTERED ([AccountId] ASC)
+    CONSTRAINT [PK_Account] PRIMARY KEY  CLUSTERED ([AccountId] ASC),
+    CONSTRAINT [AK_UniqueEmail] UNIQUE ([AccountEmail]  ASC),
+    CONSTRAINT [AK_UniqueUsername] UNIQUE ([AccountUsername]  ASC)
     )
     go
 
 CREATE TABLE [GameTool].[Monster]
 (
-    [MonsterId]          [GameTool].[PrimaryKey3]  IDENTITY ( 1000,1 ) ,
+    [MonsterId]          [PrimaryKey2]  IDENTITY ( 100,1 ) ,
     [MonsterName]        [GameTool].[MonsterName] ,
     [MonsterHP]          [GameTool].[MonsterStatValue]
     CONSTRAINT [CK_StatValue_1345395308]
@@ -171,17 +180,25 @@ CREATE TABLE [GameTool].[Monster]
     [MonsterACC]         [GameTool].[MonsterStatValue]
     CONSTRAINT [CK_StatValue_827407896]
     CHECK  ( MonsterACC BETWEEN 0 AND 999999 ),
-    CONSTRAINT [XPKMonster] PRIMARY KEY  CLUSTERED ([MonsterId] ASC)
+    CONSTRAINT [PK_Monster] PRIMARY KEY  CLUSTERED ([MonsterId] ASC),
+    CONSTRAINT [AK_UniqueMonster] UNIQUE ([MonsterName]  ASC)
     )
     go
 
 CREATE TABLE [GameTool].[Summon]
 (
     [AccountMonsterId]   [GameTool].[PrimaryKey3]  IDENTITY ( 1000,1 ) ,
-    [MonsterId]          [GameTool].[PrimaryKey3]  NULL
-    INDEX [XIF1AccontMonster] NONCLUSTERED  ,
-    CONSTRAINT [XPKAccontMonster] PRIMARY KEY  CLUSTERED ([AccountMonsterId] ASC),
-    CONSTRAINT [FK_MonsterSummon] FOREIGN KEY ([MonsterId]) REFERENCES [GameTool].[Monster]([MonsterId])
+    [MonsterId]          [PrimaryKey2]  NOT NULL
+    INDEX [XFK_MonsterSummon] NONCLUSTERED  ,
+    [AccountId]          [GameTool].[PrimaryKey]  NULL
+    INDEX [XFK_AccountSummon] NONCLUSTERED  ,
+    [SummonName]         [GameTool].[MonsterName] ,
+    CONSTRAINT [PK_Summon] PRIMARY KEY  CLUSTERED ([AccountMonsterId] ASC),
+    CONSTRAINT [AK_UniqueSummon] UNIQUE ([MonsterId]  ASC,[SummonName]  ASC,[AccountId]  ASC),
+    CONSTRAINT [FK_Account_Summon] FOREIGN KEY ([AccountId]) REFERENCES [GameTool].[Account]([AccountId])
+    ON DELETE SET NULL
+    ON UPDATE NO ACTION,
+    CONSTRAINT [FK_Monster_Summon] FOREIGN KEY ([MonsterId]) REFERENCES [GameTool].[Monster]([MonsterId])
     ON DELETE CASCADE
     ON UPDATE NO ACTION
     )
@@ -189,9 +206,9 @@ CREATE TABLE [GameTool].[Summon]
 
 CREATE TABLE [GameTool].[Rune]
 (
-    [RuneId]             [GameTool].[PrimaryKey6]  IDENTITY ( 1000000,1 ) ,
+    [RuneId]             [PrimaryKey2]  IDENTITY ( 100,1 ) ,
     [AccountId]          [GameTool].[PrimaryKey]  NOT NULL
-    INDEX [XIF1Rune] NONCLUSTERED  ,
+    INDEX [XFK_AccountRune] NONCLUSTERED  ,
     [RuneGrade]          [GameTool].[Grade]
     CONSTRAINT [CK_Grade_317387518]
     CHECK  ( [RuneGrade]=5 OR [RuneGrade]=6 ),
@@ -231,9 +248,12 @@ CREATE TABLE [GameTool].[Rune]
     CHECK  ( Runestat4val >= 1 ),
     [Runeinnatestat]     [GameTool].[InnateStat] ,
     [Runeinnateval]      [GameTool].[InnateStatValue] ,
-    CONSTRAINT [XPKRune] PRIMARY KEY  CLUSTERED ([RuneId] ASC),
-    CONSTRAINT [FK_AccountRune] FOREIGN KEY ([AccountId]) REFERENCES [GameTool].[Account]([AccountId])
-    ON DELETE SET NULL
+    [Engraved]           [BooleanInt]
+    CONSTRAINT [DF_BooleanFalse_1165685170]
+    DEFAULT  0,
+    CONSTRAINT [PK_Rune] PRIMARY KEY  CLUSTERED ([RuneId] ASC),
+    CONSTRAINT [FK_Account_Rune] FOREIGN KEY ([AccountId]) REFERENCES [GameTool].[Account]([AccountId])
+    ON DELETE CASCADE
     ON UPDATE NO ACTION
     )
     go
@@ -241,94 +261,48 @@ CREATE TABLE [GameTool].[Rune]
 CREATE TABLE [GameTool].[Engraved]
 (
     [AccountId]          [GameTool].[PrimaryKey]
-     INDEX [XIF1AccountAccontMonster] NONCLUSTERED  ,
+     INDEX [XPK_AccountEngraved] NONCLUSTERED  ,
     [MonsterId]          [GameTool].[PrimaryKey3]
-     INDEX [XIF2AccountAccontMonster] NONCLUSTERED  ,
-    [Rune1]              [GameTool].[PrimaryKey6]  NULL
-     INDEX [XIF3AccountAccontMonster] NONCLUSTERED  ,
-    [Rune2]              [GameTool].[PrimaryKey6]  NULL
-     INDEX [XIF4AccountAccontMonster] NONCLUSTERED  ,
-    [Rune3]              [GameTool].[PrimaryKey6]  NULL
-     INDEX [XIF5AccountAccontMonster] NONCLUSTERED  ,
-    [Rune4]              [GameTool].[PrimaryKey6]  NULL
-     INDEX [XIF6AccountAccontMonster] NONCLUSTERED  ,
-    [Rune5]              [GameTool].[PrimaryKey6]  NULL
-     INDEX [XIF7AccountAccontMonster] NONCLUSTERED  ,
-    [Rune6]              [GameTool].[PrimaryKey6]  NULL
-     INDEX [XIF8AccountAccontMonster] NONCLUSTERED  ,
-     CONSTRAINT [XPKAccountAccontMonster] PRIMARY KEY  CLUSTERED ([AccountId] ASC,[MonsterId] ASC),
-    CONSTRAINT [PK_AccountEngraved] FOREIGN KEY ([AccountId]) REFERENCES [GameTool].[Account]([AccountId])
-    ON UPDATE NO ACTION,
-    CONSTRAINT [PK_SummonEngraved] FOREIGN KEY ([MonsterId]) REFERENCES [GameTool].[Summon]([AccountMonsterId])
-    ON UPDATE NO ACTION,
+     INDEX [XPK_SummonEngraved] NONCLUSTERED  ,
+    [Rune1]              [PrimaryKey2]  NULL
+     INDEX [XFK_Rune1] NONCLUSTERED  ,
+    [Rune2]              [PrimaryKey2]  NULL
+     INDEX [XFK_Rune2] NONCLUSTERED  ,
+    [Rune3]              [PrimaryKey2]  NULL
+     INDEX [XFK_Rune3] NONCLUSTERED  ,
+    [Rune4]              [PrimaryKey2]  NULL
+     INDEX [XFK_Rune4] NONCLUSTERED  ,
+    [Rune5]              [PrimaryKey2]  NULL
+     INDEX [XFK_Rune5] NONCLUSTERED  ,
+    [Rune6]              [PrimaryKey2]  NULL
+     INDEX [XFK_Rune6] NONCLUSTERED  ,
+     CONSTRAINT [PK_AccountMonster] PRIMARY KEY  CLUSTERED ([AccountId] ASC,[MonsterId] ASC),
+    CONSTRAINT [AK_UniqueRunes] UNIQUE ([Rune1]  ASC,[Rune2]  ASC,[Rune3]  ASC,[Rune4]  ASC,[Rune5]  ASC,[Rune6]  ASC),
     CONSTRAINT [FK_Rune1] FOREIGN KEY ([Rune1]) REFERENCES [GameTool].[Rune]([RuneId])
-    ON DELETE SET NULL
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION,
     CONSTRAINT [FK_Rune2] FOREIGN KEY ([Rune2]) REFERENCES [GameTool].[Rune]([RuneId])
-    ON DELETE SET NULL
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION,
     CONSTRAINT [FK_Rune3] FOREIGN KEY ([Rune3]) REFERENCES [GameTool].[Rune]([RuneId])
-    ON DELETE SET NULL
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION,
     CONSTRAINT [FK_Rune4] FOREIGN KEY ([Rune4]) REFERENCES [GameTool].[Rune]([RuneId])
-    ON DELETE SET NULL
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION,
     CONSTRAINT [FK_Rune5] FOREIGN KEY ([Rune5]) REFERENCES [GameTool].[Rune]([RuneId])
-    ON DELETE SET NULL
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION,
     CONSTRAINT [FK_Rune6] FOREIGN KEY ([Rune6]) REFERENCES [GameTool].[Rune]([RuneId])
-    ON DELETE SET NULL
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+    CONSTRAINT [PK_EngravedAccount] FOREIGN KEY ([AccountId]) REFERENCES [GameTool].[Account]([AccountId])
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+    CONSTRAINT [PK_EngravedSummon] FOREIGN KEY ([MonsterId]) REFERENCES [GameTool].[Summon]([AccountMonsterId])
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION
     )
     go
 
-    SET IDENTITY_INSERT GameTool.Account ON
 
-    GO
-
-    INSERT INTO GameTool.Account
-(AccountId, AccountUserName, AccountPassword, AccountEmail)
-    VALUES
-(1, 'adrian', 'password', 'anoa_apps@icloud.com'),
-(10, 'adrian2', 'password', 'email');
-
-GO
-
-SET IDENTITY_INSERT GameTool.Account OFF
-
-GO
-
-INSERT INTO GameTool.Monster
-VALUES
-    ('Artamiel', '11535', '604', '769', '95', '15', '50', '40', '0'),
-    ('Barbara', '9720', '845', '648', '108', '15', '50', '15', '25'),
-    ('Bastet', '11850', '637', '714', '99', '15', '50', '40', '0'),
-    ('Bellenus', '10215', '703', '758', '99', '15', '50', '15', '0'),
-    ('Chiwu', '12180', '780', '549', '103', '15', '50', '15', '40'),
-    ('Ethna', '10380', '845', '604', '119', '30', '50', '15', '0'),
-    ('Laika', '11040', '834', '571', '100', '15', '50', '15', '0'),
-    ('Monkey', '12180', '692', '637', '118', '15', '50', '15', '0'),
-    ('Oberon', '10050', '790', '681', '92', '15', '50', '40', '0'),
-    ('Perna', '12345', '878', '439', '109', '15', '50', '15', '0'),
-    ('Ryu', '10875', '823', '593', '103', '15', '50', '40', '15'),
-    ('Seara', '10875', '801', '615', '100', '15', '50', '15', '25'),
-    ('Susano', '8070', '911', '527', '107', '15', '50', '15', '25'),
-    ('Sylvia', '11040', '692', '714', '104', '15', '50', '15', '0'),
-    ('Theomars', '10875', '823', '593', '100', '30', '50', '15', '0'),
-    ('Tiana', '11850', '725', '626', '96', '15', '50', '40', '0');
-
-GO
-
-
-INSERT INTO GameTool.Rune
-(AccountId, RuneGrade, RuneSet, RunePosition, RuneInnate, RuneMainStat, Runestat1, Runestat1val, Runestat2, Runestat2val, Runestat3, Runestat3val, Runestat4, Runestat4val, Runeinnatestat, Runeinnateval)
-VALUES
-(1, 6, 'Violent', 1, 1, 'ATK', 'HP%', 23, 'ACC', 16, 'SPD', 5, 'CRte', 10, 'CDmg', 6),
-(1, 6, 'Violent', 6, 0, 'ATK%', 'CDmg', 11, 'SPD', 25, 'CRte', 5, 'HP%', 22, NULL, NULL),
-(1, 6, 'Violent', 4, 1, 'ATK%', 'HP%', 17, 'DEF', 55, 'SPD', 25, 'DEF%', 13, 'ATK', 18),
-(1, 6, 'Violent', 3, 1, 'DEF', 'ACC', 11, 'SPD', 14, 'CRte', 4, 'HP%', 16, 'DEF%', 8),
-(1, 6, 'Nemesis', 2, 0, 'SPD', 'ATK%', 15, 'HP%', 16, 'CRte', 16, 'RES', 13, NULL, NULL),
-(1, 6, 'Nemesis', 5, 1, 'HP', 'RES', 12, 'SPD', 24, 'ATK%', 11, 'HP%', 14, 'DEF%', 7);
-
-
-GO
