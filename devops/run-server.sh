@@ -37,7 +37,7 @@ else
 
   # Check if the container started successfully
   if [ "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
-    echo "SQL Server container '$CONTAINER_NAME' is running successfully on port $PORT_NUMBER!"
+    echo "SQL Server container '$CONTAINER_NAME' successfully deployed on port $PORT_NUMBER!"
   else
     echo "Error: Container '$CONTAINER_NAME' failed to start."
     exit 1
