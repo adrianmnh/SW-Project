@@ -7,11 +7,13 @@ import classes.subclasses.MyImageIcon;
 import panels.MainAppPanel;
 import panels.MainFrame;
 import panels.MyPanel;
+import runes.Rune;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashSet;
 
 public class MonsterScrollPanel extends JScrollPane{
 
@@ -60,8 +62,8 @@ public class MonsterScrollPanel extends JScrollPane{
         }
         COLUMNS = (size * REPEAT) / 2;
         if(size%2==1)   this.COLUMNS += 1;
-        System.out.println(size);
-        System.out.println(COLUMNS);
+//        System.out.println(size);
+//        System.out.println(COLUMNS);
 
         COLUMN_SIZE = ICON_DIMENSION * COLUMNS;
 
@@ -82,36 +84,14 @@ public class MonsterScrollPanel extends JScrollPane{
                 int col = e2.getX()/ICON_DIMENSION;
                 int pos = row * COLUMNS + col ;
                 int assetPosInList = pos;
-                System.out.println("row:" + row + " " + "col:" +col + " " + parentFrame.monsterResources.get(assetPosInList).name);
+                System.out.println("\n\nrow:" + row + " " + "col:" +col + " " + parentFrame.monsterResources.get(assetPosInList).name);
 
                 ImageIcon thumbs = parentFrame.uiResources.getImage("thumbs.png");
 //                thumbs = scaleImage(thumbs, (int) (thumbs.getIconWidth()*.8), (int) (thumbs.getIconHeight()*.8));
                 ImageIcon img = parentFrame.monsterResources.get(assetPosInList).img;
 
-//                int testCount=0;
-//                for (MyImageIcon img2 : parentFrame.monsterAssetIcons) {
-//                    ++testCount;
-//                    JLabel l = new JLabel(img2.img);
-//                    if(testCount%3==0) l.setFocusable(false);
-//                    monsterPanel.add(l);
-//                }
                 monsterObjectClicked = parentFrame.monsterResources.get(assetPosInList);
 
-
-//                JOptionPane optionPane = new JOptionPane(
-//                        "Select " + selectedMonster.monster.getName(),
-//                        JOptionPane.INFORMATION_MESSAGE,
-//                        JOptionPane.OK_CANCEL_OPTION,
-//                        null, new Object[] {new JLabel(img), JOptionPane.OK_OPTION, JOptionPane.CANCEL_OPTION}, JOptionPane.OK_OPTION
-//                        );
-//                optionPane.setMessageType(JOptionPane.PLAIN_MESSAGE);
-//                // Create a JDialog to display the option pane
-//                JDialog dialog = optionPane.createDialog(parentFrame, "Select Monster");
-//                dialog.setVisible(true);
-//                if (optionPane.getValue() != null && (int)optionPane.getValue() == JOptionPane.YES_OPTION) {
-//                    System.out.println("Button clicked!");
-//                    setSelectedMonster(assetPosInList);
-//                }
 
                 Object[] options = {"OK", "Cancel"}; // Custom button labels
                 int result = JOptionPane.showOptionDialog(
@@ -144,19 +124,43 @@ public class MonsterScrollPanel extends JScrollPane{
     }
     private void selectMonsterFromClick(int assetPosInList){
 
+        System.out.println("MonsterID Before: " + parentPanel.currentMonster.getId());
+
         this.monsterObjectSelected = this.monsterObjectClicked;
 
         this.monsterObjectSelected.img = scaleImage(monsterObjectSelected.img, 100,100);
 
         this.parentPanel.setSelectedMonster(monsterObjectSelected);
 
-        System.out.println(monsterObjectSelected);
+//        System.out.println(monsterObjectSelected);
 
         parentPanel.monster_name_label.setText(monsterObjectSelected.monster.getName());
 
         parentPanel.currentMonster = monsterObjectSelected.monster;
 
-        parentPanel.setMonsterLabelText(false);
+        parentPanel.updateStatDisplay(false);
+
+        if(parentPanel.monsterRuneMap.get(monsterObjectSelected.monster.getId())==null)
+            parentPanel.monsterRuneMap.put(monsterObjectSelected.monster.getId(), new HashSet<Rune>());
+
+        this.setRunesEquipped();
+
+
+    }
+
+    private void setRunesEquipped(){
+        int id = parentPanel.currentMonster.getId();
+        parentPanel.resetRuneArray();
+
+        RuneScrollPanel temp = (RuneScrollPanel) parentPanel.rune_scroll_panel;
+
+        temp.updateDisplay();
+        for(Rune r : parentPanel.monsterRuneMap.get(parentPanel.currentMonster.getId())){
+            parentPanel.runesEquipped[r.getPosInt()] = r.runeId;
+        }
+        parentPanel.updateStatDisplay(false);
+
+
     }
 
 
