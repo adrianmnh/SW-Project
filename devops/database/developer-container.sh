@@ -29,7 +29,7 @@ fi
 if [ "$(docker volume ls -q -f name=$DATA_VOLUME_NAME)" ]; then
     echo "Docker volume '$DATA_VOLUME_NAME' already exists."
 #    read -p "Remove the existing volume? (Y/n): " REMOVE_VOLUME
-    REMOVE_VOLUME="N"
+    REMOVE_VOLUME="Y"
     if [[ $REMOVE_VOLUME == "Y" || $REMOVE_VOLUME == "y" ]]; then
         docker volume rm $DATA_VOLUME_NAME
         echo "Docker volume '$DATA_VOLUME_NAME' removed."
