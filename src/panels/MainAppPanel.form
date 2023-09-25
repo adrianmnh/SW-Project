@@ -3,10 +3,10 @@
   <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="6" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="24" y="20" width="1398" height="1176"/>
+      <xy x="24" y="20" width="1398" height="813"/>
     </constraints>
     <properties>
-      <background color="-855310"/>
+      <background color="-14739957"/>
     </properties>
     <border type="none"/>
     <children>
@@ -25,16 +25,12 @@
       </grid>
       <scrollpane id="ca73" binding="monster_scroll_pane" custom-create="true">
         <constraints>
-          <grid row="3" column="1" row-span="1" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <minimum-size width="400" height="179"/>
-            <preferred-size width="400" height="179"/>
-            <maximum-size width="400" height="179"/>
-          </grid>
+          <grid row="3" column="1" row-span="1" col-span="2" vsize-policy="7" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <focusable value="false"/>
         </properties>
-        <border type="line">
+        <border type="none">
           <color color="-11924720"/>
         </border>
         <children>
@@ -42,6 +38,7 @@
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints/>
             <properties>
+              <background color="-14739957"/>
               <focusable value="false"/>
             </properties>
             <border type="none"/>
@@ -63,7 +60,9 @@
         <constraints>
           <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-14739957"/>
+        </properties>
         <border type="none"/>
         <children>
           <grid id="3a524" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -217,14 +216,14 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="b5045" class="javax.swing.JButton" binding="selectMonsterButton" default-binding="true">
+              <component id="b5045" class="javax.swing.JButton" binding="addMonsterButton">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <alignmentY value="0.0"/>
                   <iconTextGap value="0"/>
-                  <text value="Select Monster"/>
+                  <text value="Add Monsters"/>
                 </properties>
               </component>
             </children>
@@ -314,13 +313,15 @@
           </vspacer>
           <component id="8df81" class="javax.swing.JLabel" binding="selected_monster_label">
             <constraints>
-              <grid row="3" column="2" row-span="2" col-span="1" vsize-policy="0" hsize-policy="0" anchor="2" fill="0" indent="0" use-parent-layout="false">
+              <grid row="3" column="2" row-span="2" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="120" height="120"/>
               </grid>
             </constraints>
             <properties>
+              <horizontalAlignment value="0"/>
+              <horizontalTextPosition value="0"/>
               <text value="Monster Pic here"/>
-              <verticalAlignment value="1"/>
+              <verticalAlignment value="0"/>
             </properties>
           </component>
           <hspacer id="44718">
@@ -447,12 +448,12 @@
                   </model>
                 </properties>
               </component>
-              <component id="4da44" class="javax.swing.JButton" binding="equipRuneButton">
+              <component id="4da44" class="javax.swing.JButton" binding="runeMap">
                 <constraints>
                   <grid row="2" column="1" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="Equip Rune"/>
+                  <text value="Rune Map"/>
                 </properties>
               </component>
               <component id="143b7" class="javax.swing.JButton" binding="removeAllButton" default-binding="true">
@@ -492,7 +493,7 @@
                       <gridbag weightx="1.0" weighty="1.0"/>
                     </constraints>
                     <properties>
-                      <background color="-15465211"/>
+                      <enabled value="false"/>
                       <foreground color="-3023691"/>
                     </properties>
                     <border type="none"/>
@@ -509,9 +510,12 @@
                       <gridbag weightx="1.0" weighty="1.0"/>
                     </constraints>
                     <properties>
-                      <background color="-15465211"/>
+                      <enabled value="false"/>
                       <foreground color="-3023691"/>
                     </properties>
+                    <clientProperties>
+                      <html.disable class="java.lang.Boolean" value="true"/>
+                    </clientProperties>
                     <border type="none"/>
                     <children/>
                   </grid>
@@ -539,102 +543,6 @@
               <text value="Label"/>
             </properties>
           </component>
-        </children>
-      </grid>
-      <grid id="59b42" binding="OLD" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
-        <constraints>
-          <grid row="5" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <visible value="false"/>
-        </properties>
-        <border type="none"/>
-        <children>
-          <scrollpane id="ac0e4" binding="OLDmonster_scroll_panel">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <minimum-size width="120" height="160"/>
-                <maximum-size width="400" height="160"/>
-              </grid>
-            </constraints>
-            <properties>
-              <background color="-865456"/>
-              <horizontalScrollBarPolicy value="32"/>
-              <verticalScrollBarPolicy value="21"/>
-              <visible value="true"/>
-            </properties>
-            <border type="line">
-              <color color="-10161586"/>
-            </border>
-            <children>
-              <grid id="4870e" binding="OLDmonster_panel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                <margin top="0" left="0" bottom="0" right="0"/>
-                <constraints/>
-                <properties>
-                  <background color="-888482"/>
-                </properties>
-                <border type="none"/>
-                <children>
-                  <component id="fb6f4" class="javax.swing.JTable" binding="OLDmonster_table">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                        <minimum-size width="120" height="160"/>
-                        <maximum-size width="-1" height="160"/>
-                      </grid>
-                    </constraints>
-                    <properties>
-                      <autoResizeMode value="0"/>
-                      <fillsViewportHeight value="false"/>
-                      <gridColor color="-532645"/>
-                      <preferredScrollableViewportSize width="120" height="100"/>
-                      <selectionForeground color="-1"/>
-                      <showHorizontalLines value="true"/>
-                      <showVerticalLines value="true"/>
-                    </properties>
-                  </component>
-                </children>
-              </grid>
-            </children>
-          </scrollpane>
-          <scrollpane id="48d75" binding="OLDrune_scroll_panel">
-            <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="7" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <minimum-size width="240" height="360"/>
-                <preferred-size width="240" height="360"/>
-                <maximum-size width="240" height="360"/>
-              </grid>
-            </constraints>
-            <properties>
-              <verticalScrollBarPolicy value="22"/>
-              <visible value="true"/>
-            </properties>
-            <border type="none"/>
-            <children>
-              <grid id="e8930" binding="OLDrune_panel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                <margin top="0" left="0" bottom="0" right="0"/>
-                <constraints/>
-                <properties>
-                  <maximumSize width="34" height="54"/>
-                </properties>
-                <border type="none"/>
-                <children>
-                  <component id="6742d" class="javax.swing.JTable" binding="OLDrune_table">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties>
-                      <autoResizeMode value="0"/>
-                      <font size="12" style="1"/>
-                      <preferredScrollableViewportSize width="240" height="360"/>
-                      <showHorizontalLines value="true"/>
-                      <showVerticalLines value="true"/>
-                    </properties>
-                  </component>
-                </children>
-              </grid>
-            </children>
-          </scrollpane>
         </children>
       </grid>
       <hspacer id="95698">

@@ -1,10 +1,13 @@
 package panels;
 
+import classes.Monster;
 import classes.subclasses.IconArrayList;
 import classes.subclasses.MonsterImageIcon;
 import classes.subclasses.MyImageIcon;
+import database.MonsterDB;
 
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.io.File;
@@ -37,12 +40,21 @@ public class MainFrame extends JFrame {
     public ArrayList<String> monsterFiles;
     public ArrayList<String> uiFiles;
     public IconArrayList<MonsterImageIcon> monsterResources;
+    public IconArrayList<MonsterImageIcon> baseMonsters;
+
     public IconArrayList<MyImageIcon> uiResources;
     public MainAppPanel mainApp_panel;
+
+    public AddSummonPanel base_monster_panel;
 
     private String OperatingSystem;
 
     private String ExecutableType;
+
+    public Color baseColor = new Color(0x1F160B);
+    public Color baseRed = new Color(0x140505);
+
+    public Color fontColor = new Color(0xD1DCB5);
 
     public int getCurrentUserID(){
         return this.currentUserID;
@@ -74,66 +86,99 @@ public class MainFrame extends JFrame {
 
         this.pack();
 
-        // Check if there are at least two monitors
-        if (outputDevice.length >= 2) {
-            GraphicsDevice secondMonitor = outputDevice[1];
-            Rectangle bounds = secondMonitor.getDefaultConfiguration().getBounds();
-            int centerX = bounds.x + bounds.width / 2;
-            int centerY = bounds.y + bounds.height / 2;
-//            int centerY = bounds.y + bounds.height / 3;
+        this.setLocationRelativeTo(null);
 
-            // Calculate the position to center the JFrame on the second monitor
-            int frameX = centerX - this.getWidth() / 2;
-            int frameY = centerY - this.getHeight() / 2;
-//            int frameY = centerY + this.getHeight() / 4;
-            this.setLocation(frameX, frameY);
-//            this.setLocation(secondMonitor.getDefaultConfiguration().getBounds().x, 0);
-        } else {
-            this.setLocationRelativeTo(null);
-            System.out.println("There is no second monitor available.");
-        }
+        // Check if there are at least two monitors
+//        if (outputDevice.length >= 2) {
+//            GraphicsDevice secondMonitor = outputDevice[1];
+//            Rectangle bounds = secondMonitor.getDefaultConfiguration().getBounds();
+//            int centerX = bounds.x + bounds.width / 2;
+//            int centerY = bounds.y + bounds.height / 2;
+////            int centerY = bounds.y + bounds.height / 3;
+//
+//            // Calculate the position to center the JFrame on the second monitor
+//            int frameX = centerX - this.getWidth() / 2;
+//            int frameY = centerY - this.getHeight() / 2;
+////            int frameY = centerY + this.getHeight() / 4;
+//            this.setLocation(frameX, frameY);
+////            this.setLocation(secondMonitor.getDefaultConfiguration().getBounds().x, 0);
+//        } else {
+//            this.setLocationRelativeTo(null);
+//            System.out.println("There is no second monitor available.");
+//        }
 
     }
+
+    private void setUI(){
+        //        setUIFont(new FontUIResource(new Font("Segoe UI", Font.BOLD, 12)));
+        UIManager.put("Panel.background", baseColor);
+        UIManager.put("Panel.foreground", fontColor);
+
+        UIManager.put("OptionPane.background", baseColor);
+        UIManager.put("OptionPane.foreground", fontColor);
+
+        UIManager.put("ScrollPane.background", baseColor);
+        UIManager.put("ScrollPane.foreground", fontColor);
+
+//        UIManager.put("Label.background", Color.RED);
+        UIManager.put("Label.foreground", fontColor);
+
+        UIManager.put("TextField.background", baseColor);
+        UIManager.put("TextField.foreground", fontColor);
+
+        UIManager.put("TextArea.background", baseColor);
+        UIManager.put("TextArea.foreground", fontColor);
+
+        UIManager.put("TextPane.background", baseColor);
+        UIManager.put("TextPane.foreground", fontColor);
+
+//        UIManager.put("InternalFrame.activeTitleBackground", Color.ORANGE );
+//        UIManager.put("InternalFrame.activeTitleForeground", Color.RED);
+//        UIManager.put("InternalFrame.titleFont", new Font("Dialog", Font.PLAIN, 11));
+    }
+
     public MainFrame() throws IOException, InterruptedException {
         super("Main Application");
         setEXECType();
         setOS();
 
-//        setUIFont(new FontUIResource(new Font("Segoe UI", Font.BOLD, 12)));
-//        UIManager.put("Panel.background", Color.YELLOW);
-//        UIManager.put("OptionPane.background", Color.YELLOW);
+        setUI();
 
 
-        loadAssets();
+        loadAssetFilesFromLocation();
 
-        createResources();
+        createImageFromResources();
 
         login_panel = new LoginPanel(this);
         login_panel = new LoginPanel(this);
         mainApp_panel = new MainAppPanel(this, 1);
         rune_panel = new CreateRunePanel(this);
+        base_monster_panel = new AddSummonPanel(this);
 
         this.setAlwaysOnTop(true);
         this.setSize(100, 100);
         this.setIconImage(logo.getImage());
         this.setVisible(true);
-//        this.setResizable(false);
-        this.setResizable(true);
+        this.setResizable(false);
+//        this.setResizable(true);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 //        this.framepanel = login_panel.getMain();
+
+
         this.framepanel = mainApp_panel.getMain();
+//        this.framepanel = base_monster_panel.getMain();
 
 //        this.framepanel = rune_panel.getMain();
 
         //this.framepanel = engrave_panel.getMain();
         this.setContentPane(framepanel);
-//        this.setLocationRelativeTo(null);
 
         this.reframe();
 //        this.setLocation(750, 250);
     }
 
     public void changePanel(JPanel jp){
+        this.setVisible(true);
         this.setSize(1,1);
         this.framepanel = jp;
         this.setContentPane(framepanel);
@@ -143,11 +188,9 @@ public class MainFrame extends JFrame {
         rune_panel = new CreateRunePanel(this);
         System.out.println("Entered new rune panel...");
         this.setVisible(true);
-        //this.framepanel.removeAll();
         this.setSize(1,1);
         this.framepanel = rune_panel.getMain();
         this.setContentPane(framepanel);
-
         this.reframe();
 //        this.setLocation(this.getX()+350, this.getY()+100);
     }
@@ -183,7 +226,7 @@ public class MainFrame extends JFrame {
         //engrave_panel.getLoadRunes().doClick();
     }
 
-    public void loadAssets(){
+    public void loadAssetFilesFromLocation(){
 
         this.uiFiles = new ArrayList<>();
         this.monsterFiles = new ArrayList<>();
@@ -205,7 +248,7 @@ public class MainFrame extends JFrame {
                 for (ZipEntry monsterEntry = monsterZippedStream.getNextEntry(); monsterEntry != null; monsterEntry = monsterZippedStream.getNextEntry()) {
                     String content = new String(monsterZippedStream.readAllBytes(), StandardCharsets.UTF_8);
 //                    byte[] data = content.getBytes();
-                    if(monsterEntry.getName().startsWith("monsters/") && monsterEntry.getName().endsWith(".jpg")){
+                    if(monsterEntry.getName().startsWith("monsters/") && monsterEntry.getName().endsWith(".png")){
 //                        map.put(entry.getName(), content.getBytes());
 //                        map.put(entry.getName(), data);
                         this.monsterFiles.add(monsterEntry.getName());
@@ -260,11 +303,12 @@ public class MainFrame extends JFrame {
         }
 
     }
-    private void createResources(){
+    private void createImageFromResources(){
         System.out.println("Creating Resources should be first\n\n***********************");
 
         this.monsterResources = new IconArrayList();
         for ( String monsterAssetFile : this.monsterFiles) {
+//            System.out.println("monsterAssetFile :: "+monsterAssetFile);
             MonsterImageIcon icon = new MonsterImageIcon(monsterAssetFile);
             this.monsterResources.add(icon);
         }
@@ -274,6 +318,29 @@ public class MainFrame extends JFrame {
 //            System.out.println("icon :: "+icon.name);
 //            ImageIcon icon = getImageIcon(resourceAssetFile);
             this.uiResources.add(icon);
+        }
+
+        createBaseMonsters();
+    }
+
+    private void createBaseMonsters(){
+        this.baseMonsters = new IconArrayList();
+        MonsterDB monsterDB = new MonsterDB();
+        ArrayList<String> arrayList = monsterDB.getAllMonsters();
+        for ( String monsterName : arrayList ) {
+//            System.out.println(monsterName);
+
+            try {
+                Monster monster = new Monster(monsterName);
+                MonsterImageIcon monsterImageIcon =  this.monsterResources.get(monster.getName());
+                monsterImageIcon.monster = monster;
+                this.baseMonsters.add(monsterImageIcon);
+            } catch (Exception e) {
+                System.out.println(e.getLocalizedMessage());
+                System.out.println("Error: " + monsterName + " not found in Monster Image Resources");
+
+            }
+
         }
     }
 

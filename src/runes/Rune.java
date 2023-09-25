@@ -1,11 +1,10 @@
 package runes;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Rune implements Comparable<Rune> {
 
+    public int runeId;
     public RuneGrade runeGrade;
     private RuneSet runeSet;
     public RunePosition runePosition;
@@ -15,7 +14,6 @@ public class Rune implements Comparable<Rune> {
     public boolean isEquipped;
 
     /************************************** Constructors **************************************/
-
     public Rune(String grade, String set, String pos, String innate, String stat){
         setRuneGrade(grade);
         setRuneSet(set);
@@ -25,27 +23,36 @@ public class Rune implements Comparable<Rune> {
         subs = new ArrayList<>();
         this.isEquipped = false;
     }
+    public Rune(String runeID,
+                String grade, String set, String pos, String innate, String stat){
+        this(grade, set, pos, innate, stat);
+        setRuneId(runeID);
+    }
+
     public Rune(String longstring){
 //        System.out.println(longstring);
         String[] arr;
         arr = longstring.split(" ");
 //        System.out.println(Arrays.toString(arr));
-        setRuneGrade(arr[0]);
-        setRuneSet(arr[1]);
-        setRunePosition(arr[2]);
-        setRuneInnate(arr[3]);
-        setRuneMainStat(arr[4], arr[0]);
+        setRuneId(arr[0]);
+        setRuneGrade(arr[1]);
+        setRuneSet(arr[2]);
+        setRunePosition(arr[3]);
+        setRuneInnate(arr[4]);
+        setRuneMainStat(arr[5], arr[1]);
         subs = new ArrayList<>();
 
-        addRuneSubstat(arr[5], arr[6]);
-        addRuneSubstat(arr[7], arr[8]);
-        addRuneSubstat(arr[9], arr[10]);
-        addRuneSubstat(arr[11], arr[12]);
-        if(this.getRuneInnate()) addRuneSubstat(arr[13], arr[14]);
+        addRuneSubstat(arr[6], arr[7]);
+        addRuneSubstat(arr[8], arr[9]);
+        addRuneSubstat(arr[10], arr[11]);
+        addRuneSubstat(arr[12], arr[13]);
+        if(this.getRuneInnate()) addRuneSubstat(arr[14], arr[15]);
 
-        this.isEquipped = false;
+        int equipped = Integer.parseInt(arr[16]);
+        this.isEquipped = equipped == 1;
 //        System.out.println("********************Rune created********************");
     }
+    /************************************** Constructors **************************************/
 
     @Override
     public String toString() {
@@ -73,7 +80,9 @@ public class Rune implements Comparable<Rune> {
     }
 
 
-
+    private void setRuneId(String id){
+        this.runeId = Integer.parseInt(id);
+    }
     private void setRuneGrade(String x){
         int grade = Integer.parseInt(x);
         if(grade==6) this.runeGrade = RuneGrade.six;
@@ -110,6 +119,9 @@ public class Rune implements Comparable<Rune> {
     }
     public void addRuneSubstat(String sub, String val){
         this.subs.add(new SubStat(sub, val));
+    }
+    public int getId(){
+        return this.runeId;
     }
     public RuneGrade getGrade(){
         return this.runeGrade;

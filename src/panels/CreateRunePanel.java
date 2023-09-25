@@ -2,7 +2,7 @@ package panels;
 
 import runes.Rune;
 import database.RuneDB;
-import subpanel.RuneScrollPanel;
+import panels.subpanel.RuneScrollPanel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -510,9 +510,7 @@ public class CreateRunePanel extends  MyPanel {
     }
 
     private String convertStatToEnum(String s){
-
         if(s.equals("CRte%") || s.equals("CDmg%")) s = s.replace("%","");
-
         return s;
     }
 
@@ -591,9 +589,11 @@ public class CreateRunePanel extends  MyPanel {
                         RuneDB cnnct = new RuneDB();
                         System.out.println("currentuserid: " + frame.getCurrentUserID());
                         Rune r = createRune();
-                        boolean accept = cnnct.addRuneToUser(frame.getCurrentUserID(), r);
+                        int runePrimarykey = cnnct.execAddRune(frame.getCurrentUserID(), r);
+                        r.runeId = runePrimarykey;
                         cnnct.closeConnection();
-                        if(accept){
+                        boolean accepted = (runePrimarykey != -1) ? true : false;
+                        if(accepted){
                             frame.mainApp_panel.offlineRuneBag.add(r);
                             RuneScrollPanel temp = (RuneScrollPanel) frame.mainApp_panel.rune_scroll_panel;
                             temp.addRow(r);
@@ -633,7 +633,7 @@ public class CreateRunePanel extends  MyPanel {
                 frame.changePanel_BackToMainApp();
 //                parentFrame.engrave_panel.bottom_panel.setVisible(false);
 //                parentFrame.engrave_panel.OLDrune_scroll_panel.setVisible(false);
-                frame.reframe();
+//                frame.reframe();
 
             }
         });

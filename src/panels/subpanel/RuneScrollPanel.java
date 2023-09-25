@@ -1,4 +1,4 @@
-package subpanel;
+package panels.subpanel;
 
 import classes.subclasses.MonsterImageIcon;
 import classes.subclasses.MonsterRuneMap;
@@ -41,17 +41,18 @@ public class RuneScrollPanel extends JScrollPane{
     public ImageIcon runeNotAvailable;
 
     public RuneScrollPanel(MyPanel parentPanel, JPanel panel, JPanel l1, JPanel l2)  {
+        this.parentFrame = parentPanel.frame;
 
         this.runePanel = panel;
 
         this.left = l1;
+        this.left.setBackground(parentFrame.baseRed);
 
         this.right = l2;
 
 //        this.left2 = l2;
         this.parentPanel = (MainAppPanel) parentPanel;
 //        this.outerComponent = component;
-        this.parentFrame = parentPanel.frame;
 
 //        this.getHorizontalScrollBar().setUnitIncrement(16);
 
@@ -101,9 +102,14 @@ public class RuneScrollPanel extends JScrollPane{
             @Override
             public void mouseReleased(MouseEvent e2) {
 
+                JLabel message1 = new JLabel("To engrave runes");
+                JLabel message2 = new JLabel("Please selected a monster first.              ");
+//                message1.setForeground(FONT_COLOR);
+//                message2.setForeground(FONT_COLOR);
+
                 MonsterImageIcon monster = parentPanel.selectedMonster;
                 if(monster == null){
-                    JOptionPane.showMessageDialog(parentFrame,"To engrave runes,\nPlease selected a monster first.              ",
+                    JOptionPane.showMessageDialog(parentFrame, new Object[] { message1, message2 },
                             "Watcher", JOptionPane.INFORMATION_MESSAGE, runeAvailable);
                     return;
                 }
@@ -263,6 +269,7 @@ public class RuneScrollPanel extends JScrollPane{
             }
         });
 
+        parentFrame.reframe();
 
     }
     public void addRow(Rune r){
@@ -323,10 +330,11 @@ public class RuneScrollPanel extends JScrollPane{
         parentPanel.monsterRuneMap.get(parentPanel.monsterSelectedID).add(boxSelected.rune);
 
         RuneDB runeDB = new RuneDB();
-        boolean result = runeDB.execEngraveRuneQuery(parentFrame.getCurrentUserID(), parentPanel.currentMonster, boxSelected.rune);
+        int result = runeDB.execEngraveRuneQuery(parentFrame.getCurrentUserID(), parentPanel.currentMonster, boxSelected.rune);
         runeDB.closeConnection();
-        if (result) {
+        if (result != -1) {
             System.out.println("Rune Engraved");
+            System.out.println(result + " rows affected");
         } else {
             System.out.println("Rune Not Engraved");
         }

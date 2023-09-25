@@ -12,4 +12,5 @@ public abstract class MyPanel extends JPanel{
           super();
           setParent(PF);
      }
+     abstract JPanel getMain();
 }

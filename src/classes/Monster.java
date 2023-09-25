@@ -17,6 +17,8 @@ public class Monster {
     private int RES;
     private int ACC;
 
+    private int baseId;
+
     public Monster(){
         this.id = 0;
         this.name = null;
@@ -63,7 +65,7 @@ public class Monster {
         }
     }
 
-    public int getID(){return this.id;}
+    public int getId(){return this.id;}
     public String getName(){return this.name;}
     public int getHP(){return this.HP;}
     public int getATK(){return this.ATK;}
@@ -74,7 +76,7 @@ public class Monster {
     public int getRES(){return this.RES;}
     public int getACC(){return this.ACC;}
 
-    public void setID(int a){this.id = a;}
+    public void setID(int id){this.id = id;}
     public void setName(String a){this.name = a;}
     public void setHP(int a){this.HP = a;}
     public void setATK(int a){this.ATK = a;}
@@ -84,13 +86,15 @@ public class Monster {
     public void setCD(int a){this.CDmg = a;}
     public void setRES(int a){this.RES = a;}
     public void setACC(int a){this.ACC = a;}
+    public void setBaseId(int a){this.baseId = a;}
 
 
 
 
     public String toString(){
         StringBuilder build = new StringBuilder();
-        build.append("Monster name: " + this.name + "\n");
+        build.append("ID: " + this.id + " - ");
+        build.append("Monster: " + this.name + "\n");
         build.append("HP: " + this.HP + "\n" + "ATK: " + this.ATK + "\n");
         build.append("DEF: " + this.DEF + "\n" + "SPD: " + this.SPD + "\n");
         build.append("Crte: " + this.CRte + "\n" + "Cdmg: " + this.CDmg + "\n");

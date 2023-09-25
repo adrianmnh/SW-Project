@@ -7,6 +7,8 @@ TAG="latest"
 
 # Define your container name
 CONTAINER_NAME="SW-OptimizerTool-Db"
+DATA_VOLUME_NAME="SW-OptimizerTool-Volume"
+
 
 # Check if Docker is installed
 if ! [ -x "$(command -v docker)" ]; then
@@ -31,7 +33,7 @@ else
 
 
   # Run the SQL Server container with user-defined SA_PASSWORD and port number
-  docker run -d -e 'ACCEPT_EULA=Y' -e "SA_PASSWORD=$SA_PASSWORD" -p $PORT_NUMBER:1433 --name $CONTAINER_NAME $IMAGE_NAME
+  docker run -d -e 'ACCEPT_EULA=Y' -e "SA_PASSWORD=$SA_PASSWORD" -p $PORT_NUMBER:1433 --name $CONTAINER_NAME -v $DATA_VOLUME_NAME:/var/opt/mssql $IMAGE_NAME
 
   # Check if the container started successfully
   if [ "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then

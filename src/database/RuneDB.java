@@ -1,9 +1,11 @@
 package database;
+import classes.Monster;
+import classes.subclasses.RuneBag;
 import runes.Rune;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.sql.Statement;
 
 public class RuneDB extends Database {
 //    public ArrayList<Rune> runes;
@@ -14,22 +16,33 @@ public class RuneDB extends Database {
         setTable("GameTool.Rune");
     }
 
-    public boolean addRuneToUser(int user, Rune r){
+    public int execAddRune(int user, Rune r){
         boolean success = false;
+        int generatedId = -1;
         try{
-            String sqlQuery = addRuneSQLQuery(user, r);
-            System.out.println(getStatement().execute(sqlQuery)  );
-            System.out.printf("%s\n****rune added to user %d****", r, user);
+            String sqlQuery = insertRuneQuery(user, r);
+//            System.out.println( );
+            getStatement().executeUpdate(sqlQuery, Statement.RETURN_GENERATED_KEYS);
+            System.out.printf("%s\n****rune added to user %d****\n", r, user);
             success = true;
-            System.out.println("success: " + success);
+//            System.out.println("success: " + success
+//                    + "\nprimary key: " + primaryKey
+//                    + "\nsqlQuery: " + sqlQuery);
+
+            ResultSet generatedKeys = getStatement().getGeneratedKeys();
+            if (generatedKeys.next()) {
+                generatedId = generatedKeys.getInt(1); // Assuming the generated key is an integer
+                System.out.println("Inserted row with generated ID: " + generatedId);
+            }
         }catch (SQLException e){
             System.out.println("Error found: " + e);
             System.out.println("success: " + success);
             success = false;
         }
-        return success;
+        this.closeConnection();
+        return generatedId;
     }
-    private String addRuneSQLQuery(int user, Rune r){
+    private String insertRuneQuery(int user, Rune r){
         //checkIfUserHasRune(user, r);
         System.out.println("----------------------------------");
         int grade = Integer.parseInt(r.getGradeString());
@@ -50,58 +63,51 @@ public class RuneDB extends Database {
         } else {
             s.append(", null, null");
         }
+        s.append(", 0"); // is equipped
         s.append(");");
 
-        System.out.println(s.toString());
+//        System.out.println(s.toString());
 //        System.out.println("INSERT INTO " + this.getTable() + " VALUES (1, 6, 'Violent', 1, 1, 'ATK', 'HP%', 23, 'ACC', 16, 'SPD', 5, 'CRte', 10, 'CDmg', 6);");
 
         return s.toString();
     }
-//
-    public boolean userHasRune(int user, Rune rune){
-        boolean toReturn = false;
+    public int execEngraveRuneQuery(int user, Monster monster, Rune rune){
+        int rowsUpdated = -1;
+        String sql = "";
         try{
-            ArrayList<Rune> user_runes = getUserRunes(10);
-            for ( Rune r : user_runes ) {
-                if( rune.compareTo(r) == 0 ){
-                    System.out.println("Comparing, true flag hit, user has rune");
-                    return true;
-                }
-                System.out.print("-NOhit-  ");
-            }
+            sql = String.format("UPDATE %s SET Rune%d = %d WHERE AccountId = %d AND MonsterId = %d;",
+                    "GameTool.Engraved", rune.getPosInt(), rune.getId(), user, monster.getId());
+            System.out.println(sql);
+            rowsUpdated = getStatement().executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            System.out.println("Rows updated: " + rowsUpdated);
 
-            if(toReturn == false){
-//                getStatement().execute(addRuneSQLQuery(user, rune));
-//                System.out.println(rune+ " rune added to" + user);
-//                user_runes.add(rune);
-                return false;
-            }
-        }catch(Exception e){
-            System.out.println("Error found here. " + e.getLocalizedMessage());
+        } catch (SQLException e) {
+            System.out.println("Error found: " + e);
         }
-        return toReturn;
+        this.closeConnection();
+        return rowsUpdated;
     }
 //
-    public ArrayList<Rune> getUserRunes(int userid){
-        ArrayList<Rune> runes = null;
+    public RuneBag getUserRunes(int userid){
+        RuneBag runes = new RuneBag();
         try{
             String sqlQuery = "SELECT * FROM " + getTable() + " WHERE AccountId = " + userid;
             ResultSet result = getStatement().executeQuery(sqlQuery);
-            runes = new ArrayList();
             while(result.next()){
                 String r = "";
-                for(int i=3; i<=result.getMetaData().getColumnCount(); i++){
-                    if(result.getObject(i) != null )
+                for(int i=1; i<=result.getMetaData().getColumnCount(); i++){
+                    if(i!=2)
                         r += result.getObject(i) + " ";
                 }
+//                System.out.println(r);
                 runes.add(new Rune(r));
-                System.out.println("Rune from DB: " + r);
+//                System.out.println("Rune from DB: " + r);
             }
-            return runes;
+            this.closeConnection();
         }catch(Exception e){
             System.out.println("Error found. " + e);
         }
-        return null;
+        return runes;
     }
 
     public static void main(String[] args) {

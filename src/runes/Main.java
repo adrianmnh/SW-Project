@@ -47,7 +47,7 @@ public class Main {
         RuneDB connection = new RuneDB();
 //        connection.execQuery("delete from user_runes where userid = 10");
 //        connection.execQuery("ALTER TABLE user_runes AUTO_INCREMENT = 100;");
-        for(Rune r : mine)connection.addRuneToUser(10, r);
+        for(Rune r : mine)connection.execAddRune(10, r);
 //        //        //System.out.println(connection.userHasRune(10, mine.get(1)));
 //        connection.printAllTableData();
 //        ArrayList<Rune> test = connection.getUserRunes(10);
