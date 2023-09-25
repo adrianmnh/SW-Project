@@ -6,7 +6,11 @@ import java.awt.*;
 
 public class MacStyleScrollBarUI extends BasicScrollBarUI {
 
-    private final int THUMB_SIZE = 40;
+    private final int THUMB_SIZE = 30;
+    private final int WIDTH = 12;
+    private final int HEIGHT = 15;
+    private final Color BACKGROUND_COLOR = new Color(0, 0, 0, 0);
+    private final Color ACCENT_COLOR = new Color(0, 0, 0, 0);
 
     @Override
     protected Dimension getMaximumThumbSize() {
@@ -37,50 +41,69 @@ public class MacStyleScrollBarUI extends BasicScrollBarUI {
     }
 
     @Override
-    protected void paintTrack(Graphics grphcs, JComponent jc, Rectangle rctngl) {
-        Graphics2D g2 = (Graphics2D) grphcs;
+    protected void paintTrack(Graphics g, JComponent c, Rectangle trackBounds) {
+        Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        int orientation = scrollbar.getOrientation();
-        int size;
-        int x;
-        int y;
-        int width;
-        int height;
-        if (orientation == JScrollBar.VERTICAL) {
-            size = rctngl.width / 2;
-            x = rctngl.x + ((rctngl.width - size) / 2);
-            y = rctngl.y;
-            width = size;
-            height = rctngl.height;
-        } else {
-            size = rctngl.height / 2;
-            y = rctngl.y + ((rctngl.height - size) / 2);
-            x = 0;
-            width = rctngl.width;
-            height = size;
-        }
-        g2.setColor(Color.RED);
-        g2.fillRect(x, y, width, height);
+
+        int x = trackBounds.x;
+        int y = trackBounds.y;
+        int width = trackBounds.width;
+        int height = trackBounds.height;
+
+        // Decrease the track's width to 13 pixels and add 2 pixels to the left and right
+        int trackWidth = WIDTH - 8;
+
+        // Center the track within the original bounds
+        x += (width - trackWidth) / 2;
+        width = trackWidth;
+
+        g2.setColor(Color.PINK);
+        g2.fillRoundRect(x, y, width, height, 10, 10);
+        g2.dispose();
     }
 
     @Override
-    protected void paintThumb(Graphics grphcs, JComponent jc, Rectangle rctngl) {
-        Graphics2D g2 = (Graphics2D) grphcs;
+    protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
+        Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        int x = rctngl.x;
-        int y = rctngl.y;
-        int width = rctngl.width;
-        int height = rctngl.height;
-        if (scrollbar.getOrientation() == JScrollBar.VERTICAL) {
-            y += 8;
-            height -= 16;
-        } else {
-            x += 8;
-            width -= 16;
-        }
+
+        int x = thumbBounds.x;
+        int y = thumbBounds.y;
+        int width = thumbBounds.width;
+        int height = thumbBounds.height;
+
+        // Set the thumb's width to 15 pixels and add 2 pixels to the left and right
+        int thumbWidth = WIDTH - 2;
+
+        // Center the thumb within the original bounds
+        x += (width - thumbWidth) / 2;
+        width = thumbWidth;
+
         g2.setColor(Color.BLACK);
         g2.fillRoundRect(x, y, width, height, 10, 10);
+
+        g2.setColor(Color.PINK);
+        g2.drawRoundRect(x, y, width, height-1, 10, 10);
+
+        g2.dispose();
     }
+
+
+
+    @Override
+    public Dimension getPreferredSize(JComponent c) {
+        Dimension dim = super.getPreferredSize(c);
+
+        // Adjust the preferred size to half its size
+        if (scrollbar.getOrientation() == JScrollBar.VERTICAL) {
+            dim.width = WIDTH;
+        } else {
+            dim.height = dim.height / 2;
+        }
+
+        return dim;
+    }
+
 
     private class ScrollBarButton extends JButton {
 
