@@ -33,6 +33,10 @@ public class IconArrayList<MyImageIcon> extends ArrayList<MyImageIcon> implement
         return null;
     }
 
+    public MyImageIcon get(int index) {
+        return (MyImageIcon) ((classes.subclasses.MyImageIcon) super.get(index));
+    }
+
 
     @Override
     public Iterator<MyImageIcon> iterator() {

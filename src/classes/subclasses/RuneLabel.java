@@ -22,4 +22,8 @@ public class RuneLabel extends JLabel {
                 '}');
         return toReturn;
     }
+
+    public Rune getRune() {
+         return rune;
+    }
 }
