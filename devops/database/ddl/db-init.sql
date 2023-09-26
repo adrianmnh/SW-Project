@@ -1,4 +1,3 @@
-
 USE [Master];
 GO
 
@@ -26,7 +25,7 @@ DROP LOGIN [admin]
 go
 
 CREATE LOGIN admin
-WITH PASSWORD = 'admin$%#@29174$%#@',
+WITH PASSWORD = 'admin$%#@33096$%#@',
 DEFAULT_DATABASE = SummonersWar
 go
 
@@ -141,18 +140,6 @@ CREATE TYPE [BooleanInt]
     sp_addsrvrolemember 'admin', 'sysadmin'
     go
 
-CREATE TABLE [GameTool].[Account]
-(
-    [AccountId]          [GameTool].[PrimaryKey]  IDENTITY ( 10,1 ) ,
-    [AccountUsername]    [GameTool].[Username] ,
-    [AccountPassword]    [GameTool].[Password] ,
-    [AccountEmail]       [GameTool].[Email] ,
-    CONSTRAINT [PK_Account] PRIMARY KEY  CLUSTERED ([AccountId] ASC),
-    CONSTRAINT [AK_UniqueEmail] UNIQUE ([AccountEmail]  ASC),
-    CONSTRAINT [AK_UniqueUsername] UNIQUE ([AccountUsername]  ASC)
-    )
-    go
-
 CREATE TABLE [GameTool].[Monster]
 (
     [MonsterId]          [PrimaryKey2]  IDENTITY ( 100,1 ) ,
@@ -186,29 +173,22 @@ CREATE TABLE [GameTool].[Monster]
     )
     go
 
-CREATE TABLE [GameTool].[Summon]
+CREATE TABLE [GameTool].[Account]
 (
-    [SummonId]           [GameTool].[PrimaryKey3]  IDENTITY ( 1000,1 ) ,
-    [AccountId]          [GameTool].[PrimaryKey]  NULL
-    INDEX [XFK_AccountSummon] NONCLUSTERED  ,
-    [MonsterId]          [PrimaryKey2]  NOT NULL
-    INDEX [XFK_MonsterSummon] NONCLUSTERED  ,
-    [SummonName]         [GameTool].[MonsterName] ,
-    CONSTRAINT [PK_Summon] PRIMARY KEY  CLUSTERED ([SummonId] ASC),
-    CONSTRAINT [AK_UniqueSummon] UNIQUE ([MonsterId]  ASC,[SummonName]  ASC,[AccountId]  ASC),
-    CONSTRAINT [FK_Account_Summon] FOREIGN KEY ([AccountId]) REFERENCES [GameTool].[Account]([AccountId])
-    ON DELETE SET NULL
-    ON UPDATE NO ACTION,
-    CONSTRAINT [FK_Monster_Summon] FOREIGN KEY ([MonsterId]) REFERENCES [GameTool].[Monster]([MonsterId])
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION
+    [AccountId]          [GameTool].[PrimaryKey]  IDENTITY ( 10,1 ) ,
+    [AccountUsername]    [GameTool].[Username] ,
+    [AccountPassword]    [GameTool].[Password] ,
+    [AccountEmail]       [GameTool].[Email] ,
+    CONSTRAINT [PK_Account] PRIMARY KEY  CLUSTERED ([AccountId] ASC),
+    CONSTRAINT [AK_UniqueEmail] UNIQUE ([AccountEmail]  ASC),
+    CONSTRAINT [AK_UniqueUsername] UNIQUE ([AccountUsername]  ASC)
     )
     go
 
 CREATE TABLE [GameTool].[Rune]
 (
     [RuneId]             [PrimaryKey2]  IDENTITY ( 100,1 ) ,
-    [AccountId]          [GameTool].[PrimaryKey]  NOT NULL
+    [AccountId]          [GameTool].[SurrogateKey]  NOT NULL
     INDEX [XFK_AccountRune] NONCLUSTERED  ,
     [RuneGrade]          [GameTool].[Grade]
     CONSTRAINT [CK_Grade_317387518]
@@ -259,82 +239,51 @@ CREATE TABLE [GameTool].[Rune]
     )
     go
 
-CREATE TABLE [GameTool].[Engraved]
+CREATE TABLE [GameTool].[Summon]
 (
-    [AccountId]          [GameTool].[PrimaryKey]
-     INDEX [XPK_AccountEngraved] NONCLUSTERED  ,
-    [SummonId]           [GameTool].[PrimaryKey3]
-     INDEX [XPK_SummonEngraved] NONCLUSTERED  ,
-    [Rune1]              [PrimaryKey2]  NULL
-     INDEX [XFK_Rune1] NONCLUSTERED  ,
-    [Rune2]              [PrimaryKey2]  NULL
-     INDEX [XFK_Rune2] NONCLUSTERED  ,
-    [Rune3]              [PrimaryKey2]  NULL
-     INDEX [XFK_Rune3] NONCLUSTERED  ,
-    [Rune4]              [PrimaryKey2]  NULL
-     INDEX [XFK_Rune4] NONCLUSTERED  ,
-    [Rune5]              [PrimaryKey2]  NULL
-     INDEX [XFK_Rune5] NONCLUSTERED  ,
-    [Rune6]              [PrimaryKey2]  NULL
-     INDEX [XFK_Rune6] NONCLUSTERED  ,
-     CONSTRAINT [PK_AccountMonster] PRIMARY KEY  CLUSTERED ([AccountId] ASC,[SummonId] ASC),
-    CONSTRAINT [AK_UniqueRunes] UNIQUE ([Rune1]  ASC,[Rune2]  ASC,[Rune3]  ASC,[Rune4]  ASC,[Rune5]  ASC,[Rune6]  ASC,[SummonId]  ASC),
-    CONSTRAINT [FK_Rune1] FOREIGN KEY ([Rune1]) REFERENCES [GameTool].[Rune]([RuneId])
+    [SummonId]           [GameTool].[PrimaryKey3]  IDENTITY ( 1000,1 ) ,
+    [AccountId]          [GameTool].[SurrogateKey]  NULL
+    INDEX [XFK_AccountSummon] NONCLUSTERED  ,
+    [MonsterId]          [GameTool].[SurrogateKey]  NOT NULL
+    INDEX [XFK_MonsterSummon] NONCLUSTERED  ,
+    [Name]               [GameTool].[MonsterName] ,
+    [Rune1]              [GameTool].[SurrogateKey]  NULL
+    INDEX [XIF3Summon] NONCLUSTERED  ,
+    [Rune2]              [GameTool].[SurrogateKey]  NULL
+    INDEX [XIF4Summon] NONCLUSTERED  ,
+    [Rune3]              [GameTool].[SurrogateKey]  NULL
+    INDEX [XIF5Summon] NONCLUSTERED  ,
+    [Rune4]              [GameTool].[SurrogateKey]  NULL
+    INDEX [XIF6Summon] NONCLUSTERED  ,
+    [Rune5]              [GameTool].[SurrogateKey]  NULL
+    INDEX [XIF7Summon] NONCLUSTERED  ,
+    [Rune6]              [GameTool].[SurrogateKey]  NULL
+    INDEX [XIF8Summon] NONCLUSTERED  ,
+    CONSTRAINT [PK_Summon] PRIMARY KEY  CLUSTERED ([SummonId] ASC),
+    CONSTRAINT [AK_UniqueSummon] UNIQUE ([MonsterId]  ASC,[Name]  ASC,[AccountId]  ASC),
+    CONSTRAINT [Rune1] FOREIGN KEY ([Rune1]) REFERENCES [GameTool].[Rune]([RuneId])
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-    CONSTRAINT [FK_Rune2] FOREIGN KEY ([Rune2]) REFERENCES [GameTool].[Rune]([RuneId])
+    CONSTRAINT [Rune2] FOREIGN KEY ([Rune2]) REFERENCES [GameTool].[Rune]([RuneId])
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-    CONSTRAINT [FK_Rune3] FOREIGN KEY ([Rune3]) REFERENCES [GameTool].[Rune]([RuneId])
+    CONSTRAINT [Rune3] FOREIGN KEY ([Rune3]) REFERENCES [GameTool].[Rune]([RuneId])
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-    CONSTRAINT [FK_Rune4] FOREIGN KEY ([Rune4]) REFERENCES [GameTool].[Rune]([RuneId])
+    CONSTRAINT [Rune4] FOREIGN KEY ([Rune4]) REFERENCES [GameTool].[Rune]([RuneId])
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-    CONSTRAINT [FK_Rune5] FOREIGN KEY ([Rune5]) REFERENCES [GameTool].[Rune]([RuneId])
+    CONSTRAINT [Rune5] FOREIGN KEY ([Rune5]) REFERENCES [GameTool].[Rune]([RuneId])
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-    CONSTRAINT [FK_Rune6] FOREIGN KEY ([Rune6]) REFERENCES [GameTool].[Rune]([RuneId])
+    CONSTRAINT [Rune6] FOREIGN KEY ([Rune6]) REFERENCES [GameTool].[Rune]([RuneId])
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-    CONSTRAINT [PK_EngravedAccount] FOREIGN KEY ([AccountId]) REFERENCES [GameTool].[Account]([AccountId])
-    ON DELETE NO ACTION
+    CONSTRAINT [FK_Account_Summon] FOREIGN KEY ([AccountId]) REFERENCES [GameTool].[Account]([AccountId])
+    ON DELETE SET NULL
     ON UPDATE NO ACTION,
-    CONSTRAINT [PK_EngravedSummon] FOREIGN KEY ([SummonId]) REFERENCES [GameTool].[Summon]([SummonId])
+    CONSTRAINT [FK_Monster_Summon] FOREIGN KEY ([MonsterId]) REFERENCES [GameTool].[Monster]([MonsterId])
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
     )
     go
-
-CREATE OR ALTER TRIGGER GameTool.[Ti_AddEngraved] ON GameTool.Summon
-    AFTER INSERT
-
-  AS
-
-BEGIN
-  DECLARE  @numrows int
-
-SELECT @numrows = @@rowcount
-
-           PRINT(@numrows)
-
-DECLARE @AccountId integer
-DECLARE @MonsterId integer
-
-    IF (EXISTS (SELECT * FROM inserted))
-BEGIN
-INSERT INTO GameTool.Engraved ( AccountId, SummonId )
-SELECT AccountId, SummonId from Inserted
-
-
-END
-
-
-
-
-
-  RETURN
-
-END
-
-go
