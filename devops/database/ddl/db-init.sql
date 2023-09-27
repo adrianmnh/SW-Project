@@ -142,7 +142,7 @@ CREATE TYPE [BooleanInt]
 
 CREATE TABLE [GameTool].[Monster]
 (
-    [MonsterId]          [PrimaryKey2]  IDENTITY ( 100,1 ) ,
+    [MonsterId]          [GameTool].[PrimaryKey]  IDENTITY ( 11,1 ) ,
     [MonsterName]        [GameTool].[MonsterName] ,
     [MonsterHP]          [GameTool].[MonsterStatValue]
     CONSTRAINT [CK_StatValue_1345395308]
@@ -175,7 +175,7 @@ CREATE TABLE [GameTool].[Monster]
 
 CREATE TABLE [GameTool].[Account]
 (
-    [AccountId]          [GameTool].[PrimaryKey]  IDENTITY ( 10,1 ) ,
+    [AccountId]          [GameTool].[PrimaryKey]  IDENTITY ( 11,1 ) ,
     [AccountUsername]    [GameTool].[Username] ,
     [AccountPassword]    [GameTool].[Password] ,
     [AccountEmail]       [GameTool].[Email] ,
@@ -187,7 +187,7 @@ CREATE TABLE [GameTool].[Account]
 
 CREATE TABLE [GameTool].[Rune]
 (
-    [RuneId]             [PrimaryKey2]  IDENTITY ( 100,1 ) ,
+    [RuneId]             [PrimaryKey2]  IDENTITY ( 201,1 ) ,
     [AccountId]          [GameTool].[SurrogateKey]  NOT NULL
     INDEX [XFK_AccountRune] NONCLUSTERED  ,
     [RuneGrade]          [GameTool].[Grade]
@@ -241,10 +241,10 @@ CREATE TABLE [GameTool].[Rune]
 
 CREATE TABLE [GameTool].[Summon]
 (
-    [SummonId]           [GameTool].[PrimaryKey3]  IDENTITY ( 1000,1 ) ,
+    [SummonId]           [GameTool].[PrimaryKey3]  IDENTITY ( 3001,1 ) ,
     [AccountId]          [GameTool].[SurrogateKey]  NULL
     INDEX [XFK_AccountSummon] NONCLUSTERED  ,
-    [MonsterId]          [GameTool].[SurrogateKey]  NOT NULL
+    [MonsterId]          [GameTool].[PrimaryKey]  NOT NULL
     INDEX [XFK_MonsterSummon] NONCLUSTERED  ,
     [Name]               [GameTool].[MonsterName] ,
     [Rune1]              [GameTool].[SurrogateKey]  NULL
@@ -286,4 +286,11 @@ CREATE TABLE [GameTool].[Summon]
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
     )
+    go
+
+CREATE VIEW [GameTool].[UserSummons]([SummonId],[AccountId],[MonsterId],[MonsterName],[GivenName],[MonsterHP],[MonsterATK],[MonsterDEF],[MonsterSPD],[MonsterCRte],[MonsterCDmg],[MonsterRES],[MonsterACC],[Rune1],[Rune2],[Rune3],[Rune4],[Rune5],[Rune6])
+AS
+SELECT s.[SummonId],s.[AccountId],m.[MonsterId],m.[MonsterName],s.[Name],m.[MonsterHP],m.[MonsterATK],m.[MonsterDEF],m.[MonsterSPD],m.[MonsterCRte],m.[MonsterCDmg],m.[MonsterRES],m.[MonsterACC],s.[Rune1],s.[Rune2],s.[Rune3],s.[Rune4],s.[Rune5],s.[Rune6]
+FROM [GameTool].[Monster] m,[GameTool].[Summon] s
+WHERE m.MonsterId = s.MonsterId
     go
