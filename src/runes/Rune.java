@@ -1,5 +1,6 @@
 package runes;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 public class Rune implements Comparable<Rune> {
@@ -219,6 +220,23 @@ public class Rune implements Comparable<Rune> {
 
         return b.toString();
     }
+
+    public JLabel[] toStringLabels(){
+        JLabel[] labels = new JLabel[6];
+        labels[0] = new JLabel(String.format("%s %s ★", this.getSet().toString().toUpperCase(),
+                this.getGrade()));
+        labels[1] = new JLabel(String.format("Slot %s %s", this.getPos(), this.getMainStat().toString().toUpperCase()));
+        if(subs.size()>0){
+            if(getRuneInnate()){
+                labels[2] = new JLabel(String.format("innate %s",this.getSubStats().get(4)));
+            }
+            labels[3] = new JLabel(String.format("%s",this.getSubStats().get(0)).toUpperCase());
+            labels[4] = new JLabel(String.format("%s",this.getSubStats().get(1)).toUpperCase());
+            labels[5] = new JLabel(String.format("%s",this.getSubStats().get(2)).toUpperCase());
+        }
+        return labels;
+    }
+
     public void printJSON(){
 //        StringBuilder s = new StringBuilder();
 //        s.append("{\n");
