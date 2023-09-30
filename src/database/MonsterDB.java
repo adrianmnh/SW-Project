@@ -1,9 +1,12 @@
 package database;
 
+import classes.Monster;
+
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class MonsterDB extends Database implements DatabaseCommands{
+public class MonsterDB extends Database{
 //    private Connection con;
 //    private Statement query;
 //    private ResultSet result;
@@ -13,55 +16,35 @@ public class MonsterDB extends Database implements DatabaseCommands{
         setTable("GameTool.Monster");
     }
 
-    public void changeColumnName(String from, String to, int i){
+    public ArrayList<Object> removeUserSummon(int userId, int summonId, String summonName){
+        setTable("GameTool.Summon");
+        System.out.println("Removing Summon: " + summonId + " " + summonName + " from user: " + userId);
+        ArrayList<Object> deletedRows = new ArrayList<>();
+        HashMap<String, Object> map = new HashMap<>();
+        String query = String.format("DELETE FROM %s WHERE AccountId = %d AND SummonId = %d AND Name = '%s';", getTable(), userId, summonId, summonName);
+        map.put("query", query);
+        map.put("type", "delete");
 
-        if( i != 0 ) {
-            try {
-                System.out.println("Changing Column data of \"" + getTable() + "\":");
-
-                String sql = "ALTER TABLE `" + getTable() + "` CHANGE `" + from + "` `" + to + "` INT(" + i + ") NOT NULL;";
-
-                getStatement().execute(sql);
-
-                System.out.println(getStatement().getUpdateCount());
-
-
-            } catch (Exception ex) {
-                System.out.println("Error found :" + ex);
-            }
-        }
-    }
-    @Override
-    public void changeColumnNames() {
-//        changeColumnName("atk", "ATK", 4);
-//        changeColumnName("def", "DEF", 4);
-//        changeColumnName("spd", "SPD", 3);
-//        changeColumnName("crate", "CRte", 3);
-//        changeColumnName("cdmg", "CDmg", 3);
-//        changeColumnName("res", "RES", 3);
-//        changeColumnName("acc", "ACC", 3);
-    }
-    @Override
-    public void addData() {
-        addToMonsterDatabase();
+        deletedRows = this.execUpdate(map);
+        return deletedRows;
     }
 
-    public void removeMonsterFromDatabase(){
+    private ArrayList<Object> addUserSummon(int userId, Monster monster, String summonName){
+        setTable("GameTool.Summon");
+        System.out.println("Adding Summon: " + monster.getName() + " with alias " + summonName + " toUser user: " + userId);
+        ArrayList<Object> keyAdded = new ArrayList<>();
+        HashMap<String, Object> map = new HashMap<>();
+        String query = String.format("INSERT INTO %s (AccountId, MonsterId, Name) VALUES(%d, %d, '%s');", getTable(), userId, monster.getBaseId(), summonName);
+        map.put("query", query);
+        map.put("type", "keys");
+        keyAdded = this.execUpdate(map);
+        return keyAdded;
+    }
 
+    public ArrayList<String> getBaseMonsters(){
+
+        ArrayList<String> data = new ArrayList<>();
         try{
-            getStatement().execute("DELETE FROM " + getTable() + " WHERE Monster = 'NAME HERE' ");
-            System.out.println("Monsters deleted: " + getStatement().getUpdateCount());
-        } catch(SQLException e){
-            System.out.println("Error executing query: " + e);
-        }
-
-    }
-
-    public ArrayList<String> getAllMonsters(){
-
-
-        try{
-            ArrayList<String> data = new ArrayList<>();
 
             String sqlQuery = "";
             sqlQuery = String.format("SELECT * from %s ", getTable());
@@ -80,78 +63,17 @@ public class MonsterDB extends Database implements DatabaseCommands{
 //            System.out.println(r);
             }
 
-            return data;
 
 
 
         }catch(SQLException ex){
             System.out.println("Error found: " + ex);
+        } finally {
+            this.closeConnection();
+            return data;
         }
-        return null;
     }
-    private void addToMonsterDatabase(){
-        /*
-        Insert data to "monsters" table, no return value.
-         */
 
-        try{
-
-            StringBuilder build = new StringBuilder();
-            String mon = null;
-
-
-//            getStatement().execute("INSERT INTO `user_monsters` VALUE (null, 'Monster', '0', '0', '0', '0', '0', '0', '0', '0')");
-
-              //Artamiel
-//              mon = "(null, null, 'Artamiel', '11535', '604', '769', '95', '15', '50', '40', '0', '0')";
-            //Barbara
-//              mon = "(null, null, 'Barbara', '9720', '845', '648', '108', '15', '50', '15', '25', '0')";
-            //Bastet
-//              mon = "(null, null, 'Bastet', '11850', '637', '714', '99', '15', '50', '40', '0', '0')";
-            //Bellenus
-//              mon = "(null, null, 'Bellenus', '10215', '703', '758', '99', '15', '50', '15', '0', '0')";
-            //Chiwu
-//              mon = "(null, null, 'Chiwu', '12180', '780', '549', '103', '15', '50', '15', '40', '0')";
-            //Ethna
-//                mon = "(null, null, 'Ethna', '10380', '845', '604', '119', '30', '50', '15', '0', '0' )," +
-////            //Laika
-//                    "(null, null, 'Laika', '11040', '834', '571', '100', '15', '50', '15', '0', '0')," +
-////            //Monkey
-//                    "(null, null, 'Monkey', '12180', '692', '637', '118', '15', '50', '15', '0', '0')," +
-////            //Oberon
-//                    "(null, null, 'Oberon', '10050', '790', '681', '92', '15', '50', '40', '0', '0')," +
-////            //Perna
-//                    "(null, null, 'Perna', '12345', '878', '439', '109', '15', '50', '15', '0', '0')," +
-////            //DarkRyu
-//                    "(null, null, 'Ryu', '10875', '823', '593', '103', '15', '50', '40', '15', '0')," +
-////            //Seara
-//                    "(null, null, 'Seara', '10875', '801', '615', '100', '15', '50', '15', '25', '0')," +
-////            //Susano
-//                    "(null, null, 'Susano', '8070', '911', '527', '107', '15', '50', '15', '25', '0')," +
-////            //Sylvia
-//                    "(null, null, 'Sylvia', '11040', '692', '714', '104', '15', '50', '15', '0', '0')";
-
-//            //Theomars
-//            mon = "(null, null, 'Theomars', '10875', '823', '593', '100', '30', '50', '15', '0', '0')";
-
-////            //Tiana
-//            mon = "(null,null, 'Tiana', '11850', '725', '626', '96', '15', '50', '40', '0', '0')";
-
-
-
-            build.append("INSERT INTO " + getTable() + " VALUES " + mon );
-            getStatement().execute(build.toString());
-
-
-
-            System.out.println("Monsters Added: " + getStatement().getUpdateCount());
-
-        }catch(Exception ex){
-            System.out.println("Error is found :"+ex);
-
-        }
-
-    }
     /*
         *** Adding individual monsters to userid
      */
