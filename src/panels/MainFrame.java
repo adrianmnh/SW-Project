@@ -7,7 +7,6 @@ import classes.subclasses.MyImageIcon;
 import database.MonsterDB;
 
 import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.io.File;
@@ -28,7 +27,7 @@ public class MainFrame extends JFrame {
 
     private int currentUserID;
 
-    private JPanel framepanel;
+    public JPanel framepanel;
 
     private GraphicsDevice[] outputDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
     //    private ImageIcon logo = new ImageIcon(getClass().getClassLoader().getResource("rune.png"));
@@ -45,7 +44,7 @@ public class MainFrame extends JFrame {
     public IconArrayList<MyImageIcon> uiResources;
     public MainAppPanel mainApp_panel;
 
-    public AddSummonPanel base_monster_panel;
+    public AddSummonPanel add_summon_panel;
 
     private String OperatingSystem;
 
@@ -86,6 +85,7 @@ public class MainFrame extends JFrame {
 
         this.pack();
 
+
         this.setLocationRelativeTo(null);
 
         // Check if there are at least two monitors
@@ -107,6 +107,11 @@ public class MainFrame extends JFrame {
 //            System.out.println("There is no second monitor available.");
 //        }
 
+    }
+
+    public void fixContentBleed(){
+        this.validate();
+        this.repaint();
     }
 
     private void setUI(){
@@ -153,7 +158,7 @@ public class MainFrame extends JFrame {
         login_panel = new LoginPanel(this);
         mainApp_panel = new MainAppPanel(this, 1);
         rune_panel = new CreateRunePanel(this);
-        base_monster_panel = new AddSummonPanel(this);
+        add_summon_panel = new AddSummonPanel(this);
 
         this.setAlwaysOnTop(true);
         this.setSize(100, 100);
@@ -166,6 +171,7 @@ public class MainFrame extends JFrame {
 
 
         this.framepanel = mainApp_panel.getMain();
+//        this.framepanel = add_summon_panel.getMain();
 //        this.framepanel = base_monster_panel.getMain();
 
 //        this.framepanel = rune_panel.getMain();
@@ -326,7 +332,7 @@ public class MainFrame extends JFrame {
     private void createBaseMonsters(){
         this.baseMonsters = new IconArrayList();
         MonsterDB monsterDB = new MonsterDB();
-        ArrayList<String> arrayList = monsterDB.getAllMonsters();
+        ArrayList<String> arrayList = monsterDB.getBaseMonsters();
         for ( String monsterName : arrayList ) {
 //            System.out.println(monsterName);
 
