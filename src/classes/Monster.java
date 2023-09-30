@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Monster {
 
-    private int id;
+    private int baseId;
     private String name;
     private int HP;
     private int ATK;
@@ -16,11 +16,11 @@ public class Monster {
     private int CDmg;
     private int RES;
     private int ACC;
+    private int summonId;
 
-    private int baseId;
 
     public Monster(){
-        this.id = 0;
+        this.baseId = 0;
         this.name = null;
         this.HP = 0;
         this.ATK = 0;
@@ -31,8 +31,8 @@ public class Monster {
         this.RES = 0;
         this.ACC = 0;
     }
-    public Monster(int id, String name, int HP, int ATK, int DEF, int SPD, int CRte, int CDmg, int RES, int ACC){
-        this.id = id;
+    public Monster(int baseId, String name, int HP, int ATK, int DEF, int SPD, int CRte, int CDmg, int RES, int ACC){
+        this.baseId = baseId;
         this.name = name;
         this.HP = HP;
         this.ATK = ATK;
@@ -46,7 +46,7 @@ public class Monster {
     public Monster(String longstring){
         String[] arr;
         arr = longstring.split(" ");
-        setID(Integer.parseInt(arr[0]));
+        setBaseId(Integer.parseInt(arr[0]));
         setName(arr[1]);
         setHP(Integer.parseInt(arr[2]));
         setATK(Integer.parseInt(arr[3]));
@@ -65,7 +65,7 @@ public class Monster {
         }
     }
 
-    public int getId(){return this.id;}
+    public int getBaseId(){return this.baseId;}
     public String getName(){return this.name;}
     public int getHP(){return this.HP;}
     public int getATK(){return this.ATK;}
@@ -76,7 +76,7 @@ public class Monster {
     public int getRES(){return this.RES;}
     public int getACC(){return this.ACC;}
 
-    public void setID(int id){this.id = id;}
+    public void setBaseId(int id){this.baseId = id;}
     public void setName(String a){this.name = a;}
     public void setHP(int a){this.HP = a;}
     public void setATK(int a){this.ATK = a;}
@@ -86,14 +86,14 @@ public class Monster {
     public void setCD(int a){this.CDmg = a;}
     public void setRES(int a){this.RES = a;}
     public void setACC(int a){this.ACC = a;}
-    public void setBaseId(int a){this.baseId = a;}
+//    public void setSummondId(int a){this.summonId = a;}
 
 
 
 
     public String toString(){
         StringBuilder build = new StringBuilder();
-        build.append("ID: " + this.id + " - ");
+        build.append("ID: " + this.baseId + " - ");
         build.append("Monster: " + this.name + "\n");
         build.append("HP: " + this.HP + "\n" + "ATK: " + this.ATK + "\n");
         build.append("DEF: " + this.DEF + "\n" + "SPD: " + this.SPD + "\n");
@@ -148,7 +148,7 @@ public class Monster {
 
     private void setData(int col, Object o){
         switch(col){
-            case 0: this.id = (Integer)o;
+            case 0: this.baseId = (Integer)o;
                 break;
             case 1: this.name = (String)o;
                 break;
