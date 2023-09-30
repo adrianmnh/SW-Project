@@ -4,13 +4,13 @@ import runes.Rune;
 
 import javax.swing.*;
 
-public class RuneLabel extends JLabel {
+public class RuneBoxImage extends JLabel {
     public Rune rune;
-    public RuneLabel(Rune rune){
+    public RuneBoxImage(Rune rune){
         super();
         this.rune = rune;
     }
-    public RuneLabel(Rune rune, ImageIcon imageIcon){
+    public RuneBoxImage(Rune rune, ImageIcon imageIcon){
         super(imageIcon);
         this.rune = rune;
     }

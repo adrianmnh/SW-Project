@@ -5,14 +5,12 @@ import runes.Rune;
 import javax.swing.*;
 import java.awt.*;
 
-import static tools.HelperMethods.resizeComponent;
-
-public class RuneBox extends Box {
+public class RuneBoxLabel extends Box {
 
     public Box runeStats;
     public Rune rune;
 
-    public RuneBox(Rune r, Color FONT_COLOR, int RIGHT_WIDTH, int ROW_HEIGHT) {
+    public RuneBoxLabel(Rune r, Color FONT_COLOR, int RIGHT_WIDTH, int ROW_HEIGHT) {
         super(BoxLayout.Y_AXIS);
         this.rune = r;
 //        runeStats = new Box(BoxLayout.Y_AXIS);
