@@ -1,16 +1,19 @@
 package database;
 import runes.Rune;
 
+import javax.xml.transform.Result;
 import java.sql.*;
 
 import java.util.ArrayList;
 
 import java.sql.Connection;
+import java.util.Collection;
+import java.util.HashMap;
 
 public abstract class Database {
 
     private Connection connection;
-    private Statement query;
+    private Statement satement;
     private String dbtable;
 
     /*
@@ -21,13 +24,59 @@ public abstract class Database {
         initConnection();
     }
 
+    //statement execute(sql) returns SQL Warning or "printed message"
+    //int = statement executeUpdate(sql, RETURN_GE..) -> rowsUpdated
+    // statement executeUpdate(sql, RETURN_GENERATED_KEYS),  ResultSet generated = statement.getGeneratedKeys().next(), generated.getInt(1)
+
+    public ArrayList<Object> execUpdate(HashMap<String, Object> map) {
+        ArrayList<Object> data = new ArrayList<Object>();
+        try {
+            String updateType = map.get("type").toString() == null ? "" : map.get("type").toString();
+            String query = map.get("query").toString();
+
+            switch(updateType) {
+                case "rows":
+                    System.out.println("Executing update query: " + query);
+                    int rowsUpdated = satement.executeUpdate(query);
+                    data.add(rowsUpdated);
+                    System.out.println("Rows updated: " + data);
+                    break;
+
+                case "keys":
+                    System.out.println("Executing update query: " + query);
+                    getStatement().executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
+                    ResultSet generatedKeys = getStatement().getGeneratedKeys();
+                    while(generatedKeys.next()){
+                        data.add(generatedKeys.getInt(1));
+                    }
+                    System.out.println("Generated keys: " + data);
+                    break;
+
+                case "delete":
+                    System.out.println("Executing update query: " + query);
+                    int rowsDeleted = getStatement().executeUpdate(query);
+                    data.add(rowsDeleted);
+                    System.out.println("Deleted keys: " + data);
+                    break;
+            }
+
+        } catch (Exception ex) {
+            System.out.println("Error found :" + ex.getLocalizedMessage());
+        } finally {
+            this.closeConnection();
+            return data;
+        }
+
+    }
+
     public void initConnection(){
         try{
 
             String connectionString = "" +
                     "jdbc:sqlserver://localhost:1433;" +
                     "database=SummonersWar;user=admin;" +
-                    "password=admin$%#@29174$%#@;" +
+//                    "password=admin$%#@29174$%#@;" +
+                    "password=admin$%#@33096$%#@;" +
                     "encrypt=true;" +
                     "trustServerCertificate=true;";
 //            System.out.println(connectionString);
@@ -42,7 +91,7 @@ public abstract class Database {
             System.out.println(connection.getClientInfo());
             System.out.println("\n -- Connection established -- \n\n --");
 
-            query = connection.createStatement();
+            satement = connection.createStatement();
 
 
         }catch(Exception ex){
@@ -64,13 +113,13 @@ public abstract class Database {
     public String getTable(){
         return this.dbtable;
     }
-    public Statement getStatement(){return this.query; }
+    public Statement getStatement(){return this.satement; }
 
     public ArrayList<Object> getAllObjectData(){
         try{
             System.out.println("Retrieving all data from \"" + dbtable + "\":");
             String sql = "select * from " + dbtable;
-            ResultSet result = query.executeQuery(sql);
+            ResultSet result = satement.executeQuery(sql);
             System.out.println("Number of columns: " + result.getMetaData().getColumnCount());
 
             ArrayList<Object> monsterList = new ArrayList<Object>();
@@ -291,7 +340,7 @@ public abstract class Database {
         try {
             System.out.println("\nPrinting data from online Database table \"" + dbtable + "\":");
             String sql = "select * from " + dbtable;
-            ResultSet resultSet = query.executeQuery(sql);
+            ResultSet resultSet = satement.executeQuery(sql);
 
             while (resultSet.next()) {
                 ArrayList<Object> row = new ArrayList<Object>();
@@ -305,12 +354,26 @@ public abstract class Database {
         }
     }
 
+    public static void main(String[] args) {
+        Database db;
+        String query;
+        HashMap<String, Object> map = new HashMap<String, Object>();
 
+        db = new MonsterDB();
+        query = "    INSERT INTO GameTool.Account VALUES " +
+                "('nameGoesHere', 'password', 'email@email.com'), " +
+                "('nameGoesHere2', 'password', 'email2@email.com');"  ;
+        map.put("query", query);
+        map.put("type", "rows");
+        db.execUpdate(map);
 
-
-
-
-
+        db = new MonsterDB();
+//        query = "    DELETE FROM GameTool.Account WHERE AccountUsername LIKE 'nameGoes%';"   ;
+        query = "    DELETE FROM GameTool.Account WHERE AccountUsername LIKE 'nameGoesHere';"   ;
+        map.put("query", query);
+        map.put("type", "delete");
+        db.execUpdate(map);
+    }
 
 
 }
