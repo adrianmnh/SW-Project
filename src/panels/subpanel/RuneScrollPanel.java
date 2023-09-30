@@ -1,9 +1,6 @@
 package panels.subpanel;
 
-import classes.subclasses.MonsterImageIcon;
-import classes.subclasses.MonsterRuneMap;
-import classes.subclasses.RuneBox;
-import classes.subclasses.RuneLabel;
+import classes.subclasses.*;
 import database.RuneDB;
 import panels.MainAppPanel;
 import panels.MainFrame;
@@ -45,39 +42,36 @@ public class RuneScrollPanel extends JScrollPane{
 
         this.runePanel = panel;
 
-        this.left = l1;
-        this.left.setBackground(parentFrame.baseRed);
+        resizeComponent(this,LEFT_WIDTH + RIGHT_WIDTH + 15 + 5, (ROW_HEIGHT * 4) );
 
-        this.right = l2;
+        this.setBorder(BorderFactory.createEmptyBorder());
+
+        this.left = l1;
+        this.left.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, parentFrame.baseRed));
+//        this.left.setBackground(parentFrame.baseRed);
+
+//        this.right = l2;
+//        this.right.setBorder(BorderFactory.createEmptyBorder());
 
 //        this.left2 = l2;
         this.parentPanel = (MainAppPanel) parentPanel;
 //        this.outerComponent = component;
 
-//        this.getHorizontalScrollBar().setUnitIncrement(16);
+        JScrollBar customScrollBar = new MacStyleScrollBar(Adjustable.VERTICAL);
+        customScrollBar.setBackground(this.parentFrame.baseColor);
+        this.setVerticalScrollBar(customScrollBar);
+        this.getVerticalScrollBar().setUnitIncrement(ROW_HEIGHT / 2);
 
-        this.getVerticalScrollBar().setUnitIncrement(14);
+        this.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-        runePanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        runePanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
 
         left.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
-        right.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+//        right.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
         runeAvailable = scaleImage(parentFrame.uiResources.getImage("runeon.png"), ROW_HEIGHT-2, ROW_HEIGHT-2);
         runeEquipped = scaleImage(parentFrame.uiResources.getImage("runeoff2.png"), ROW_HEIGHT-2, ROW_HEIGHT-2);
         runeNotAvailable = scaleImage(parentFrame.uiResources.getImage("runered.png"), ROW_HEIGHT-2, ROW_HEIGHT-2);
-
-
-
-
-
-//        this.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
-
-//        loadAssetsIntoPanels();
-//        resizeComponent(this, 300, 600);
-//        resizeComponent(left, 150, 600);
-//        resizeComponent(right, 150, 600);
 
     }
 
@@ -128,23 +122,28 @@ public class RuneScrollPanel extends JScrollPane{
                 int row = e2.getY()/ROW_HEIGHT;
                 System.out.print("row:" + row + " " + "col:" +col + " ----- " );
 
-                RuneLabel boxSelected = null;
+                JPanel temp;
+                RuneBoxImage boxSelected = null;
                 Rune runeSelected = null;
 
-                    boxSelected = (RuneLabel)left.getComponentAt(0, e2.getY());
-                    if(col == 0){
-                        runeSelected = ((RuneLabel)left.getComponentAt(0, e2.getY())).rune;
+                boxSelected = (RuneBoxImage)((JPanel)left.getComponent(row)).getComponent(0);
 
-                    }
-                    else{
-                        runeSelected = ((RuneBox)right.getComponentAt(0, e2.getY())).rune;
-                    }
+//                boxSelected = (RuneLabel)left.getComponentAt(0, e2.getY());
+//                if(col == 0){
+
+//                    runeSelected = ((RuneLabel)left.getComponentAt(0, e2.getY())).rune;
+//
+//                }
+//                else{
+//                    runeSelected = ((RuneBox)right.getComponentAt(0, e2.getY())).rune;
+//                }
+                runeSelected = ((RuneBoxImage)((JPanel)left.getComponent(row)).getComponent(0)).rune;
 
                 Object[] options = {"Yes", "Cancel"}; // Custom button labels
 
                 int result;
 
-                int monsterid = monster.monster.getId();
+                int monsterid = monster.monster.getBaseId();
 
                 boolean equippedOnCurrent = parentPanel.monsterRuneMap.runeIn(monsterid, runeSelected);
 
@@ -158,20 +157,43 @@ public class RuneScrollPanel extends JScrollPane{
 
                 int switchCase = -1;
 
+
+
+
+
+
+
                 /******************** Case 1********************: Rune is equipped by current monster*/
                 if(runeSelected.isEquipped && equippedOnCurrent){
+
+
+
+
+
                     result = JOptionPane.showOptionDialog(parentFrame, new Object[] { removeRuneFromCurrent, runeSelected.toStringGUI()}, "Watcher", JOptionPane.OK_CANCEL_OPTION,
                         JOptionPane.PLAIN_MESSAGE, runeEquipped, options, options[0]);
                     switchCase = 1;
                 }
                 /******************** Case 2********************: Rune is equipped by another monster*/
                 else if(runeSelected.isEquipped && !equippedOnCurrent){
-                    result = JOptionPane.showOptionDialog(parentFrame, new Object[] { removeRuneFromAnother, runeSelected.toStringGUI()}, "Watcher", JOptionPane.OK_CANCEL_OPTION,
-                            JOptionPane.PLAIN_MESSAGE, runeNotAvailable, options, options[0]);
+
+                    String s = runeSelected.toStringGUI();
+                    s = s.substring(0, s.length()-1);
+                    JLabel label = new JLabel(s + " is equipped by another monster.              ");
+
+
+                    result = JOptionPane.showOptionDialog(parentFrame, new Object[] { removeRuneFromAnother, runeSelected.toStringGUI()}, "Watcher", JOptionPane.OK_CANCEL_OPTION,                            JOptionPane.PLAIN_MESSAGE, runeNotAvailable, options, options[0]);
                 }
                 /******************** Case 1********************: Rune is not equipped*/
                 else {
-                    result = JOptionPane.showOptionDialog(parentFrame, new Object[] { engraveRune, runeSelected.toStringGUI()}, "Watcher", JOptionPane.OK_CANCEL_OPTION,
+
+                    String s = runeSelected.toStringGUI();
+                    s = s.substring(0, s.length()-1);
+                    JLabel label = new JLabel(s + " is equipped by another monster.              ");
+
+
+
+                    result = JOptionPane.showOptionDialog(parentFrame, new Object[] { engraveRune, runeSelected.toStringLabels()}, "Watcher", JOptionPane.OK_CANCEL_OPTION,
                             JOptionPane.PLAIN_MESSAGE, runeAvailable, options, options[0]);
                     switchCase = 3;
                 }
@@ -274,54 +296,60 @@ public class RuneScrollPanel extends JScrollPane{
     }
     public void addRow(Rune r){
 //        JLabel rune = new JLabel(image);
-        RuneLabel rune;
+        RuneBoxImage runeBoxImage;
         if(!r.isEquipped){
-            rune = new RuneLabel(r, runeAvailable);
-//            rune.setBackground(Color.GREEN);
-//            rune.setBorder(BorderFactory.createLineBorder(Color.GREEN));
+            runeBoxImage = new RuneBoxImage(r, runeAvailable);
         } else {
-            rune = new RuneLabel(r, runeEquipped);
+            runeBoxImage = new RuneBoxImage(r, runeEquipped);
         }
-        rune.setBorder(BorderFactory.createLineBorder(FONT_COLOR));
 
-        this.left.add(rune);
-//        right.add(addRuneBox(r));
-//        RuneBox runeBox = new RuneBox(r, FONT_COLOR, RIGHT_WIDTH, ROW_HEIGHT);
-//        right.add(runeBox);
-        this.right.add(new RuneBox(r, FONT_COLOR, RIGHT_WIDTH, ROW_HEIGHT));
+        RuneBoxLabel runeBoxLabel = new RuneBoxLabel(r, FONT_COLOR, RIGHT_WIDTH, ROW_HEIGHT);
+
+        JPanel row = new JPanel();
+        row.setBorder(BorderFactory.createMatteBorder(1, 1, 0, 0, parentFrame.baseRed));
+        row.add(runeBoxImage);
+        row.add(runeBoxLabel);
+        row.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        row.setAlignmentY(Component.CENTER_ALIGNMENT);
+        resizeComponent(row, LEFT_WIDTH + RIGHT_WIDTH + 5, ROW_HEIGHT );
+
+//        this.left.add(runeLabel);
+        this.left.add(row);
+//        this.right.add(runeBox);
         changeSize();
     }
 
     public void changeSize() {
         this.runeCount++;
-        resizeComponent(left, LEFT_WIDTH, ROW_HEIGHT * runeCount);
-        resizeComponent(right, RIGHT_WIDTH, ROW_HEIGHT * runeCount);
+        resizeComponent(left, LEFT_WIDTH + RIGHT_WIDTH + 5, (ROW_HEIGHT * runeCount) + 1 );
+//        resizeComponent(right, RIGHT_WIDTH, ROW_HEIGHT * runeCount);
         parentFrame.reframe();
     }
 
     public void updateDisplay(){
-        System.out.println("MonsterID After: " + parentPanel.currentMonster.getId());
-        int currentMonsterId = parentPanel.currentMonster.getId();
+        System.out.println("MonsterID After: " + parentPanel.currentMonster.getBaseId());
+        int currentMonsterId = parentPanel.currentMonster.getBaseId();
 
         MonsterRuneMap map = parentPanel.monsterRuneMap;
-        RuneLabel boxSelected;
+        RuneBoxImage runeBoxImage;
         for(Component component: left.getComponents()){
-            boxSelected = ((RuneLabel)component);
-            Rune rune = boxSelected.rune;
+            runeBoxImage = (RuneBoxImage)((JPanel)component).getComponent(0);
+//            runeBoxImage = ((RuneBoxImage)component);
+            Rune rune = runeBoxImage.rune;
             System.out.println("rune: " + rune.runeId + " isEquipped: " + rune.isEquipped);
             if(map.runeIn(currentMonsterId, rune)){
-                boxSelected.setIcon(runeEquipped);
+                runeBoxImage.setIcon(runeEquipped);
             } else {
                 if(rune.isEquipped)
-                    boxSelected.setIcon(runeNotAvailable);
+                    runeBoxImage.setIcon(runeNotAvailable);
                 else
-                    boxSelected.setIcon(runeAvailable);
+                    runeBoxImage.setIcon(runeAvailable);
 //                boxSelected.setIcon(runeOn);
             }
         }
     }
 
-    public void applyRune(RuneLabel boxSelected){
+    public void applyRune(RuneBoxImage boxSelected){
         boxSelected.rune.isEquipped = true;
         boxSelected.setIcon(runeEquipped);
         parentPanel.applyRune(boxSelected.rune.runeId, boxSelected.rune.getPosInt());

@@ -5,6 +5,8 @@ import runes.Rune;
 import javax.swing.*;
 import java.awt.*;
 
+import static tools.HelperMethods.resizeComponent;
+
 public class RuneBox extends Box {
 
     public Box runeStats;
@@ -13,8 +15,9 @@ public class RuneBox extends Box {
     public RuneBox(Rune r, Color FONT_COLOR, int RIGHT_WIDTH, int ROW_HEIGHT) {
         super(BoxLayout.Y_AXIS);
         this.rune = r;
+//        runeStats = new Box(BoxLayout.Y_AXIS);
         runeStats = new Box(BoxLayout.Y_AXIS);
-        runeStats.setBorder(BorderFactory.createLineBorder(FONT_COLOR));
+//        runeStats.setBorder(BorderFactory.createLineBorder(FONT_COLOR));
         JLabel innate = new JLabel(), setGrade = new JLabel(), posMainstat = new JLabel(),
                 stat1 = new JLabel(), stat2 = new JLabel(), stat3 = new JLabel(), stat4 = new JLabel();
 
@@ -35,17 +38,17 @@ public class RuneBox extends Box {
         stat4.setText(String.format("%s", r.getSubStats().get(3)));
         runeStats.add(stat4);
 
-        for (Component comp:runeStats.getComponents()) {
-            comp.setForeground(FONT_COLOR);
-            ((JComponent) comp).setAlignmentY(Component.CENTER_ALIGNMENT);
-        }
-        runeStats.setPreferredSize(new Dimension(RIGHT_WIDTH-2, ROW_HEIGHT-2));
+//        resizeComponent(runeStats, RIGHT_WIDTH-2, ROW_HEIGHT-2);
+//        for (Component comp:runeStats.getComponents()) {
+////            comp.setForeground(FONT_COLOR);
+//            ((JComponent) comp).setAlignmentY(Component.CENTER_ALIGNMENT);
+//        }
+//        runeStats.setPreferredSize(new Dimension(RIGHT_WIDTH-2, ROW_HEIGHT-2));
         //set padding left and right to 10
-        runeStats.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
-        this.setBorder(BorderFactory.createLineBorder(FONT_COLOR,1));
+//        runeStats.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
+//        this.setBorder(BorderFactory.createLineBorder(FONT_COLOR,1));
         this.add(runeStats);
 
-//        return outerBox;
 
     }
 
