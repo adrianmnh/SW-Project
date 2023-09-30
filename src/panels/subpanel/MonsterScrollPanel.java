@@ -2,11 +2,9 @@ package panels.subpanel;
 
 import static tools.HelperMethods.*;
 
-import classes.Monster;
 import classes.subclasses.MacStyleScrollBar;
 import classes.subclasses.MacStyleScrollBarUI;
 import classes.subclasses.MonsterImageIcon;
-import classes.subclasses.MyImageIcon;
 import panels.MainAppPanel;
 import panels.MainFrame;
 import panels.MyPanel;
@@ -38,29 +36,27 @@ public class MonsterScrollPanel extends JScrollPane{
     public MonsterScrollPanel(MyPanel parentPanel, JPanel panel)  {
 
         this.monsterPanel = panel;
-        this.monsterPanel.setBackground(new Color(0x1F160B));
-
         this.parentPanel = (MainAppPanel) parentPanel;
-        this.parentPanel.setBackground(new Color(0x1F160B));
-
-        this.setBackground(new Color(0x1F160B));
-
         this.parentFrame = parentPanel.frame;
 
-//        JScrollBar customScrollbar = new MacStyleScrollBar(JScrollBar.HORIZONTAL);
-//        customScrollbar.setBackground(new Color(0x1F160B));
+        this.monsterPanel.setBackground(parentFrame.baseColor);
+        this.parentPanel.setBackground(parentFrame.baseColor);
+        this.setBackground(parentFrame.baseColor);
 
-//        this.setHorizontalScrollBar(customScrollbar);
-        this.getHorizontalScrollBar().setUI(new MacStyleScrollBarUI());
-        this.getHorizontalScrollBar().setUnitIncrement((480/4) - 80);
 
-        resizeComponent(this, ICON_DIMENSION * 5, (80 * HEIGHT) + 12);
+
+        JScrollBar customScrollBar = new MacStyleScrollBar(Adjustable.HORIZONTAL);
+        customScrollBar.setBackground(new Color(0x1F160B));
+        this.setHorizontalScrollBar(customScrollBar);
+        this.getHorizontalScrollBar().setUnitIncrement(ICON_DIMENSION );
+
+        resizeComponent(this, ICON_DIMENSION * 5, (80 * HEIGHT) + 10 + 15);
 
 
         this.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 
 
-        loadAssetsIntoPanels();
+//        loadAssetsIntoPanels();
         this.setBorder(BorderFactory.createEmptyBorder());
     }
 
@@ -74,6 +70,7 @@ public class MonsterScrollPanel extends JScrollPane{
 
         for (MonsterImageIcon monsterImageIcon : this.parentFrame.baseMonsters) {
 //            System.out.println(monsterImageIcon);
+//            if(testCount==15) break;
             ImageIcon resized = scaleImage(monsterImageIcon.img, ICON_DIMENSION-2, ICON_DIMENSION-2);
             JLabel l = new JLabel(resized);
             l.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 1));
@@ -85,6 +82,8 @@ public class MonsterScrollPanel extends JScrollPane{
         }
         COLUMNS = (size * REPEAT) / HEIGHT;
         if(size%2==1)   this.COLUMNS += 1;
+//        COLUMNS = (testCount * REPEAT) / HEIGHT;
+//        if(testCount%2==1)   this.COLUMNS += 1;
 
 
         COLUMN_SIZE = ICON_DIMENSION * COLUMNS;
@@ -163,7 +162,7 @@ public class MonsterScrollPanel extends JScrollPane{
     }
     private void selectMonsterFromClick(int assetPosInList){
 
-        System.out.println("MonsterID Before: " + parentPanel.currentMonster.getId());
+        System.out.println("MonsterID Before: " + parentPanel.currentMonster.getBaseId());
 
         this.monsterObjectSelected = this.monsterObjectClicked;
 
@@ -179,9 +178,9 @@ public class MonsterScrollPanel extends JScrollPane{
 
         parentPanel.updateStatDisplay(false);
 
-        if(parentPanel.monsterRuneMap.get(monsterObjectSelected.monster.getId())==null){
+        if(parentPanel.monsterRuneMap.get(monsterObjectSelected.monster.getBaseId())==null){
 
-            parentPanel.monsterRuneMap.put(monsterObjectSelected.monster.getId(), new HashSet<Rune>());
+            parentPanel.monsterRuneMap.put(monsterObjectSelected.monster, new HashSet<Rune>());
         }
 
         this.setRunesEquipped();
@@ -190,13 +189,13 @@ public class MonsterScrollPanel extends JScrollPane{
     }
 
     private void setRunesEquipped(){
-        int id = parentPanel.currentMonster.getId();
+        int id = parentPanel.currentMonster.getBaseId();
         parentPanel.resetRuneArray();
 
-        RuneScrollPanel temp = (RuneScrollPanel) parentPanel.rune_scroll_panel;
+        RuneScrollPanel temp = (RuneScrollPanel) parentPanel.abstract_rune_scroll_panel;
 
         temp.updateDisplay();
-        for(Rune r : parentPanel.monsterRuneMap.get(parentPanel.currentMonster.getId())){
+        for(Rune r : parentPanel.monsterRuneMap.get(parentPanel.currentMonster.getBaseId())){
             parentPanel.runesEquipped[r.getPosInt()] = r.runeId;
         }
         parentPanel.updateStatDisplay(false);

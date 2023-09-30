@@ -70,12 +70,13 @@ public class MacStyleScrollBarUI extends BasicScrollBarUI {
         g2.setColor(ACCENT_COLOR);
         g2.fillRoundRect(x , y, width, height, 10, 10);
         g2.dispose();
+        c.repaint();
     }
 
     @Override
     protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
         Graphics2D g2 = (Graphics2D) g.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         int x = thumbBounds.x;
         int y = thumbBounds.y;
@@ -99,7 +100,7 @@ public class MacStyleScrollBarUI extends BasicScrollBarUI {
 
         } else {
             // Set the thumb's height to 15 pixels and add 2 pixels to the top and bottom
-            int thumbHeight = HEIGHT - 4;
+            int thumbHeight = HEIGHT - 2;
 
             // Center the thumb within the original bounds
             y += (height - thumbHeight) / 2;
@@ -109,12 +110,13 @@ public class MacStyleScrollBarUI extends BasicScrollBarUI {
             g2.fillRoundRect(x, y, width, height, 10, 10);
 
             g2.setColor(ACCENT_COLOR); // Use a different color for the border
-            g2.drawRoundRect(x, y, width , height, 10, 10);
+            g2.drawRoundRect(x, y, width -1 , height, 10, 10);
 
         }
 
-        g2.dispose();
 
+        g2.dispose();
+        c.repaint();
     }
 
 

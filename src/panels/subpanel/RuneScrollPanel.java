@@ -42,7 +42,7 @@ public class RuneScrollPanel extends JScrollPane{
 
         this.runePanel = panel;
 
-        resizeComponent(this,LEFT_WIDTH + RIGHT_WIDTH + 15 + 5, (ROW_HEIGHT * 4) );
+        resizeComponent(this,LEFT_WIDTH + RIGHT_WIDTH + 15 + 5, (ROW_HEIGHT * 4) + 1);
 
         this.setBorder(BorderFactory.createEmptyBorder());
 

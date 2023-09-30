@@ -2,6 +2,7 @@ package panels.subpanel;
 
 import static tools.HelperMethods.*;
 
+import classes.subclasses.MacStyleScrollBar;
 import classes.subclasses.MonsterImageIcon;
 import database.MonsterDB;
 import panels.AddSummonPanel;
@@ -28,6 +29,9 @@ public class BaseMonsterScrollPanel extends JScrollPane{
     final int REPEAT = 1;
     int ICON_DIMENSION = 80;
     final int COLUMNS = 8;
+    final int VIEW_ROWS = 3;
+
+    final int HEIGHT = ICON_DIMENSION * VIEW_ROWS;
 
     int ROW_SIZE;
     int ROWS;
@@ -38,25 +42,28 @@ public class BaseMonsterScrollPanel extends JScrollPane{
         this.monsterPanel = panel;
         this.parentPanel = (AddSummonPanel) parentPanel;
         this.parentFrame = parentPanel.frame;
-        this.getHorizontalScrollBar().setUnitIncrement(16);
-//        this.getVerticalScrollBar().setUnitIncrement(16);
+
+        JScrollBar customScrollBar = new MacStyleScrollBar(Adjustable.VERTICAL);
+        customScrollBar.setBackground(parentFrame.baseColor);
+        this.setVerticalScrollBar(customScrollBar);
+        this.getVerticalScrollBar().setUnitIncrement( ICON_DIMENSION / 2 );
+
+        resizeComponent(this, (ICON_DIMENSION*COLUMNS) + 10 + 15, (HEIGHT) + 0);
 
         loadAssetsIntoPanels();
+
     }
 
     public void loadAssetsIntoPanels() {
 
-        int size = this.parentPanel.frame.baseMonsters.size();
+        int size = this.parentFrame.baseMonsters.size();
         System.out.println("Numbers of monsters: " + size);
-        int count = -1;
-        int testCount=0;
 
         for (MonsterImageIcon monsterImageIcon : this.parentFrame.baseMonsters) {
             ImageIcon resized = scaleImage(monsterImageIcon.img, ICON_DIMENSION-2, ICON_DIMENSION-2);
             JLabel l = new JLabel(resized);
             l.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 1));
 
-            ++testCount;
             l.setFocusable(false);
 
             monsterPanel.add(l);
@@ -69,19 +76,19 @@ public class BaseMonsterScrollPanel extends JScrollPane{
 
         ROW_SIZE = ICON_DIMENSION * COLUMNS;
 
-        resizeComponent(monsterPanel, ROW_SIZE, ICON_DIMENSION * ROWS);
+        resizeComponent(monsterPanel, ROW_SIZE , ICON_DIMENSION * ROWS);
 
 
         monsterPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
 
-        this.parentPanel.frame.pack();
 
         monsterPanel.addMouseListener(  new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e2) {
 
                 try {
+
                     int size = parentFrame.baseMonsters.size();
                     int row = e2.getY()/ICON_DIMENSION;
                     int col = e2.getX()/ICON_DIMENSION;
@@ -89,8 +96,8 @@ public class BaseMonsterScrollPanel extends JScrollPane{
                     int assetPosInList = pos;
                     System.out.println("\n\nrow:" + row + " " + "col:" +col + " " + parentFrame.baseMonsters.get(assetPosInList).name);
 
-                    ImageIcon thumbs = parentFrame.uiResources.getImage("thumbs.png");
-//                thumbs = scaleImage(thumbs, (int) (thumbs.getIconWidth()*.8), (int) (thumbs.getIconHeight()*.8));
+
+
                     ImageIcon img = parentFrame.baseMonsters.get(assetPosInList).img;
 
                     monsterObjectClicked = parentFrame.baseMonsters.get(assetPosInList);
@@ -100,14 +107,16 @@ public class BaseMonsterScrollPanel extends JScrollPane{
                     JLabel message = new JLabel("              TitleTitleTitleTitleTitleTitleTitleTitleTitleTitle\nTitleTitleTitleTitleTitleTitleTitleTitle              ");
                     message.setHorizontalAlignment(JLabel.CENTER);
 
+                    JLabel message2 = new JLabel(monsterObjectClicked.index + " " + monsterObjectClicked.monster.getName() + " - BaseId: " + monsterObjectClicked.monster.getBaseId());
+
                     JLabel imageLabel = new JLabel(img);
-                    resizeComponent(imageLabel, ICON_DIMENSION*2, ICON_DIMENSION*2);
+//                    resizeComponent(imageLabel, ICON_DIMENSION*2, ICON_DIMENSION*2);
 
 
                     Object[] options = {"OK", "Cancel"}; // Custom button labels
                     int result = JOptionPane.showOptionDialog(
                             parentFrame, // Use null for the parent frame
-                            new Object[]{message , imageLabel}, // Your custom content
+                            new Object[]{message, message2, imageLabel}, // Your custom content
                             title,
                             JOptionPane.OK_CANCEL_OPTION,
                             JOptionPane.PLAIN_MESSAGE,
@@ -116,6 +125,9 @@ public class BaseMonsterScrollPanel extends JScrollPane{
                             options[0] // Default selection
                     );
 
+                    parentFrame.fixContentBleed();
+
+
                     if (result == JOptionPane.OK_OPTION) {
                         System.out.println(parentFrame.baseMonsters.get(assetPosInList));
                         selectMonsterFromClick(assetPosInList);
@@ -123,7 +135,6 @@ public class BaseMonsterScrollPanel extends JScrollPane{
 
                         doSomething();
                     }
-//                    Thread.sleep(100);
                 } catch (Exception e) {
                     System.out.println(e.getLocalizedMessage());
                 }
