@@ -3,7 +3,6 @@ package panels.subpanel;
 import static tools.HelperMethods.*;
 
 import classes.subclasses.MacStyleScrollBar;
-import classes.subclasses.MacStyleScrollBarUI;
 import classes.subclasses.MonsterImageIcon;
 import panels.MainAppPanel;
 import panels.MainFrame;
@@ -52,11 +51,8 @@ public class MonsterScrollPanel extends JScrollPane{
 
         resizeComponent(this, ICON_DIMENSION * 5, (80 * HEIGHT) + 10 + 15);
 
-
         this.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 
-
-//        loadAssetsIntoPanels();
         this.setBorder(BorderFactory.createEmptyBorder());
     }
 
@@ -71,7 +67,7 @@ public class MonsterScrollPanel extends JScrollPane{
         for (MonsterImageIcon monsterImageIcon : this.parentFrame.baseMonsters) {
 //            System.out.println(monsterImageIcon);
 //            if(testCount==15) break;
-            ImageIcon resized = scaleImage(monsterImageIcon.img, ICON_DIMENSION-2, ICON_DIMENSION-2);
+            ImageIcon resized = scaleImage(monsterImageIcon.imgResource, ICON_DIMENSION-2, ICON_DIMENSION-2);
             JLabel l = new JLabel(resized);
             l.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 1));
 
@@ -106,11 +102,11 @@ public class MonsterScrollPanel extends JScrollPane{
                     int col = e2.getX()/ICON_DIMENSION;
                     int pos = row * COLUMNS + col ;
                     int assetPosInList = pos;
-                    System.out.println("\n\nrow:" + row + " " + "col:" +col + " " + parentFrame.baseMonsters.get(assetPosInList).name);
+                    System.out.println("\n\nrow:" + row + " " + "col:" +col + " " + parentFrame.baseMonsters.get(assetPosInList).imgName);
 
                     ImageIcon thumbs = parentFrame.uiResources.getImage("thumbs.png");
 //                thumbs = scaleImage(thumbs, (int) (thumbs.getIconWidth()*.8), (int) (thumbs.getIconHeight()*.8));
-                    ImageIcon img = parentFrame.baseMonsters.get(assetPosInList).img;
+                    ImageIcon img = parentFrame.baseMonsters.get(assetPosInList).imgResource;
 
                     monsterObjectClicked = parentFrame.baseMonsters.get(assetPosInList);
 
@@ -166,7 +162,7 @@ public class MonsterScrollPanel extends JScrollPane{
 
         this.monsterObjectSelected = this.monsterObjectClicked;
 
-        this.monsterObjectSelected.img = scaleImage(monsterObjectSelected.img, 100,100);
+        this.monsterObjectSelected.imgResource = scaleImage(monsterObjectSelected.imgResource, 100,100);
 
         this.parentPanel.setSelectedMonster(monsterObjectSelected);
 

@@ -147,8 +147,8 @@ public class RuneScrollPanel extends JScrollPane{
 
                 boolean equippedOnCurrent = parentPanel.monsterRuneMap.runeIn(monsterid, runeSelected);
 
-                JLabel engraveRune = new JLabel("Do you want to Engrave Rune on " +  monster.name + "?              ");
-                JLabel removeRuneFromCurrent = new JLabel("Do you want to Remove Rune from " +  monster.name + "?              ");
+                JLabel engraveRune = new JLabel("Do you want to Engrave Rune on " +  monster.imgName + "?              ");
+                JLabel removeRuneFromCurrent = new JLabel("Do you want to Remove Rune from " +  monster.imgName + "?              ");
                 JLabel removeRuneFromAnother = new JLabel("Do you want to Remove Rune from another monster?              ");
 
 

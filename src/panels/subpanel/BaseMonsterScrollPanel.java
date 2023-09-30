@@ -14,8 +14,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
-import java.sql.SQLWarning;
-import java.sql.Statement;
+import java.util.Arrays;
 
 public class BaseMonsterScrollPanel extends JScrollPane{
 
@@ -59,8 +58,11 @@ public class BaseMonsterScrollPanel extends JScrollPane{
         int size = this.parentFrame.baseMonsters.size();
         System.out.println("Numbers of monsters: " + size);
 
+//        System.out.println(Arrays.toString(this.parentFrame.baseMonsters.baseID_toIndex));
+
         for (MonsterImageIcon monsterImageIcon : this.parentFrame.baseMonsters) {
-            ImageIcon resized = scaleImage(monsterImageIcon.img, ICON_DIMENSION-2, ICON_DIMENSION-2);
+//            System.out.println(monsterImageIcon);
+            ImageIcon resized = scaleImage(monsterImageIcon.imgResource, ICON_DIMENSION-2, ICON_DIMENSION-2);
             JLabel l = new JLabel(resized);
             l.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 1));
 
@@ -94,20 +96,21 @@ public class BaseMonsterScrollPanel extends JScrollPane{
                     int col = e2.getX()/ICON_DIMENSION;
                     int pos = row * COLUMNS + col ;
                     int assetPosInList = pos;
-                    System.out.println("\n\nrow:" + row + " " + "col:" +col + " " + parentFrame.baseMonsters.get(assetPosInList).name);
+                    System.out.println("\n\nrow:" + row + " " + "col:" +col + " " + parentFrame.baseMonsters.get(assetPosInList).imgName);
+                    System.out.println("\n\nrow:" + row + " " + "col:" +col + " " + parentFrame.baseMonsters.get(assetPosInList));
 
 
 
-                    ImageIcon img = parentFrame.baseMonsters.get(assetPosInList).img;
+                    ImageIcon img = parentFrame.baseMonsters.get(assetPosInList).imgResource;
 
                     monsterObjectClicked = parentFrame.baseMonsters.get(assetPosInList);
 
                     String title = "Add " + monsterObjectClicked.monster.getName() + " to MonsterBox?";
 
-                    JLabel message = new JLabel("              TitleTitleTitleTitleTitleTitleTitleTitleTitleTitle\nTitleTitleTitleTitleTitleTitleTitleTitle              ");
+                    JLabel message = new JLabel("              TitleTitleTitleTitleTitleTitleTitleTitleTitleTitle\nTitle              ");
                     message.setHorizontalAlignment(JLabel.CENTER);
 
-                    JLabel message2 = new JLabel(monsterObjectClicked.index + " " + monsterObjectClicked.monster.getName() + " - BaseId: " + monsterObjectClicked.monster.getBaseId());
+                    JLabel message2 = new JLabel(monsterObjectClicked.monster.getName() + " - BaseId: " + monsterObjectClicked.monster.getBaseId());
 
                     JLabel imageLabel = new JLabel(img);
 //                    resizeComponent(imageLabel, ICON_DIMENSION*2, ICON_DIMENSION*2);

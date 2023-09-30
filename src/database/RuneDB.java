@@ -76,7 +76,7 @@ public class RuneDB extends Database {
         String sql = "";
         try{
             sql = String.format("UPDATE %s SET Rune%d = %d WHERE AccountId = %d AND MonsterId = %d;",
-                    "GameTool.Engraved", rune.getPosInt(), rune.getId(), user, monster.getId());
+                    "GameTool.Engraved", rune.getPosInt(), rune.getId(), user, monster.getBaseId());
             System.out.println(sql);
             rowsUpdated = getStatement().executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
             System.out.println("Rows updated: " + rowsUpdated);

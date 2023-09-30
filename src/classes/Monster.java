@@ -21,7 +21,7 @@ public class Monster {
 
     public Monster(){
         this.baseId = 0;
-        this.name = null;
+        this.name = "";
         this.HP = 0;
         this.ATK = 0;
         this.DEF = 0;
@@ -30,6 +30,7 @@ public class Monster {
         this.CDmg = 0;
         this.RES = 0;
         this.ACC = 0;
+        this.summonId = -1;
     }
     public Monster(int baseId, String name, int HP, int ATK, int DEF, int SPD, int CRte, int CDmg, int RES, int ACC){
         this.baseId = baseId;
@@ -42,6 +43,7 @@ public class Monster {
         this.CDmg = CDmg;
         this.RES = RES;
         this.ACC = ACC;
+        setSummonId(-1);
     }
     public Monster(String longstring){
         String[] arr;
@@ -56,6 +58,7 @@ public class Monster {
         setCD(Integer.parseInt(arr[7]));
         setRES(Integer.parseInt(arr[8]));
         setACC(Integer.parseInt(arr[9]));
+        setSummonId(-1);
     }
 
     public Monster(ArrayList<Object> obj){
@@ -86,14 +89,15 @@ public class Monster {
     public void setCD(int a){this.CDmg = a;}
     public void setRES(int a){this.RES = a;}
     public void setACC(int a){this.ACC = a;}
-//    public void setSummondId(int a){this.summonId = a;}
+    public void setSummonId(int a){this.summonId = a;}
+    public int getSummonId(){return this.summonId;}
 
 
 
 
     public String toString(){
         StringBuilder build = new StringBuilder();
-        build.append("ID: " + this.baseId + " - ");
+        build.append("BaseId: " + this.baseId + " - ");
         build.append("Monster: " + this.name + "\n");
         build.append("HP: " + this.HP + "\n" + "ATK: " + this.ATK + "\n");
         build.append("DEF: " + this.DEF + "\n" + "SPD: " + this.SPD + "\n");
@@ -181,5 +185,15 @@ public class Monster {
         //System.out.println(mon);
         //db.getRowDataObject("Monster", "Bellenus");
         db.closeConnection();
+    }
+
+    public boolean isEqual(Monster o) {
+        if(this.baseId != o.baseId || !this.name.equals(o.name) || this.HP != o.HP || this.ATK != o.ATK || this.DEF != o.DEF || this.SPD != o.SPD || this.CRte != o.CRte || this.CDmg != o.CDmg || this.RES != o.RES || this.ACC != o.ACC || this.summonId != o.summonId)
+            return false;
+        return true;
+    }
+
+    public Monster clone(){
+        return new Monster(this.baseId, this.name, this.HP, this.ATK, this.DEF, this.SPD, this.CRte, this.CDmg, this.RES, this.ACC);
     }
 }
