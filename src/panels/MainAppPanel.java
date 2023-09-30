@@ -15,14 +15,10 @@ import panels.subpanel.RuneScrollPanel;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import static java.lang.Thread.sleep;
-import static tools.HelperMethods.resizeComponent;
 
 public class MainAppPanel extends MyPanel {
 
@@ -46,22 +42,24 @@ public class MainAppPanel extends MyPanel {
     private JLabel left_panel_label;
     private JButton addMonsterButton;
     private JPanel after_load_panel;
+    private JPanel center_panel;
     public JPanel bottom_panel;
     private JButton load_monsters_button;
     public JLabel selected_monster_label;
     public JLabel monster_name_label;
     private JTextPane current_stats_label;
-    private JScrollPane monster_scroll_pane;
+    private JScrollPane abstract_monster_scroll_panel;
+    public MonsterScrollPanel monster_scroll_pane;
     private JPanel monster_pane;
-    private JPanel center_panel;
-    public JScrollPane rune_scroll_panel;
+    public JScrollPane abstract_rune_scroll_panel;
     public RuneScrollPanel rune_scroll_pane;
     private JPanel rune_pane;
-    private JPanel rune_left;
-    private JPanel rune_right;
+    private JPanel rune_pane_left;
+    private JPanel rune_pane_right;
     private JPanel stat_opt_pane;
     private JPanel pos2_3pane;
-//    private ImageIcon runeoff = getImg("ui/runeoff.png");
+    private JPanel current_stat_pane;
+    //    private ImageIcon runeoff = getImg("ui/runeoff.png");
     private ImageIcon runeoff = frame.uiResources.getImage("runeoff.png");
     private ImageIcon left_panel_cover_img = getImg("ui/ifrit.png");
     private ImageIcon thumbs = getImg("ui/thumbs.png");
@@ -86,7 +84,13 @@ public class MainAppPanel extends MyPanel {
     private void UIsetup(){
     }
     private void startSetup(){
-        frame.setSizeTo(0,0);
+//        frame.setSizeTo(0,0);
+
+        // monster pane in app panel
+        this.abstract_monster_scroll_panel.setVisible(false);
+        this.current_stat_pane.setVisible(false);
+
+        // add new monster
 
         frame.setCurrentUserID(1);
 //        frame.setCurrentUserID(10);
@@ -98,7 +102,8 @@ public class MainAppPanel extends MyPanel {
 
         add_new_rune_button.setVisible(false);
 
-        fetchMonsterDataFromDB();
+        fetchUserData();
+
 
         // padding for monster selected image
         int padding = 10;
@@ -106,8 +111,15 @@ public class MainAppPanel extends MyPanel {
         selected_monster_label.setBorder(paddingBorder);
 
         current_stats_label.setFocusable(false);
-        current_stats_label.setBackground(new Color(242,242,242));
+//        current_stats_label.setBackground(new Color(242,242,242));
+        current_stats_label.setForeground(frame.fontColor);
         addMonsterButton.setVisible(false);
+
+    }
+
+    public void fetchUserData(){
+//        fetchMonsterDataFromDB();
+        addAllUserRunes(frame.getCurrentUserID());
 
     }
     public MainAppPanel(MainFrame f, int userID) {
@@ -119,56 +131,32 @@ public class MainAppPanel extends MyPanel {
 
         load_runes_button.addActionListener(e -> {
 
-            monster_scroll_pane.setVisible(false);
-//            for (int i = 0; i < parentFrame.monsterResources.size(); i++) {
-//                System.out.println(parentFrame.monsterResources.get(i).monster);
-//            }
-
-            addAllUserRunes(frame.getCurrentUserID());
             load_runes_button.setVisible(false);
             after_load_panel.setVisible(true);
             add_new_rune_button.setVisible(true);
-//            System.out.println(parentFrame.monsterAssetFiles);
-//                System.out.println(offlineRuneBag);
-//                System.out.println(String.format("%s%s%s%s%s%s",runesEquipped[0],runesEquipped[1]
-//                        ,runesEquipped[2],runesEquipped[3],runesEquipped[4],runesEquipped[5] ));
             addMonsterButton.setVisible(true);
 
-//            RuneScrollPanel temp = (RuneScrollPanel) rune_scroll_panel;
-//            temp.loadAssetsIntoPanels();
+            this.monster_scroll_pane = (MonsterScrollPanel) abstract_monster_scroll_panel;
+            this.monster_scroll_pane.loadAssetsIntoPanels();
 
-
-            this.rune_scroll_pane = (RuneScrollPanel) rune_scroll_panel;
+            this.rune_scroll_pane = (RuneScrollPanel) abstract_rune_scroll_panel;
             this.rune_scroll_pane.loadAssetsIntoPanels();
 
-            this.frame.reframe();
-            this.monster_scroll_pane.setVisible(true);
+            this.current_stat_pane.setVisible(true);
+            this.abstract_monster_scroll_panel.setVisible(true);
 
-//            this.frame.changePanel(this.mainPanel);
+            this.frame.fixContentBleed();
 
 
         });
         add_new_rune_button.addActionListener(e -> {
             frame.changePanel_NewRune();
-//                frame.reframe();
 
         });
-//        addMonsterButton.addActionListener(e -> {
-//
-//            if(monsterFocusedString.equals(""))
-//                JOptionPane.showMessageDialog(parentFrame, "Please select a monster first", "Monster Selected", JOptionPane.OK_OPTION);
-//            else{
-//
-//                JOptionPane.showMessageDialog(parentFrame, "Selected " + monsterFocusedString.toUpperCase(), "Monster Selected", JOptionPane.OK_OPTION, thumbs);
-//                monsterPanelLabel.setIcon(thumbs);
-//                System.out.println(monsterList.get(monsterSelected));
-//                currentMonster = monsterBox.get(monsterSelected);
-//                monster_name_label.setText(monsterFocusedString);
-//            }
-//        });
+
         findBestSetButton.addActionListener(e -> {
 
-            if (currentMonster.getId() == 0) {
+            if (currentMonster.getBaseId() == 0) {
                 JOptionPane.showMessageDialog(frame, "Please select a monster", "Not enough data", 2, thumbs);
             } else {
                 if (statPriority1.getSelectedIndex() > 0 &&
@@ -215,17 +203,7 @@ public class MainAppPanel extends MyPanel {
         runeMap.addActionListener(e -> System.out.print(monsterRuneMap));
 
         addMonsterButton.addActionListener(e -> {
-
-
-//            JPanel base_monster_panel = new JPanel();
-//
-//            JScrollPane base_monster_scroll_panel = new BaseMonsterScrollPanel(this, base_monster_panel);
-//
-//            resizeComponent(base_monster_scroll_panel, 400, 200);
-//
-//            this.frame.setContentPane(base_monster_scroll_panel.getParent());
-//            this.frame.reframe();
-
+            this.frame.changePanel(this.frame.add_summon_panel.getMain());
         });
     }
 
@@ -244,7 +222,7 @@ public class MainAppPanel extends MyPanel {
     }
 
     public void applyRune(int runeID, int runePosition) {
-        System.out.println("Applying rune " + runeID + " to monster " + currentMonster.getId() + " rune position " + runePosition);
+        System.out.println("Applying rune " + runeID + " to monster " + currentMonster.getBaseId() + " rune position " + runePosition);
         if (runePosition == 1) pos1.setIcon(runeon);
         if (runePosition == 2) pos2.setIcon(runeon);
         if (runePosition == 3) pos3.setIcon(runeon);
@@ -289,10 +267,6 @@ public class MainAppPanel extends MyPanel {
     public JPanel getMain() {
         return mainPanel;
     }
-
-//    private void resetRuneImage(int r){
-//        OLDrune_table.setValueAt(runeon, r, 0);
-//    }
 
     private void optimize(){
 
@@ -531,13 +505,11 @@ public class MainAppPanel extends MyPanel {
 
     private void fetchMonsterDataFromDB(){
         MonsterDB connect = new MonsterDB();
-        this.baseMonsterArrayFromDatabase = connect.getAllMonsters();
-        connect.closeConnection();
-//        System.out.println(baseMonsterArrayFromDatabase);
-//        createMonsters(baseMonsterStringArray);
-        createBaseMonsters();
+//        this.baseMonsterArrayFromDatabase = connect.getBaseMonsters();
+//        connect.closeConnection();
+//        createBaseMonsters();
     }
-//    private void createMonsters(ArrayList<String> dataArr){
+
     private void createBaseMonsters(){
         System.out.println("\n***********************Creating " + baseMonsterArrayFromDatabase.size() + " monsters***********************\n");
         baseMonsterBox = new ArrayList<>(); // want to not use this
@@ -571,7 +543,7 @@ public class MainAppPanel extends MyPanel {
 
         this.selectedMonster = monster;
 //        this.monsterSelectedID = monster.index;
-        this.monsterSelectedID = monster.monster.getId();
+        this.monsterSelectedID = monster.monster.getBaseId();
         this.selected_monster_label.setIcon(monster.img);
 
     }
@@ -589,7 +561,7 @@ public class MainAppPanel extends MyPanel {
     }
     public void updateStatDisplay(boolean reset){
 
-        if(currentMonster.getId()-1 != -1){
+        if(currentMonster.getBaseId()-1 != -1){
 
             String s;
 
@@ -680,7 +652,7 @@ public class MainAppPanel extends MyPanel {
     }
 
     public void resetRuneArray(){
-        runesEquipped = new int[] {currentMonster.getId(),-1,-1,-1,-1,-1,-1};
+        runesEquipped = new int[] {currentMonster.getBaseId(),-1,-1,-1,-1,-1,-1};
     }
 
     private void test_OptimizerScript(){
@@ -697,19 +669,15 @@ public class MainAppPanel extends MyPanel {
     private void createUIComponents() {
         System.out.println("Creating UI Components for MainAppPanel");
         // TODO: place custom component creation code here
-//        System.out.println(this.parentFrame.localAssetList);
         monster_pane = new JPanel();
-        monster_scroll_pane = new MonsterScrollPanel(this, monster_pane);
-//        monster_scroll_pane.setVisible(false);
+        abstract_monster_scroll_panel = new MonsterScrollPanel(this, monster_pane);
 
 
-        rune_left = new JPanel();
-        rune_left.setBackground(null);
-        rune_right = new JPanel();
+        rune_pane_left = new JPanel();
+        rune_pane_right = new JPanel();
         rune_pane = new JPanel();
-        rune_scroll_panel = new RuneScrollPanel(this, rune_pane, rune_left, rune_right);
+        abstract_rune_scroll_panel = new RuneScrollPanel(this, rune_pane, rune_pane_left, rune_pane_right);
 
-        rune_right.setBackground(null);
 
     }
 }

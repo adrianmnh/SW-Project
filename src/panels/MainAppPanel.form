@@ -1,34 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="panels.MainAppPanel">
-  <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="6" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="5" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
       <xy x="24" y="20" width="1398" height="813"/>
     </constraints>
     <properties>
       <background color="-14739957"/>
+      <minimumSize width="1378" height="500"/>
     </properties>
     <border type="none"/>
     <children>
-      <grid id="7b736" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
+      <scrollpane id="ca73" binding="abstract_monster_scroll_panel" custom-create="true">
         <constraints>
-          <grid row="2" column="4" row-span="4" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <minimum-size width="10" height="-1"/>
-            <preferred-size width="10" height="-1"/>
-            <maximum-size width="10" height="-1"/>
-          </grid>
-        </constraints>
-        <properties/>
-        <border type="none"/>
-        <children/>
-      </grid>
-      <scrollpane id="ca73" binding="monster_scroll_pane" custom-create="true">
-        <constraints>
-          <grid row="3" column="1" row-span="1" col-span="2" vsize-policy="7" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="7" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <focusable value="false"/>
+          <foreground color="-4188160"/>
         </properties>
         <border type="none">
           <color color="-11924720"/>
@@ -38,7 +27,6 @@
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints/>
             <properties>
-              <background color="-14739957"/>
               <focusable value="false"/>
             </properties>
             <border type="none"/>
@@ -58,7 +46,7 @@
       <grid id="cb31c" binding="center_panel" layout-manager="GridLayoutManager" row-count="7" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="1" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <background color="-14739957"/>
@@ -274,7 +262,7 @@
             <border type="none"/>
             <children/>
           </grid>
-          <grid id="453e7" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="453e7" binding="current_stat_pane" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <grid row="0" column="1" row-span="2" col-span="1" vsize-policy="3" hsize-policy="3" anchor="6" fill="0" indent="0" use-parent-layout="false">
@@ -336,11 +324,7 @@
       <grid id="5a5e3" binding="after_load_panel" layout-manager="GridLayoutManager" row-count="6" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="1" column="3" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <minimum-size width="270" height="-1"/>
-            <preferred-size width="270" height="-1"/>
-            <maximum-size width="270" height="-1"/>
-          </grid>
+          <grid row="1" column="3" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties/>
         <border type="none"/>
@@ -466,13 +450,9 @@
               </component>
             </children>
           </grid>
-          <scrollpane id="3c44a" binding="rune_scroll_panel" custom-create="true">
+          <scrollpane id="3c44a" binding="abstract_rune_scroll_panel" custom-create="true">
             <constraints>
-              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <minimum-size width="270" height="560"/>
-                <preferred-size width="270" height="560"/>
-                <maximum-size width="270" height="560"/>
-              </grid>
+              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
             <border type="none"/>
@@ -482,7 +462,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <grid id="ea32c" binding="rune_left" custom-create="true" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                  <grid id="ea32c" binding="rune_pane_left" custom-create="true" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="0" left="0" bottom="0" right="0"/>
                     <constraints>
                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
@@ -499,7 +479,7 @@
                     <border type="none"/>
                     <children/>
                   </grid>
-                  <grid id="3f8e9" binding="rune_right" custom-create="true" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                  <grid id="3f8e9" binding="rune_pane_right" custom-create="true" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="0" left="0" bottom="0" right="0"/>
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
@@ -512,6 +492,7 @@
                     <properties>
                       <enabled value="false"/>
                       <foreground color="-3023691"/>
+                      <visible value="false"/>
                     </properties>
                     <clientProperties>
                       <html.disable class="java.lang.Boolean" value="true"/>
@@ -529,7 +510,7 @@
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="1" column="0" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <minimum-size width="600" height="600"/>
+            <minimum-size width="500" height="500"/>
           </grid>
         </constraints>
         <properties/>
@@ -548,7 +529,6 @@
       <hspacer id="95698">
         <constraints>
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
-            <minimum-size width="-1" height="45"/>
             <preferred-size width="-1" height="45"/>
             <maximum-size width="-1" height="45"/>
           </grid>
@@ -572,6 +552,15 @@
           </grid>
         </constraints>
       </hspacer>
+      <vspacer id="c64a7">
+        <constraints>
+          <grid row="1" column="4" row-span="3" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
+            <minimum-size width="10" height="-1"/>
+            <preferred-size width="10" height="-1"/>
+            <maximum-size width="10" height="-1"/>
+          </grid>
+        </constraints>
+      </vspacer>
     </children>
   </grid>
 </form>
