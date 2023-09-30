@@ -595,7 +595,7 @@ public class CreateRunePanel extends  MyPanel {
                         boolean accepted = (runePrimarykey != -1) ? true : false;
                         if(accepted){
                             frame.mainApp_panel.offlineRuneBag.add(r);
-                            RuneScrollPanel temp = (RuneScrollPanel) frame.mainApp_panel.rune_scroll_panel;
+                            RuneScrollPanel temp = (RuneScrollPanel) frame.mainApp_panel.abstract_rune_scroll_panel;
                             temp.addRow(r);
                             frame.changePanel_BackToMainApp();
                         }

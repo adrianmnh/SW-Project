@@ -7,14 +7,17 @@ import panels.subpanel.BaseMonsterScrollPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import static tools.HelperMethods.resizeComponent;
 
 public class AddSummonPanel extends MyPanel{
     private JPanel mainPanel;
-    private JScrollPane monster_scroll;
+    public JScrollPane monster_scroll;
     private JPanel monster_pane;
     private JButton button;
+    private JButton back_button;
 
     public AddSummonPanel(MainFrame PF) {
         super(PF);
@@ -33,6 +36,14 @@ public class AddSummonPanel extends MyPanel{
             System.out.println(this.monster_scroll.getSize());
             System.out.println(this.monster_pane.getSize());
         });
+
+        back_button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.changePanel(frame.mainApp_panel.getMain());
+            }
+        });
+
     }
     public JPanel getMain() {
         return mainPanel;
@@ -40,30 +51,13 @@ public class AddSummonPanel extends MyPanel{
 
     private void setup(){
 
-//        JScrollBar customScrollBar = new JScrollBar(Adjustable.VERTICAL);
-//        customScrollBar.setUI(new MacStyleScrollBarUI());
-////        customScrollBar.setBackground(new Color(0x220B0C));
-//        customScrollBar.setBackground(new Color(0x1F160B));
-
-
-        JScrollBar customScrollBar = new MacStyleScrollBar(Adjustable.VERTICAL);
-        customScrollBar.setBackground(new Color(0x1F160B));
-        customScrollBar.setUnitIncrement((240/2)-80);
-
-
-
-
-
-        monster_scroll.setVerticalScrollBar(customScrollBar);
-        monster_scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-//        monster_scroll.getVerticalScrollBar().setUnitIncrement((240/2)-80);
-
-//        resizeComponent(monster_scroll, 658, 402);
-//        resizeComponent(monster_scroll, 658, 302);
-        resizeComponent(monster_scroll, 80*8 + 0 + 12, 80 * 3 + 0);
-//        monster_scroll.setBorder(BorderFactory.createLineBorder(Color.ORANGE, 1));
-        monster_scroll.setBorder(BorderFactory.createEmptyBorder());
     }
+
+    private void UIsetup(){
+
+
+    }
+
 
 
     private void createUIComponents() {
@@ -74,39 +68,10 @@ public class AddSummonPanel extends MyPanel{
         // TODO: place custom component creation code here
         monster_pane = new JPanel();
         monster_scroll = new BaseMonsterScrollPanel(this, monster_pane);
+        monster_scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        monster_scroll.setBorder(BorderFactory.createEmptyBorder());
 
 
     }
-
-
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Custom ScrollBar Example");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(400, 300);
-
-            // Create a JTextArea within a JScrollPane
-            JTextArea textArea = new JTextArea(10, 30);
-            JScrollPane scrollPane = new JScrollPane(textArea);
-
-            // Create a custom vertical scroll bar with your custom UI
-            JScrollBar verticalScrollBar = new JScrollBar(JScrollBar.VERTICAL);
-            verticalScrollBar.setUI(new MacStyleScrollBarUI());
-            verticalScrollBar.setBackground(Color.BLACK);
-
-            // Set the custom scroll bar to the JScrollPane
-            scrollPane.setVerticalScrollBar(verticalScrollBar);
-
-            scrollPane.setBackground(Color.BLACK);
-
-            frame.add(scrollPane);
-            frame.setVisible(true);
-        });
-
-
-    }
-
-
 
 }
