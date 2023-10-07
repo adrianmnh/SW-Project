@@ -2,18 +2,23 @@ package panels.subpanel;
 
 import static tools.HelperMethods.*;
 
-import classes.subclasses.MacStyleScrollBar;
-import classes.subclasses.MonsterImageIcon;
+import classes.Monster;
+import classes.subclasses.*;
 import database.MonsterDB;
 import panels.AddSummonPanel;
+import panels.LoginPanel;
 import panels.MainFrame;
 import panels.MyPanel;
+import runes.Rune;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class BaseMonsterScrollPanel extends JScrollPane{
@@ -83,8 +88,6 @@ public class BaseMonsterScrollPanel extends JScrollPane{
 
         monsterPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
-
-
         monsterPanel.addMouseListener(  new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e2) {
@@ -107,19 +110,38 @@ public class BaseMonsterScrollPanel extends JScrollPane{
 
                     String title = "Add " + monsterObjectClicked.monster.getName() + " to MonsterBox?";
 
-                    JLabel message = new JLabel("              TitleTitleTitleTitleTitleTitleTitleTitleTitleTitle\nTitle              ");
-                    message.setHorizontalAlignment(JLabel.CENTER);
+//                    JLabel message = new JLabel("             Add " + monsterObjectClicked.monster.getName() + " to MonsterBox?              ");
+                    CenteredLabel message = new CenteredLabel("Add " + monsterObjectClicked.monster.getName() + " to MonsterBox?");
 
-                    JLabel message2 = new JLabel(monsterObjectClicked.monster.getName() + " - BaseId: " + monsterObjectClicked.monster.getBaseId());
+                    CenteredLabel message2 = new CenteredLabel(monsterObjectClicked.monster.getName() + " - BaseId: " + monsterObjectClicked.monster.getBaseId());
 
-                    JLabel imageLabel = new JLabel(img);
-//                    resizeComponent(imageLabel, ICON_DIMENSION*2, ICON_DIMENSION*2);
+                    CenteredLabel message3 = new CenteredLabel("Please enter monster alias below");
+
+                    CenteredLabel imageLabel = new CenteredLabel(img);
+
+                    JPanel panel = new JPanel();
+                    JTextField aliasField = new JTextField();
+                    aliasField.setToolTipText("Please enter monster alias");
+                    aliasField.setText(monsterObjectClicked.monster.getName());
+                    aliasField.setHorizontalAlignment(JTextField.CENTER);
+
+                    resizeComponent(panel, 180, 40);
+                    resizeComponent(aliasField, 180, 40);
+                    panel.add(aliasField);
+                    panel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+                    JOptionPane optionPane = new JOptionPane();
+
+
+                    ToolTipManager.sharedInstance().setInitialDelay(0);
+
+                    Object[] customContent = {message, message2, imageLabel, message3, panel};
 
 
                     Object[] options = {"OK", "Cancel"}; // Custom button labels
-                    int result = JOptionPane.showOptionDialog(
+
+                    int result = optionPane.showOptionDialog(
                             parentFrame, // Use null for the parent frame
-                            new Object[]{message, message2, imageLabel}, // Your custom content
+                            customContent, // Your custom content
                             title,
                             JOptionPane.OK_CANCEL_OPTION,
                             JOptionPane.PLAIN_MESSAGE,
@@ -130,18 +152,69 @@ public class BaseMonsterScrollPanel extends JScrollPane{
 
                     parentFrame.fixContentBleed();
 
+                    String alias = aliasField.getText();
+
+                    System.out.println("Alias: " + alias);
+
+                    int generatedKey = -1;
+
+                    if(alias.equals("")){
+                        JOptionPane.showMessageDialog(parentFrame, "Please enter monster alias", "Error", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
 
                     if (result == JOptionPane.OK_OPTION) {
-                        System.out.println(parentFrame.baseMonsters.get(assetPosInList));
-                        selectMonsterFromClick(assetPosInList);
-                        monsterObjectClicked = null;
 
-                        doSomething();
+//                        selectMonsterFromClick(assetPosInList);
+
+                        String customName = alias;
+                        generatedKey = addSummon(monsterObjectClicked.monster, customName);
+
+
+
+                        processAddSummon(generatedKey, customName);
+
+//                        MonsterRuneMap2 mapRef = parentFrame.mainApp_panel.monsterRuneMap2;
+//                        MonsterScrollPanel panelRef = parentFrame.mainApp_panel.monster_scroll_pane;
+//                        if(generatedKey != -1){
+//                            MonsterImageIcon monsterImageIcon = monsterObjectClicked.clone();
+//                            monsterImageIcon.setSummonId(generatedKey);
+//                            monsterImageIcon.setAlias(customName);
+//                            mapRef.put(monsterImageIcon, new RuneSet());
+//                            CenteredLabel label = new CenteredLabel("Success! Summon added to Account               ");
+//                            JOptionPane.showMessageDialog(parentFrame,label, "Summon created", 2, parentFrame.uiResources.getImageIcon("thumbs.png"));
+//                        } else {
+//                            MonsterDB monsterDB = new MonsterDB();
+//                            ArrayList<Object> data = monsterDB.selectAllSimilarSummon(parentFrame.getCurrentUserID(), monsterObjectClicked.monster.getBaseId());
+//                            System.out.println(data.get(0));
+//                            int usedSize = data.size();
+//                            if(usedSize > 0) {
+//                                Object[] aliasUsed = new Object[usedSize];
+//                                message3.setText("Alias already used:");
+//                                aliasUsed[0] = message3;
+//                                for(int i=1; i< usedSize; i++){
+//                                    // remove brackets from name
+//                                    String name = data.get(i).toString().replaceAll("[\\[\\]]", "");
+//                                    System.out.println(name);
+//                                    JLabel label = new JLabel(name);
+//                                    label.setHorizontalAlignment(JLabel.CENTER);
+//                                    aliasUsed[i] = label;
+//                                }
+//                                JOptionPane.showConfirmDialog(parentFrame, aliasUsed, "Alias already used", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+//                                return;
+//                            }
+//                        }
+//                        panelRef.createMonsterImages();
+
+
+//                        panelRef.revalidate();
+
                     }
                 } catch (Exception e) {
                     System.out.println(e.getLocalizedMessage());
                 }
 
+                monsterObjectClicked = null;
 
 
             }
@@ -149,6 +222,49 @@ public class BaseMonsterScrollPanel extends JScrollPane{
 
 
 
+    }
+
+    private void processAddSummon(int generatedKey, String customName){
+        MonsterRuneMap2 mapRef = parentFrame.mainApp_panel.monsterRuneMap2;
+        MonsterScrollPanel panelRef = parentFrame.mainApp_panel.monster_scroll_pane;
+        if(generatedKey != -1){
+            MonsterImageIcon monsterImageIcon = monsterObjectClicked.clone();
+            monsterImageIcon.setSummonId(generatedKey);
+            monsterImageIcon.setAlias(customName);
+            mapRef.put(monsterImageIcon, new RuneSet());
+            CenteredLabel label = new CenteredLabel("Success! Summon added to Account !              ");
+            label.setVerticalAlignment(JLabel.CENTER);
+            // Increase font size of label
+            label.setFont(label.getFont().deriveFont(14f));
+            JOptionPane.showMessageDialog(parentFrame,label, "Summon created", 2, parentFrame.uiResources.getImageIcon("thumbs.png"));
+        } else {
+            MonsterDB monsterDB = new MonsterDB();
+            ArrayList<Object> data = monsterDB.selectAllSimilarSummon(parentFrame.getCurrentUserID(), monsterObjectClicked.monster.getBaseId());
+            System.out.println(data.get(0));
+            int usedSize = data.size();
+            if(usedSize > 0) {
+                Object[] aliasUsed = new Object[usedSize];
+                CenteredLabel message = new CenteredLabel("Alias already used:");
+                aliasUsed[0] = message;
+                for(int i=1; i< usedSize; i++){
+                    // remove brackets from name
+                    String name = data.get(i).toString().replaceAll("[\\[\\]]", "");
+                    System.out.println(name);
+                    JLabel label = new JLabel(name);
+                    label.setHorizontalAlignment(JLabel.CENTER);
+                    aliasUsed[i] = label;
+                }
+                JOptionPane.showConfirmDialog(parentFrame, aliasUsed, "Alias already used", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE);
+                return;
+            }
+        }
+        panelRef.createMonsterImages();
+    }
+    private int addSummon(Monster monster, String name){
+        MonsterDB monsterDB = new MonsterDB();
+        ArrayList<Object> data = monsterDB.addUserSummon(parentFrame.getCurrentUserID(), monsterObjectClicked.monster, name);
+        System.out.println("Data: " + data);
+        return (int)data.get(0);
     }
 
     private void doSomething(){
@@ -189,7 +305,7 @@ public class BaseMonsterScrollPanel extends JScrollPane{
         System.out.println("Rows updated: " + rowsUpdated);
 
     }
-    private void createMonsterImage(int assetPosInList){
+    private void createMonsterImage(int generatedKey){
 
 //        this.selectedMonster = parentFrame.monsterResources.get(assetPosInList);
 //        this.selectedMonster.monster = parentPanel.monsterBox.get(assetPosInList);
@@ -217,7 +333,6 @@ public class BaseMonsterScrollPanel extends JScrollPane{
 //            parentPanel.monsterRuneMap.put(monsterObjectSelected.monster.getId(), new HashSet<Rune>());
 //
 //        this.setRunesEquipped();
-
 
     }
 
