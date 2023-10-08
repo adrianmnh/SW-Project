@@ -5,26 +5,30 @@ import runes.Rune;
 import javax.swing.*;
 import java.awt.*;
 
-public class RuneBoxImage extends JLabel {
+public class UIRuneBoxImage extends JLabel {
     public Rune rune;
-    public RuneBoxImage(Rune rune){
+    public UIRuneBoxImage(Rune rune){
         super();
         this.rune = rune;
     }
-    public RuneBoxImage(Rune rune, ImageIcon imageIcon){
+    public UIRuneBoxImage(Rune rune, ImageIcon imageIcon){
         super(imageIcon);
         this.rune = rune;
         this.setHorizontalTextPosition(JLabel.CENTER);
-        this.setForeground(Color.ORANGE);
-        this.setFont(this.getFont().deriveFont(14f));
+        this.setFont(this.getFont().deriveFont(Font.BOLD, 18f));
         this.updateDisplay();
     }
 
     public void updateDisplay(){
-        //        String alias = rune.summonAlias == null ? "" : rune.summonAlias;
+//        String alias = rune.summonAlias == null ? "" : rune.summonAlias;
 //        this.setText(alias);
         String summonId = rune.summonId == -1 ? "" : rune.summonId + "";
         this.setText(rune.runeId + ":" + summonId);
+        if(rune.isEquipped){
+            this.setForeground(Color.ORANGE);
+        } else {
+            this.setForeground(Color.BLACK);
+        }
     }
 
     @Override

@@ -15,7 +15,7 @@ public class IconArrayList<MyImageIcon> extends ArrayList<MyImageIcon> implement
         super.add((MyImageIcon) myImage);
     }
 
-    public ImageIcon getImage(String name) {
+    public ImageIcon getImageIcon(String name) {
         for (int i = 0; i < super.size(); i++) {
             if (((classes.subclasses.MyImageIcon) super.get(i)).imgName.equals(name)) {
                 return ((classes.subclasses.MyImageIcon) super.get(i)).imgResource;
@@ -24,9 +24,17 @@ public class IconArrayList<MyImageIcon> extends ArrayList<MyImageIcon> implement
         return null;
     }
 
-    public MyImageIcon get(String name) {
+    public MyImageIcon getFromName(String name) {
         for (int i = 0; i < super.size(); i++) {
             if (((classes.subclasses.MyImageIcon) super.get(i)).imgName.equals(name)) {
+                return (MyImageIcon) ((classes.subclasses.MyImageIcon) super.get(i));
+            }
+        }
+        return null;
+    }
+    public MyImageIcon getFromPath(String path) {
+        for (int i = 0; i < super.size(); i++) {
+            if (((classes.subclasses.MyImageIcon) super.get(i)).imgPath.equals(path)) {
                 return (MyImageIcon) ((classes.subclasses.MyImageIcon) super.get(i));
             }
         }
