@@ -3,6 +3,7 @@ package classes.subclasses;
 import runes.Rune;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class RuneBoxImage extends JLabel {
     public Rune rune;
@@ -13,6 +14,17 @@ public class RuneBoxImage extends JLabel {
     public RuneBoxImage(Rune rune, ImageIcon imageIcon){
         super(imageIcon);
         this.rune = rune;
+        this.setHorizontalTextPosition(JLabel.CENTER);
+        this.setForeground(Color.ORANGE);
+        this.setFont(this.getFont().deriveFont(14f));
+        this.updateDisplay();
+    }
+
+    public void updateDisplay(){
+        //        String alias = rune.summonAlias == null ? "" : rune.summonAlias;
+//        this.setText(alias);
+        String summonId = rune.summonId == -1 ? "" : rune.summonId + "";
+        this.setText(rune.runeId + ":" + summonId);
     }
 
     @Override

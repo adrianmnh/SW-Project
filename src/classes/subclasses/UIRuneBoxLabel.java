@@ -21,7 +21,7 @@ public class RuneBoxLabel extends Box {
 
         setGrade.setText(String.format("%s %s ★", r.getSetString(), r.getGrade()));
         runeStats.add(setGrade);
-        posMainstat.setText(String.format("Slot %s %s", r.getPos(), r.getMainStat()));
+        posMainstat.setText(String.format("SLOT %s %s", r.getPos(), r.getMainStat()));
         runeStats.add(posMainstat);
         if(r.getRuneInnate()){
             innate.setText(String.format("%s", r.getSubStats().get(4)));

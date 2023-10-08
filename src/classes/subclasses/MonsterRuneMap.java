@@ -3,7 +3,7 @@ package classes.subclasses;
 import runes.Rune;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,9 +25,10 @@ public class MonsterRuneMap extends TreeMap<MonsterImageIcon, RuneSet> {
     }
 
     public RuneSet getBySummonId(int summonId){
-        for(MonsterImageIcon monster : this.keySet()){
-            if(monster.summonId == summonId){
-                return this.get(monster);
+        for(Map.Entry<MonsterImageIcon, RuneSet> entry : this.entrySet()){
+            if(entry.getKey().summonId == summonId){
+                RuneSet runeSet = entry.getValue();
+                return runeSet;
             }
         }
         return null;
@@ -53,22 +54,22 @@ public class MonsterRuneMap extends TreeMap<MonsterImageIcon, RuneSet> {
         System.out.println("RuneMap:\n{");
         StringBuilder sb = new StringBuilder();
 
-        for(MonsterImageIcon monsterImageIcon : this.keySet()){
-            int id = monsterImageIcon.summonId;
-            sb.append("MonsterImageIcon " + monsterImageIcon.monster.getSummonId());
+        for(Map.Entry<MonsterImageIcon, RuneSet> entry : this.entrySet()){
+            int id = entry.getKey().summonId;
+            sb.append("MonsterImageIcon " + id);
             sb.append(" - {");
-            sb.append(this.get(monsterImageIcon) + " " );
+            sb.append(entry.getValue() + " " );
             sb.append("\t}\n");
         }
         sb.append("}");
         return sb.toString();
     }
 
-    public void printKeySet(){
+    public void printEntries(){
         System.out.println("KeySet: ");
-        for(MonsterImageIcon monsterImageIcon : this.keySet()){
-            System.out.println(monsterImageIcon);
-            System.out.println(this.get(monsterImageIcon));
+        for(Map.Entry<MonsterImageIcon, RuneSet> entry : this.entrySet()){
+            System.out.println(entry.getKey());
+            System.out.println(entry.getValue());
         }
     }
 
