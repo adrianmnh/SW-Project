@@ -21,19 +21,32 @@ USE [SummonersWar]
 
 GO
 
-DROP LOGIN [admin]
+DROP LOGIN [adminlogin]
 go
 
-CREATE LOGIN admin
-WITH PASSWORD = 'admin$%#@33096$%#@',
+DROP LOGIN [guestlogin]
+go
+
+CREATE LOGIN adminlogin
+WITH PASSWORD = 'adminlogin$%#@33096$%#@',
+DEFAULT_DATABASE = SummonersWar
+go
+
+CREATE LOGIN guestlogin
+WITH PASSWORD = 'guestlogin$%#@33096$%#@',
 DEFAULT_DATABASE = SummonersWar
 go
 
 CREATE SCHEMA [GameTool]
     go
 
-CREATE USER [useraccount]
-FOR LOGIN [admin]
+CREATE USER [admin001]
+FOR LOGIN [adminlogin]
+WITH DEFAULT_SCHEMA = GameTool
+go
+
+CREATE USER [adrianguest]
+FOR LOGIN [guestlogin]
 WITH DEFAULT_SCHEMA = GameTool
 go
 
@@ -137,7 +150,13 @@ CREATE TYPE [BooleanInt]
     FROM TINYINT NOT NULL
     go
 
-    sp_addsrvrolemember 'admin', 'sysadmin'
+    sp_addsrvrolemember 'adminlogin', 'sysadmin'
+    go
+
+    sp_addrolemember 'db_datawriter', 'adrianguest'
+    go
+
+    sp_addrolemember 'db_datareader', 'adrianguest'
     go
 
 CREATE TABLE [GameTool].[Monster]
@@ -188,8 +207,7 @@ CREATE TABLE [GameTool].[Account]
 CREATE TABLE [GameTool].[Rune]
 (
     [RuneId]             [PrimaryKey2]  IDENTITY ( 201,1 ) ,
-    [AccountId]          [GameTool].[SurrogateKey]  NOT NULL
-    INDEX [XFK_AccountRune] NONCLUSTERED  ,
+    [AccountId]          [GameTool].[SurrogateKey]  NOT NULL ,
     [RuneGrade]          [GameTool].[Grade]
     CONSTRAINT [CK_Grade_317387518]
     CHECK  ( [RuneGrade]=5 OR [RuneGrade]=6 ),
@@ -242,23 +260,15 @@ CREATE TABLE [GameTool].[Rune]
 CREATE TABLE [GameTool].[Summon]
 (
     [SummonId]           [GameTool].[PrimaryKey3]  IDENTITY ( 3001,1 ) ,
-    [AccountId]          [GameTool].[SurrogateKey]  NULL
-    INDEX [XFK_AccountSummon] NONCLUSTERED  ,
-    [MonsterId]          [GameTool].[PrimaryKey]  NOT NULL
-    INDEX [XFK_MonsterSummon] NONCLUSTERED  ,
+    [AccountId]          [GameTool].[SurrogateKey]  NULL ,
+    [MonsterId]          [GameTool].[PrimaryKey]  NOT NULL ,
     [Name]               [GameTool].[MonsterName] ,
-    [Rune1]              [GameTool].[SurrogateKey]  NULL
-    INDEX [XIF3Summon] NONCLUSTERED  ,
-    [Rune2]              [GameTool].[SurrogateKey]  NULL
-    INDEX [XIF4Summon] NONCLUSTERED  ,
-    [Rune3]              [GameTool].[SurrogateKey]  NULL
-    INDEX [XIF5Summon] NONCLUSTERED  ,
-    [Rune4]              [GameTool].[SurrogateKey]  NULL
-    INDEX [XIF6Summon] NONCLUSTERED  ,
-    [Rune5]              [GameTool].[SurrogateKey]  NULL
-    INDEX [XIF7Summon] NONCLUSTERED  ,
-    [Rune6]              [GameTool].[SurrogateKey]  NULL
-    INDEX [XIF8Summon] NONCLUSTERED  ,
+    [Rune1]              [GameTool].[SurrogateKey]  NULL ,
+    [Rune2]              [GameTool].[SurrogateKey]  NULL ,
+    [Rune3]              [GameTool].[SurrogateKey]  NULL ,
+    [Rune4]              [GameTool].[SurrogateKey]  NULL ,
+    [Rune5]              [GameTool].[SurrogateKey]  NULL ,
+    [Rune6]              [GameTool].[SurrogateKey]  NULL ,
     CONSTRAINT [PK_Summon] PRIMARY KEY  CLUSTERED ([SummonId] ASC),
     CONSTRAINT [AK_UniqueSummon] UNIQUE ([MonsterId]  ASC,[Name]  ASC,[AccountId]  ASC),
     CONSTRAINT [Rune1] FOREIGN KEY ([Rune1]) REFERENCES [GameTool].[Rune]([RuneId])
@@ -287,6 +297,48 @@ CREATE TABLE [GameTool].[Summon]
     ON UPDATE NO ACTION
     )
     go
+
+CREATE UNIQUE NONCLUSTERED INDEX [XAK_UniqueRune1] ON [GameTool].[Summon]
+(
+	[Rune1]               ASC
+)
+WHERE Rune1 IS NOT NULL
+go
+
+CREATE UNIQUE NONCLUSTERED INDEX [XAK_UniqueRune2] ON [GameTool].[Summon]
+(
+	[Rune2]               ASC
+)
+WHERE Rune2 IS NOT NULL
+go
+
+CREATE UNIQUE NONCLUSTERED INDEX [XAK_UniqueRune3] ON [GameTool].[Summon]
+(
+	[Rune3]               ASC
+)
+WHERE Rune3 IS NOT NULL
+go
+
+CREATE UNIQUE NONCLUSTERED INDEX [XAK_UniqueRune4] ON [GameTool].[Summon]
+(
+	[Rune4]               ASC
+)
+WHERE Rune4 IS NOT NULL
+go
+
+CREATE UNIQUE NONCLUSTERED INDEX [XAK_UniqueRune5] ON [GameTool].[Summon]
+(
+	[Rune5]               ASC
+)
+WHERE Rune5 IS NOT NULL
+go
+
+CREATE UNIQUE NONCLUSTERED INDEX [XAK_UniqueRune6] ON [GameTool].[Summon]
+(
+	[Rune6]               ASC
+)
+WHERE Rune6 IS NOT NULL
+go
 
 CREATE VIEW [GameTool].[UserSummons]([SummonId],[AccountId],[MonsterId],[MonsterName],[GivenName],[MonsterHP],[MonsterATK],[MonsterDEF],[MonsterSPD],[MonsterCRte],[MonsterCDmg],[MonsterRES],[MonsterACC],[Rune1],[Rune2],[Rune3],[Rune4],[Rune5],[Rune6])
 AS

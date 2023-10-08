@@ -28,6 +28,67 @@ public abstract class Database {
     //int = statement executeUpdate(sql, RETURN_GE..) -> rowsUpdated
     // statement executeUpdate(sql, RETURN_GENERATED_KEYS),  ResultSet generated = statement.getGeneratedKeys().next(), generated.getInt(1)
 
+    public ArrayList<Object> execSelect(HashMap<String, Object> map){
+        ArrayList<Object> data = new ArrayList<Object>();
+        try{
+            String query = map.get("query").toString();
+            String selectType = map.get("type").toString() == null ? "" : map.get("type").toString();
+
+            switch(selectType){
+                case "all":
+                    System.out.println("Executing select query: " + query);
+                    ResultSet result = satement.executeQuery(query);
+                    // get column names:
+                    ResultSetMetaData rsmd = result.getMetaData();
+                    int columnsNumber = rsmd.getColumnCount();
+                    ArrayList<Object> columnNames = new ArrayList<Object>();
+                    for(int i=1; i<=columnsNumber; i++)
+                        columnNames.add(rsmd.getColumnName(i));
+                    data.add(columnNames);
+                    while(result.next()){
+                        ArrayList<Object> row = new ArrayList<Object>();
+                        for(int col=1; col<=result.getMetaData().getColumnCount(); col++)
+                            row.add(result.getObject(col));
+                        data.add(row);
+                    }
+                    System.out.println("Retrieved rows: " + data.size());
+                    break;
+
+                case "row":
+                    System.out.println("Executing select query: " + query);
+                    ResultSet result2 = satement.executeQuery(query);
+                    result2.next();
+                    ArrayList<Object> row = new ArrayList<Object>();
+                    for(int col=1; col<=result2.getMetaData().getColumnCount(); col++)
+                        row.add(result2.getObject(col));
+                    data.add(row);
+                    System.out.println("Retrieved row: " + data);
+                    break;
+
+                case "count":
+                    System.out.println("Executing select query: " + query);
+                    ResultSet result3 = satement.executeQuery(query);
+                    result3.next();
+                    data.add(result3.getInt(1));
+                    System.out.println("Retrieved count: " + data);
+                    break;
+            }
+        } catch (Exception ex) {
+            System.out.println("\n\n::::::::::::::Error found :" + ex.getLocalizedMessage() + ":::::::::::::\n\n");
+            if(ex.getLocalizedMessage().contains("permission")){
+                data.add(-99);
+            } else {
+                data.add(-1);
+            }
+            SQLException sqlException = (SQLException)ex;
+            System.out.println("Error Code:" + sqlException.getErrorCode());
+        } finally {
+            this.closeConnection();
+            return data;
+        }
+
+    }
+
     public ArrayList<Object> execUpdate(HashMap<String, Object> map) {
         ArrayList<Object> data = new ArrayList<Object>();
         try {
@@ -36,6 +97,7 @@ public abstract class Database {
 
             switch(updateType) {
                 case "rows":
+                    System.out.println("Executing update query: " + query);
                     System.out.println("Executing update query: " + query);
                     int rowsUpdated = satement.executeUpdate(query);
                     data.add(rowsUpdated);
@@ -61,7 +123,14 @@ public abstract class Database {
             }
 
         } catch (Exception ex) {
-            System.out.println("Error found :" + ex.getLocalizedMessage());
+            System.out.println("\n\n::::::::::::::Error found :" + ex.getLocalizedMessage() + ":::::::::::::\n\n");
+            if(ex.getLocalizedMessage().contains("permission")){
+                data.add(-99);
+            } else {
+                data.add(-1);
+            }
+            SQLException sqlException = (SQLException)ex;
+            System.out.println("Error Code:" + sqlException.getErrorCode());
         } finally {
             this.closeConnection();
             return data;
@@ -69,27 +138,23 @@ public abstract class Database {
 
     }
 
+//    public ArrayList<Object>
+
     public void initConnection(){
         try{
 
             String connectionString = "" +
                     "jdbc:sqlserver://localhost:1433;" +
-                    "database=SummonersWar;user=admin;" +
-//                    "password=admin$%#@29174$%#@;" +
-                    "password=admin$%#@33096$%#@;" +
+                    "database=SummonersWar;user=guestlogin;" +
+                    "password=guestlogin$%#@33096$%#@;" +
                     "encrypt=true;" +
                     "trustServerCertificate=true;";
 //            System.out.println(connectionString);
 
-//            System.out.println("Database.Connection");
-
             connection = DriverManager.getConnection(connectionString);
 
-//            connection = DriverManager
-
-//            System.out.println("\n -- Connection established -- \n\n --" + connection);
-            System.out.println(connection.getClientInfo());
-            System.out.println("\n -- Connection established -- \n\n --");
+//            System.out.println("------- Connection established ------- :: Database:: " + connection.getCatalog() + " ClientInfo: " + connection.getClientInfo());
+//            System.out.println("------- Connection established -------");
 
             satement = connection.createStatement();
 
@@ -103,7 +168,7 @@ public abstract class Database {
         try{
             if(!connection.isClosed()){
                 connection.close();
-                System.out.println("Connection closed");
+//                System.out.println("------- Connection Closed -----------");
             }
         }catch(SQLException e) {
             System.out.println("No active connection to close");
@@ -231,21 +296,6 @@ public abstract class Database {
 
     }
 
-    //RuneDatabaseMethods
-//    public boolean addRuneToUser(int user, Rune r){
-//        try{
-//            if(!userHasRune(user, r)){
-//                String sqlQuery = addRuneSQLQuery(user, r);
-//                getStatement().execute(sqlQuery);
-//                System.out.printf("%s   ****rune added to user %d****\n", r, user);
-//                return true;
-//            }
-//        }catch (SQLException e){
-//            System.out.println("Error found on addRuneToUser: " + e);
-//            return false;
-//        }
-//        return false;
-//    }
     private String addRuneSQLQuery(int user, Rune r){
         //checkIfUserHasRune(user, r);
         //	userid	runeid	runegrade-runeset-position-innate-mainstat	sub0	val0	sub1	val1	sub2	val2	sub3	val3	sub4	val4
@@ -270,56 +320,6 @@ public abstract class Database {
         s.append("false );");
         return s.toString();
     }
-//    public boolean userHasRune(int user, Rune rune){
-//        boolean toReturn = false;
-//        try{
-//            ArrayList<Rune> user_runes = getUserRunes(user);
-//            for ( Rune r : user_runes ) {
-//                if( rune.compareTo(r) == 0 ){
-//                    System.out.println("Comparing, true flag hit, user has rune");
-//                    return true;
-//                }
-//                System.out.print("-NOhit-  ");
-//            }
-//
-//            if(toReturn == false){
-////                getStatement().execute(addRuneSQLQuery(user, rune));
-////                System.out.println(rune+ " rune added to" + user);
-////                user_runes.add(rune);
-//                return false;
-//            }
-//        }catch(Exception e){
-//            System.out.println("Error found at userHasRune\n " + e.getLocalizedMessage() + "\n"+e.getStackTrace()+"\n"+e.getClass());
-//        }
-//        return toReturn;
-//    }
-//    public ArrayList<Rune> getUserRunes(int userid){
-//        ArrayList<Rune> runes;
-//        // return and arrayList of Runes in the correct format, no null
-//        try{
-////            String sqlQuery = "select runegrade, runeset, position, innate, mainstat, sub1, val1, sub2, val2, sub3, val3, sub4, val4, sub0, val0 from user_runes where userid = "+userid;
-//            String sqlQuery =
-//            System.out.println(sqlQuery);
-//            ResultSet result = getStatement().executeQuery(sqlQuery);
-//            //System.out.println("\nThis is existing user TABLE user_runes data fixed without NULL");
-//            runes = new ArrayList<>();
-//            while(result.next()){
-//                String r = "";
-//                for(int i=1; i<=result.getMetaData().getColumnCount(); i++){
-//                    if(result.getObject(i) != null )
-//                        r += result.getObject(i) + " ";
-//                }
-//                //System.out.println(r + " String used to create Rune objects from existing data");
-//                runes.add(new Rune(r));
-//            }
-////            System.out.println("\nList of existing Runes:");
-////            for(Rune r : runes)System.out.println(r);
-//            return runes;
-//        }catch(Exception e){
-//            System.out.println("Error found. " + e);
-//        }
-//        return null;
-//    }
 
     public void printResultSet(ResultSet resultSet) {
         try {

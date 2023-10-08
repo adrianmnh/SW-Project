@@ -72,20 +72,27 @@ public class RuneDB extends Database {
         return s.toString();
     }
     public int execEngraveRuneQuery(int user, Monster monster, Rune rune){
-        int rowsUpdated = -1;
+        this.setTable("GameTool.Summon");
+        int rowsUpdated1 = -1, rowsUpdated2 = -1;
         String sql = "";
         try{
-            sql = String.format("UPDATE %s SET Rune%d = %d WHERE AccountId = %d AND MonsterId = %d;",
-                    "GameTool.Engraved", rune.getPosInt(), rune.getId(), user, monster.getBaseId());
+            sql = String.format("UPDATE %s SET Rune%d = %d WHERE AccountId = %d AND SummonId = %d;",
+                    getTable(), rune.getPosInt(), rune.getId(), user, monster.getSummonId());
             System.out.println(sql);
-            rowsUpdated = getStatement().executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
-            System.out.println("Rows updated: " + rowsUpdated);
+            rowsUpdated1 = getStatement().executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            System.out.println("Engrave Rune Query " + rowsUpdated1 + "-> Rune Added To Summon: " + monster.getSummonId());
+            this.setTable("GameTool.Rune");
+            sql = String.format("UPDATE %s SET Engraved = 1 WHERE AccountId = %d AND RuneId = %d;",
+                    getTable(), user, rune.getId());
+            System.out.println(sql);
+            rowsUpdated2 = getStatement().executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            System.out.println("Engrave Rune Query " + rowsUpdated2 + "-> Rune engraved status updated: " + rune.runeId);
 
         } catch (SQLException e) {
             System.out.println("Error found: " + e);
         }
         this.closeConnection();
-        return rowsUpdated;
+        return rowsUpdated1;
     }
 //
     public RuneBag getUserRunes(int userid){

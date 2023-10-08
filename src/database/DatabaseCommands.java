@@ -3,16 +3,6 @@ package database;
 public interface DatabaseCommands {
 
 
-    public void changeColumnNames();
-
-    public void addData();
-
-
-
-    //public void deleteRow(int i);
-
-
-
 
 }
 

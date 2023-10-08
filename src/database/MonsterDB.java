@@ -16,6 +16,28 @@ public class MonsterDB extends Database{
         setTable("GameTool.Monster");
     }
 
+    public ArrayList<Object> selectUserSummon(int userId){
+        setTable("GameTool.Summon");
+        ArrayList<Object> data = new ArrayList<>();
+        HashMap<String, Object> map = new HashMap<>();
+        String query = String.format("SELECT * FROM %s WHERE AccountId = %d;", getTable(), userId);
+        map.put("query", query);
+        map.put("type", "all");
+        data = this.execSelect(map);
+        return data;
+    }
+
+    public ArrayList<Object> selectAllSimilarSummon(int userId, int baseId){
+        setTable("GameTool.Summon");
+        ArrayList<Object> data = new ArrayList<>();
+        HashMap<String, Object> map = new HashMap<>();
+        String query = String.format("SELECT Name FROM %s WHERE AccountId = %d AND MonsterId = %d;", getTable(), userId, baseId);
+        map.put("query", query);
+        map.put("type", "all");
+        data = this.execSelect(map);
+        return data;
+    }
+
     public ArrayList<Object> removeUserSummon(int userId, int summonId, String summonName){
         setTable("GameTool.Summon");
         System.out.println("Removing Summon: " + summonId + " " + summonName + " from user: " + userId);
@@ -29,7 +51,7 @@ public class MonsterDB extends Database{
         return deletedRows;
     }
 
-    private ArrayList<Object> addUserSummon(int userId, Monster monster, String summonName){
+    public ArrayList<Object> addUserSummon(int userId, Monster monster, String summonName){
         setTable("GameTool.Summon");
         System.out.println("Adding Summon: " + monster.getName() + " with alias " + summonName + " toUser user: " + userId);
         ArrayList<Object> keyAdded = new ArrayList<>();
@@ -51,16 +73,11 @@ public class MonsterDB extends Database{
 
             ResultSet result = getStatement().executeQuery(sqlQuery);
 
-//            printResultSet(result);
-
-
-//            System.out.println("Retrieved rows: " + result.getFetchSize());
             while(result.next()) {
                 String r = "";
                 for (int col = 1; col <= result.getMetaData().getColumnCount(); col++)
                     r += result.getObject(col) + " ";
                 data.add(r);
-//            System.out.println(r);
             }
 
 
