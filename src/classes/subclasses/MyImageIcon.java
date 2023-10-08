@@ -7,25 +7,35 @@ public class MyImageIcon extends ImageIcon {
     public String imgName;
     public ImageIcon imgResource;
 
-    public String path;
+    public String imgPath;
 
-    public MyImageIcon(String path){
-        this.path = path;
+    public MyImageIcon(){
+        super();
+    }
 
-        if(path.contains("ui/"))
-            this.imgName = path.replace("ui/", "");
-        else if(path.contains("monsters/")){
-            this.imgName = path.replace("monsters/", "");
+
+    public MyImageIcon(String imgPath){
+        this.imgPath = imgPath;
+
+        if(imgPath.contains("ui/"))
+            this.imgName = imgPath.replace("ui/", "");
+        else if(imgPath.contains("monsters/")){
+            this.imgName = imgPath.replace("monsters/", "");
             this.imgName = this.imgName.replace(".png", "");
             this.imgName = this.imgName.replace(".jpg", "");
         }
-        this.imgResource = new ImageIcon(getClass().getClassLoader().getResource(path));
+        this.imgResource = new ImageIcon(getClass().getClassLoader().getResource(imgPath));
     }
 
     public String toString(){
         return "MyImageIcon{" +
+                "imgPath='" + imgPath + '\'' +
                 "imgName='" + imgName + '\'' +
                 '}';
+    }
+
+    public ImageIcon getImageIcon(){
+        return imgResource;
     }
 
 }
