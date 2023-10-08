@@ -17,7 +17,7 @@ public class RuneBag extends ArrayList <Rune>{
     public boolean hasRune(Rune r){
         return super.contains(r);
     }
-    public Rune getRune(int runeId){
+    public Rune getRuneById(int runeId){
         for(Rune r : this){
             if(r.runeId == runeId) return r;
         }
@@ -25,6 +25,18 @@ public class RuneBag extends ArrayList <Rune>{
     }
     public Rune getIndex(int index){
         return this.get(index);
+    }
+
+    public void sortByPos(){
+        this.sort((o1, o2) -> {
+            if(o1.getPosInt() > o2.getPosInt()){
+                return 1;
+            }else if(o1.getPosInt() < o2.getPosInt()){
+                return -1;
+            }else{
+                return 0;
+            }
+        });
     }
 
 }

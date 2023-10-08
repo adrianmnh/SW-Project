@@ -51,13 +51,13 @@ public class MonsterRuneMap extends TreeMap<MonsterImageIcon, RuneSet> {
     }
 
     public String toString(){
-        System.out.println("RuneMap:\n{");
+        System.out.println("RuneMap size " + this.entrySet().size() + ":\n{");
         StringBuilder sb = new StringBuilder();
 
         for(Map.Entry<MonsterImageIcon, RuneSet> entry : this.entrySet()){
             int id = entry.getKey().summonId;
             sb.append("MonsterImageIcon " + id);
-            sb.append(" - {");
+            sb.append(" --> {");
             sb.append(entry.getValue() + " " );
             sb.append("\t}\n");
         }
