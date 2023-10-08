@@ -13,6 +13,8 @@ public class Rune implements Comparable<Rune> {
     private MainStat mainStat;
     public ArrayList<SubStat> subs;
     public boolean isEquipped;
+    public int summonId=-1;
+    public String summonAlias=null;
 
     /************************************** Constructors **************************************/
     public Rune(String grade, String set, String pos, String innate, String stat){
@@ -270,6 +272,7 @@ public class Rune implements Comparable<Rune> {
 
     @Override
     public int compareTo(Rune o) {
+        //Compare
 //        if(this.runeExists(o)) return 0; // 0 - rune exits
         return -1;
     }

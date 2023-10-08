@@ -18,8 +18,11 @@ public class Monster {
     private int ACC;
     private int summonId;
 
+    private String alias;
+
 
     public Monster(){
+        this.summonId = -1;
         this.baseId = 0;
         this.name = "";
         this.HP = 0;
@@ -30,9 +33,9 @@ public class Monster {
         this.CDmg = 0;
         this.RES = 0;
         this.ACC = 0;
-        this.summonId = -1;
     }
     public Monster(int baseId, String name, int HP, int ATK, int DEF, int SPD, int CRte, int CDmg, int RES, int ACC){
+        setSummonId(-1);
         this.baseId = baseId;
         this.name = name;
         this.HP = HP;
@@ -43,11 +46,12 @@ public class Monster {
         this.CDmg = CDmg;
         this.RES = RES;
         this.ACC = ACC;
-        setSummonId(-1);
+        this.alias = this.name;
     }
     public Monster(String longstring){
         String[] arr;
         arr = longstring.split(" ");
+        setSummonId(-1);
         setBaseId(Integer.parseInt(arr[0]));
         setName(arr[1]);
         setHP(Integer.parseInt(arr[2]));
@@ -58,7 +62,6 @@ public class Monster {
         setCD(Integer.parseInt(arr[7]));
         setRES(Integer.parseInt(arr[8]));
         setACC(Integer.parseInt(arr[9]));
-        setSummonId(-1);
     }
 
     public Monster(ArrayList<Object> obj){
@@ -97,57 +100,18 @@ public class Monster {
 
     public String toString(){
         StringBuilder build = new StringBuilder();
+        build.append("SummonId: " + this.summonId + "\n");
         build.append("BaseId: " + this.baseId + " - ");
-        build.append("Monster: " + this.name + "\n");
-        build.append("HP: " + this.HP + "\n" + "ATK: " + this.ATK + "\n");
-        build.append("DEF: " + this.DEF + "\n" + "SPD: " + this.SPD + "\n");
-        build.append("Crte: " + this.CRte + "\n" + "Cdmg: " + this.CDmg + "\n");
-        build.append("RES: " + this.RES + "\n" + "ACC: " + this.ACC + "\n");
+        build.append("\tMonster: " + this.name + "\n");
+        build.append("\tHP: " + this.HP + "\n");
+        build.append("\tATK: " + this.ATK + "\n");
+        build.append("\tDEF: " + this.DEF + "\n");
+        build.append("\tSPD: " + this.SPD + "\n");
+        build.append("\tCrte: " + this.CRte + "\n");
+        build.append("\tCdmg: " + this.CDmg + "\n");
+        build.append("\tRES: " + this.RES + "\n");
+        build.append("\tACC: " + this.ACC + "\n");
         return build.toString();
-    }
-
-    private String getImageIcon(String name){
-
-        String toReturn = null;
-
-        switch(name){
-            case "Artamiel": toReturn = "monsters/Artamiel.jpg";
-            break;
-            case "Barbara": toReturn = "monsters/Barbara.jpg";
-            break;
-            case "Bastet": toReturn = "monsters/bastet.jpg";
-            break;
-            case "Bellenus": toReturn = "monsters/bellenus.jpg";
-            break;
-            case "Chiwu": toReturn = "monsters/chiwu.jpg";
-            break;
-            case "Ethna": toReturn = "monsters/ethna.jpg";
-            break;
-            case "Laika": toReturn = "monsters/laika.jpg";
-            break;
-            case "Monkey": toReturn = "monsters/monkey.jpg";
-            break;
-            case "Oberon": toReturn = "monsters/oberon.jpg";
-            break;
-            case "Perna": toReturn = "monsters/perna.jpg";
-            break;
-            case "Ryu": toReturn = "monsters/ryu.jpg";
-            break;
-            case "Seara": toReturn = "monsters/seara.jpg";
-            break;
-            case "Susano": toReturn = "monsters/susano.jpg";
-            break;
-            case "Sylvia": toReturn = "monsters/sylvia.jpg";
-            break;
-            case "Theomars": toReturn = "monsters/theo.jpg";
-            break;
-            case "Tiana": toReturn = "monsters/tiana.jpg";
-            break;
-            default: break;
-        }
-
-        return toReturn;
-
     }
 
     private void setData(int col, Object o){
@@ -176,6 +140,8 @@ public class Monster {
         }
 
     }
+
+    public String getAlias(){return this.alias;}
 
 
     public static void main(String[] args) {
