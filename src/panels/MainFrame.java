@@ -1,6 +1,7 @@
 package panels;
 
 import classes.Monster;
+import classes.subclasses.BaseMonsterList;
 import classes.subclasses.IconArrayList;
 import classes.subclasses.MonsterImageIcon;
 import classes.subclasses.MyImageIcon;
@@ -39,7 +40,7 @@ public class MainFrame extends JFrame {
     public ArrayList<String> monsterFiles;
     public ArrayList<String> uiFiles;
     public IconArrayList<MonsterImageIcon> monsterResources;
-    public IconArrayList<MonsterImageIcon> baseMonsters;
+    public BaseMonsterList baseMonsters;
 
     public IconArrayList<MyImageIcon> uiResources;
     public MainAppPanel mainApp_panel;
@@ -115,7 +116,11 @@ public class MainFrame extends JFrame {
     }
 
     private void setUI(){
-        //        setUIFont(new FontUIResource(new Font("Segoe UI", Font.BOLD, 12)));
+
+        Font defaultFont = new JLabel().getFont();
+        System.out.println("Setting UI");
+//        setUIFont(new FontUIResource(new Font("Segoe UI", Font.BOLD, 12)));
+        setUIFont(new FontUIResource(defaultFont.deriveFont(Font.BOLD, 13f)));
         UIManager.put("Panel.background", baseColor);
         UIManager.put("Panel.foreground", fontColor);
 
@@ -125,8 +130,10 @@ public class MainFrame extends JFrame {
         UIManager.put("ScrollPane.background", baseColor);
         UIManager.put("ScrollPane.foreground", fontColor);
 
-//        UIManager.put("Label.background", Color.RED);
         UIManager.put("Label.foreground", fontColor);
+        UIManager.put("Label.HorizontalAlignment", JLabel.CENTER);
+
+        UIManager.put("Label.horizontalAlignment", JLabel.CENTER);
 
         UIManager.put("TextField.background", baseColor);
         UIManager.put("TextField.foreground", fontColor);
@@ -137,6 +144,13 @@ public class MainFrame extends JFrame {
         UIManager.put("TextPane.background", baseColor);
         UIManager.put("TextPane.foreground", fontColor);
 
+        this.setAlwaysOnTop(true);
+        this.setIconImage(logo.getImage());
+        this.setVisible(true);
+        this.setResizable(false);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null);
+
 //        UIManager.put("InternalFrame.activeTitleBackground", Color.ORANGE );
 //        UIManager.put("InternalFrame.activeTitleForeground", Color.RED);
 //        UIManager.put("InternalFrame.titleFont", new Font("Dialog", Font.PLAIN, 11));
@@ -144,48 +158,51 @@ public class MainFrame extends JFrame {
 
     public MainFrame() throws IOException, InterruptedException {
         super("Main Application");
+        System.out.println("MainFrame Constructor");
+
         setEXECType();
         setOS();
-
         setUI();
 
+        try {
+            loadAssetFilesFromLocation();
 
-        loadAssetFilesFromLocation();
+            createImageFromResources();
 
-        createImageFromResources();
+            login_panel = new LoginPanel(this);
+            mainApp_panel = new MainAppPanel(this, 1);
+            rune_panel = new CreateRunePanel(this);
+            add_summon_panel = new AddSummonPanel(this);
 
-        login_panel = new LoginPanel(this);
-        login_panel = new LoginPanel(this);
-        mainApp_panel = new MainAppPanel(this, 1);
-        rune_panel = new CreateRunePanel(this);
-        add_summon_panel = new AddSummonPanel(this);
-
-        this.setAlwaysOnTop(true);
-        this.setSize(100, 100);
-        this.setIconImage(logo.getImage());
-        this.setVisible(true);
-        this.setResizable(false);
-//        this.setResizable(true);
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-//        this.framepanel = login_panel.getMain();
+    //        this.framepanel = login_panel.getMain();
 
 
-        this.framepanel = mainApp_panel.getMain();
-//        this.framepanel = add_summon_panel.getMain();
-//        this.framepanel = base_monster_panel.getMain();
+//            this.framepanel = mainApp_panel.getMain();
+            this.mainApp_panel.loadEverything.doClick();
+            this.framepanel =  mainApp_panel.getMain();
+//            this.framepanel = add_summon_panel.getMain();
+//            this.framepanel = base_monster_panel.getMain();
 
-//        this.framepanel = rune_panel.getMain();
+    //        this.framepanel = rune_panel.getMain();
 
-        //this.framepanel = engrave_panel.getMain();
-        this.setContentPane(framepanel);
+            //this.framepanel = engrave_panel.getMain();
+            this.setContentPane(framepanel);
 
-        this.reframe();
-//        this.setLocation(750, 250);
+            this.reframe();
+        } catch (Exception e) {
+//
+//            System.out.println(e.getLocalizedMessage());
+//
+//            String message = "Error: " + e.getLocalizedMessage();
+//
+//            JOptionPane.showMessageDialog(this, message);
+
+        }
     }
 
     public void changePanel(JPanel jp){
         this.setVisible(true);
-        this.setSize(1,1);
+//        this.setSize(1,1);
         this.framepanel = jp;
         this.setContentPane(framepanel);
         this.reframe();
@@ -246,9 +263,9 @@ public class MainFrame extends JFrame {
                     monterJarPath = monterJarPath.replace("/", "\\");
                     monterJarPath = monterJarPath.substring(1, monterJarPath.length());
                 }
-                System.out.println("Jar Path :: "+ monterJarPath);
+//                System.out.println("Jar Path :: "+ monterJarPath);
                 root = Paths.get(monterJarPath);
-                System.out.println("Reading From :: "+ root);
+                System.out.println("Jar Path :: Reading From :: "+ root);
                 var monsterFileIn = Files.newInputStream(root);
                 ZipInputStream monsterZippedStream = new ZipInputStream(monsterFileIn);
                 for (ZipEntry monsterEntry = monsterZippedStream.getNextEntry(); monsterEntry != null; monsterEntry = monsterZippedStream.getNextEntry()) {
@@ -278,10 +295,9 @@ public class MainFrame extends JFrame {
 
         } else {
 
-            System.out.println("production Path :: ");
             File monsterResourceFolder = new File(getClass().getClassLoader().getResource("monsters/").getFile());
 //                File[] files = folder.listFiles((dir, name) -> name.endsWith(".jpg"));
-            System.out.println("Reading From :: "+ monsterResourceFolder.getPath());
+            System.out.println("Executable::Reading From :: "+ monsterResourceFolder.getPath());
             File[] monsterFolderFiles = monsterResourceFolder.listFiles();
             for (File file : monsterFolderFiles) {
 //                System.out.println(file.getName());
@@ -310,19 +326,18 @@ public class MainFrame extends JFrame {
 
     }
     private void createImageFromResources(){
-        System.out.println("Creating Resources should be first\n\n***********************");
+//        System.out.println("Creating Resources should be first\n\n***********************");
 
         this.monsterResources = new IconArrayList();
         for ( String monsterAssetFile : this.monsterFiles) {
-//            System.out.println("monsterAssetFile :: "+monsterAssetFile);
+//            System.out.println("monsterAssetFile :: " + monsterAssetFile);
             MonsterImageIcon icon = new MonsterImageIcon(monsterAssetFile);
             this.monsterResources.add(icon);
         }
         this.uiResources = new IconArrayList();
         for ( String resourceAssetFile : this.uiFiles) {
             MyImageIcon icon = new MyImageIcon(resourceAssetFile);
-//            System.out.println("icon :: "+icon.name);
-//            ImageIcon icon = getImageIcon(resourceAssetFile);
+//            System.out.println("icon :: "+icon.imgName);
             this.uiResources.add(icon);
         }
 
@@ -330,20 +345,26 @@ public class MainFrame extends JFrame {
     }
 
     private void createBaseMonsters(){
-        this.baseMonsters = new IconArrayList();
+        this.baseMonsters = new BaseMonsterList();
         MonsterDB monsterDB = new MonsterDB();
         ArrayList<String> arrayList = monsterDB.getBaseMonsters();
-        for ( String monsterName : arrayList ) {
-//            System.out.println(monsterName);
-
+        for ( String monsterStringData : arrayList ) {
+//            System.out.println(monsterStringData);
             try {
-                Monster monster = new Monster(monsterName);
-                MonsterImageIcon monsterImageIcon =  this.monsterResources.get(monster.getName());
-                monsterImageIcon.monster = monster;
-                this.baseMonsters.add(monsterImageIcon);
+                // Create Monster from Database stringData
+                Monster monster = new Monster(monsterStringData);
+
+                // Create MonsterImageIcon from copying monsterResources
+//                MonsterImageIcon monsterImageIcon =  this.monsterResources.getFromName(monster.getName());
+                String monsterImagePath = "monsters/" + monster.getName() + ".png";
+                MonsterImageIcon monsterImageIcon =  this.monsterResources.getFromPath(monsterImagePath);
+
+
+                // Add MonsterImageIcon to baseMonsters (adds Image, monster) and sets baseId in constructor
+                this.baseMonsters.addMonster(monsterImageIcon, monster);
             } catch (Exception e) {
                 System.out.println(e.getLocalizedMessage());
-                System.out.println("Error: " + monsterName + " not found in Monster Image Resources");
+//                System.out.println("MainFrame::::Error:::: " + monsterStringData + " not found in Monster Image Resources");
 
             }
 

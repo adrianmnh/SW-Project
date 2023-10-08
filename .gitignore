@@ -2,6 +2,11 @@
 .idea/
 out/
 
+# Containers for Java distributable(opt out in favor of JAR distro)
+devops/dev/
+devops/java/
+devops/ubuntu/
+
 # Compiled class files
 *.class
 

@@ -84,7 +84,7 @@ public class LoginPanel extends MyPanel {
 
     public void initialSetup(){
         frame.pack();
-        System.out.println("Entering logging panel...");
+//        System.out.println("Entering logging panel...");
         left_panel_label.setIcon(new ImageIcon(getClass().getClassLoader().getResource("ui/yes2.png")));
         this.newRunePageButton.setVisible(false);
         createNew_panel.setVisible(false);
