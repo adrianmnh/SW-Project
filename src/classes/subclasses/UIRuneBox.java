@@ -10,8 +10,8 @@ import static tools.HelperMethods.resizeComponent;
 
 public class UIRuneBox extends JPanel {
 
-    UIRuneBoxImage runeBoxImage;
-    UIRuneBoxLabel runeBoxLabel;
+    public UIRuneBoxImage runeBoxImage;
+    public UIRuneBoxLabel runeBoxLabel;
     public UIRuneBox(){
         super();
     }
