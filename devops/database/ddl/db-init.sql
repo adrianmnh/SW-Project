@@ -1,3 +1,4 @@
+
 USE [Master];
 GO
 
@@ -302,42 +303,42 @@ CREATE UNIQUE NONCLUSTERED INDEX [XAK_UniqueRune1] ON [GameTool].[Summon]
 (
 	[Rune1]               ASC
 )
-WHERE Rune1 IS NOT NULL
+WHERE [Rune1] IS NOT NULL
 go
 
 CREATE UNIQUE NONCLUSTERED INDEX [XAK_UniqueRune2] ON [GameTool].[Summon]
 (
 	[Rune2]               ASC
 )
-WHERE Rune2 IS NOT NULL
+WHERE [Rune2] IS NOT NULL
 go
 
 CREATE UNIQUE NONCLUSTERED INDEX [XAK_UniqueRune3] ON [GameTool].[Summon]
 (
 	[Rune3]               ASC
 )
-WHERE Rune3 IS NOT NULL
+WHERE [Rune3] IS NOT NULL
 go
 
 CREATE UNIQUE NONCLUSTERED INDEX [XAK_UniqueRune4] ON [GameTool].[Summon]
 (
 	[Rune4]               ASC
 )
-WHERE Rune4 IS NOT NULL
+WHERE [Rune4] IS NOT NULL
 go
 
 CREATE UNIQUE NONCLUSTERED INDEX [XAK_UniqueRune5] ON [GameTool].[Summon]
 (
 	[Rune5]               ASC
 )
-WHERE Rune5 IS NOT NULL
+WHERE [Rune5] IS NOT NULL
 go
 
 CREATE UNIQUE NONCLUSTERED INDEX [XAK_UniqueRune6] ON [GameTool].[Summon]
 (
 	[Rune6]               ASC
 )
-WHERE Rune6 IS NOT NULL
+WHERE [Rune6] IS NOT NULL
 go
 
 CREATE VIEW [GameTool].[UserSummons]([SummonId],[AccountId],[MonsterId],[MonsterName],[GivenName],[MonsterHP],[MonsterATK],[MonsterDEF],[MonsterSPD],[MonsterCRte],[MonsterCDmg],[MonsterRES],[MonsterACC],[Rune1],[Rune2],[Rune3],[Rune4],[Rune5],[Rune6])
@@ -346,3 +347,31 @@ SELECT s.[SummonId],s.[AccountId],m.[MonsterId],m.[MonsterName],s.[Name],m.[Mons
 FROM [GameTool].[Monster] m,[GameTool].[Summon] s
 WHERE m.MonsterId = s.MonsterId
     go
+
+
+DENY ALTER,DELETE
+ON OBJECT :: [GameTool].[Monster]
+TO [public]
+go
+
+ 
+
+DENY ALTER,DELETE
+ON OBJECT :: [GameTool].[Account]
+TO [public]
+CASCADE
+go
+
+ 
+
+DENY ALTER,DELETE
+ON OBJECT :: [GameTool].[Rune]
+TO [public]
+go
+
+ 
+
+DENY ALTER,DELETE
+ON OBJECT :: [GameTool].[Summon]
+TO [public]
+go
