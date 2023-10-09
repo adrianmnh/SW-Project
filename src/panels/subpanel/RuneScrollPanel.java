@@ -34,6 +34,8 @@ public class RuneScrollPanel extends JScrollPane{
     int ROWS;
     int runeCount = 0;
 
+    MonsterImageIcon selectedMonster;
+
     public ImageIcon runeAvailable;
     public ImageIcon runeEquippedOnCurrent;
     public ImageIcon runeNotAvailable;
@@ -98,8 +100,8 @@ public class RuneScrollPanel extends JScrollPane{
                 JLabel message1 = new JLabel("To engrave runes");
                 JLabel message2 = new JLabel("Please selected a monster first.              ");
 
-                MonsterImageIcon monster = parentPanel.selectedMonster;
-                if(monster == null){
+                selectedMonster = parentPanel.selectedMonster;
+                if(selectedMonster == null){
                     JOptionPane.showMessageDialog(parentFrame, new Object[] { message1, message2 },
                             "Watcher", JOptionPane.INFORMATION_MESSAGE, runeAvailable);
                     return;
@@ -117,141 +119,9 @@ public class RuneScrollPanel extends JScrollPane{
 
                 runeSelected = ((UIRuneBoxImage)((JPanel) innerPanel.getComponent(row)).getComponent(0)).rune;
 
-                Object[] options = {"Yes", "Cancel"}; // Custom button labels
-
-                int result;
-
-                int summonId = monster.monster.getSummonId();
-
-                boolean equippedOnCurrent = parentPanel.monsterRuneMap.runeIn(summonId, runeSelected);
-
-                JLabel engraveRune = new JLabel("Do you want to Engrave Rune on " +  monster.imgName + "?              ");
-                JLabel removeRuneFromCurrent = new JLabel("Do you want to Remove Rune from " +  monster.imgName + "?              ");
-                JLabel removeRuneFromAnother = new JLabel("Do you want to Remove Rune from another monster?              ");
+                handleClickOnRune(boxSelected);
 
 
-                System.out.println("runeSelected.isEquipped: " + runeSelected.isEquipped);
-                System.out.println("RuneIN: " + parentPanel.monsterRuneMap.runeIn(summonId, runeSelected));
-
-                int switchCase = -1;
-
-                /******************** Case 1********************: Rune is equipped by current monster*/
-                if(runeSelected.isEquipped && equippedOnCurrent){
-
-
-                    result = JOptionPane.showOptionDialog(parentFrame, new Object[] { removeRuneFromCurrent, runeSelected.toStringGUI()}, "Watcher", JOptionPane.OK_CANCEL_OPTION,
-                        JOptionPane.PLAIN_MESSAGE, runeEquippedOnCurrent, options, options[0]);
-                    switchCase = 1;
-                }
-                /******************** Case 2********************: Rune is equipped by another monster*/
-                else if(runeSelected.isEquipped && !equippedOnCurrent){
-
-                    String s = runeSelected.toStringGUI();
-                    s = s.substring(0, s.length()-1);
-                    JLabel label = new JLabel(s + " is equipped by another monster.              ");
-
-
-                    result = JOptionPane.showOptionDialog(parentFrame, new Object[] { removeRuneFromAnother, runeSelected.toStringGUI()}, "Watcher", JOptionPane.OK_CANCEL_OPTION,                            JOptionPane.PLAIN_MESSAGE, runeNotAvailable, options, options[0]);
-                }
-                /******************** Case 1********************: Rune is not equipped*/
-                else {
-
-                    String s = runeSelected.toStringGUI();
-                    s = s.substring(0, s.length()-1);
-                    JLabel label = new JLabel(s + " is equipped by another monster.              ");
-
-
-
-                    result = JOptionPane.showOptionDialog(parentFrame, new Object[] { engraveRune, runeSelected.toStringLabels()}, "Watcher", JOptionPane.OK_CANCEL_OPTION,
-                            JOptionPane.PLAIN_MESSAGE, runeAvailable, options, options[0]);
-                    switchCase = 3;
-                }
-
-
-                if (result == JOptionPane.OK_OPTION) {
-
-                    int runePos = runeSelected.getPosInt();
-                    System.out.println("runePos: " + runePos + " runeID: " + runeSelected.runeId);
-
-                    switch(switchCase){
-                        case 1:
-                            System.out.println("Case 1: Rune is equipped by current monster");
-
-                            break;
-                        case 2:
-                            System.out.println("Case 2");
-
-
-                            break;
-                        case 3:
-                            System.out.println("Case 3: Rune is not equipped");
-                            parentPanel.runesEngraved[runePos] = runeSelected.runeId;
-                            applyRune(boxSelected);
-
-                            break;
-                        default:
-                            System.out.println("Default");
-
-
-                            break;
-                    }
-
-
-//                    if(!runeSelected.isEquipped){
-//                        parentPanel.runesEquipped[runePos] = runeSelected.runeID;
-//                        System.out.println(Arrays.toString(parentPanel.runesEquipped));
-//
-//                        boxSelected.rune.isEquipped = true;
-//                        boxSelected.setIcon(runeNotAvailable);
-//                        parentPanel.applyRune(boxSelected.rune.runeID, boxSelected.rune.getPosInt());
-//
-//                        System.out.println("monsterSelectedID: " + parentPanel.monsterSelectedID);
-//                        parentPanel.monsterRuneMap.get(parentPanel.monsterSelectedID).add(boxSelected.rune);
-//                    } else {
-//                        parentPanel.runesEquipped[runePos] = 0;
-//                        System.out.println(Arrays.toString(parentPanel.runesEquipped));
-//
-//                        boxSelected.rune.isEquipped = false;
-//                        boxSelected.setIcon(runeAvailable);
-//                        parentPanel.removeRune(boxSelected.rune.runeID, boxSelected.rune.getPosInt());
-//                        parentPanel.monsterRuneMap.get(parentPanel.monsterSelectedID).remove(boxSelected.rune);
-//                    }
-
-//                    runeSelected.isEquipped = true;
-
-
-//                    if(monster.rune1 == null){
-//                        monster.rune1 = selected;
-//                    }
-//                    else if(monster.rune2 == null){
-//                        monster.rune2 = selected;
-//                    }
-//                    else if(monster.rune3 == null){
-//                        monster.rune3 = selected;
-//                    }
-//                    else if(monster.rune4 == null){
-//                        monster.rune4 = selected;
-//                    }
-//                    else if(monster.rune5 == null){
-//                        monster.rune5 = selected;
-//                    }
-//                    else if(monster.rune6 == null){
-//                        monster.rune6 = selected;
-//                    }
-//                    else{
-//                        JOptionPane.showMessageDialog(parentFrame,"Monster already has 6 runes.              ",
-//                                "Watcher", JOptionPane.INFORMATION_MESSAGE, image);
-//                        return;
-//                    }
-//                    parentPanel.updateMonster(monster);
-//                    parentPanel.updateMonsterList();
-//                    parentPanel.updateMonsterInfo();
-
-//                        System.out.println(right.getComponent(row));
-//                    System.out.println(right.getComponent(row));
-                }
-//                    selectMonsterFromClick(assetPosInList);
-//                    monsterObjectClicked = null;
 
 
 
@@ -322,8 +192,144 @@ public class RuneScrollPanel extends JScrollPane{
         }
     }
 
-    public void handleClickOnRune(){
+    public void handleClickOnRune(UIRuneBox boxSelected){
 
+        selectedMonster = parentPanel.selectedMonster;
+
+        Rune runeSelected = boxSelected.runeBoxLabel.rune;
+        Object[] options = {"Yes", "Cancel"}; // Custom button labels
+
+        int result;
+
+        int summonId = selectedMonster.summonId;
+
+        boolean equippedOnCurrent = parentPanel.monsterRuneMap.runeIn(summonId, runeSelected);
+
+        JLabel engraveRune = new JLabel("Do you want to Engrave Rune on " +  selectedMonster.imgName + "?              ");
+        JLabel removeRuneFromCurrent = new JLabel("Do you want to Remove Rune from " +  selectedMonster.imgName + "?              ");
+        JLabel removeRuneFromAnother = new JLabel("Do you want to Remove Rune from another monster?              ");
+
+
+        System.out.println("runeSelected.isEquipped: " + runeSelected.isEquipped);
+        System.out.println("RuneIN: " + parentPanel.monsterRuneMap.runeIn(summonId, runeSelected));
+
+        int switchCase = -1;
+
+        /******************** Case 1********************: Rune is equipped by current monster*/
+        if(runeSelected.isEquipped && equippedOnCurrent){
+
+
+            result = JOptionPane.showOptionDialog(parentFrame, new Object[] { removeRuneFromCurrent, runeSelected.toStringGUI()}, "Watcher", JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE, runeEquippedOnCurrent, options, options[0]);
+            switchCase = 1;
+        }
+        /******************** Case 2********************: Rune is equipped by another monster*/
+        else if(runeSelected.isEquipped && !equippedOnCurrent){
+
+            String s = runeSelected.toStringGUI();
+            s = s.substring(0, s.length()-1);
+            JLabel label = new JLabel(s + " is equipped by another monster.              ");
+
+
+            result = JOptionPane.showOptionDialog(parentFrame, new Object[] { removeRuneFromAnother, runeSelected.toStringGUI()}, "Watcher", JOptionPane.OK_CANCEL_OPTION,                            JOptionPane.PLAIN_MESSAGE, runeNotAvailable, options, options[0]);
+        }
+        /******************** Case 1********************: Rune is not equipped*/
+        else {
+
+            String s = runeSelected.toStringGUI();
+            s = s.substring(0, s.length()-1);
+            JLabel label = new JLabel(s + " is equipped by another monster.              ");
+
+
+
+            result = JOptionPane.showOptionDialog(parentFrame, new Object[] { engraveRune, runeSelected.toStringLabels()}, "Watcher", JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE, runeAvailable, options, options[0]);
+            switchCase = 3;
+        }
+
+
+        if (result == JOptionPane.OK_OPTION) {
+
+            int runePos = runeSelected.getPosInt();
+            System.out.println("runePos: " + runePos + " runeID: " + runeSelected.runeId);
+
+            switch (switchCase) {
+                case 1:
+                    System.out.println("Case 1: Rune is equipped by current monster");
+
+                    break;
+                case 2:
+                    System.out.println("Case 2");
+
+
+                    break;
+                case 3:
+                    System.out.println("Case 3: Rune is not equipped");
+                    parentPanel.runesEngraved[runePos] = runeSelected.runeId;
+                    applyRune(boxSelected.runeBoxImage);
+
+                    break;
+                default:
+                    System.out.println("Default");
+
+
+                    break;
+            }
+
+
+//                    if(!runeSelected.isEquipped){
+//                        parentPanel.runesEquipped[runePos] = runeSelected.runeID;
+//                        System.out.println(Arrays.toString(parentPanel.runesEquipped));
+//
+//                        boxSelected.rune.isEquipped = true;
+//                        boxSelected.setIcon(runeNotAvailable);
+//                        parentPanel.applyRune(boxSelected.rune.runeID, boxSelected.rune.getPosInt());
+//
+//                        System.out.println("monsterSelectedID: " + parentPanel.monsterSelectedID);
+//                        parentPanel.monsterRuneMap.get(parentPanel.monsterSelectedID).add(boxSelected.rune);
+//                    } else {
+//                        parentPanel.runesEquipped[runePos] = 0;
+//                        System.out.println(Arrays.toString(parentPanel.runesEquipped));
+//
+//                        boxSelected.rune.isEquipped = false;
+//                        boxSelected.setIcon(runeAvailable);
+//                        parentPanel.removeRune(boxSelected.rune.runeID, boxSelected.rune.getPosInt());
+//                        parentPanel.monsterRuneMap.get(parentPanel.monsterSelectedID).remove(boxSelected.rune);
+//                    }
+
+//                    runeSelected.isEquipped = true;
+
+
+//                    if(monster.rune1 == null){
+//                        monster.rune1 = selected;
+//                    }
+//                    else if(monster.rune2 == null){
+//                        monster.rune2 = selected;
+//                    }
+//                    else if(monster.rune3 == null){
+//                        monster.rune3 = selected;
+//                    }
+//                    else if(monster.rune4 == null){
+//                        monster.rune4 = selected;
+//                    }
+//                    else if(monster.rune5 == null){
+//                        monster.rune5 = selected;
+//                    }
+//                    else if(monster.rune6 == null){
+//                        monster.rune6 = selected;
+//                    }
+//                    else{
+//                        JOptionPane.showMessageDialog(parentFrame,"Monster already has 6 runes.              ",
+//                                "Watcher", JOptionPane.INFORMATION_MESSAGE, image);
+//                        return;
+//                    }
+//                    parentPanel.updateMonster(monster);
+//                    parentPanel.updateMonsterList();
+//                    parentPanel.updateMonsterInfo();
+
+//                        System.out.println(right.getComponent(row));
+//                    System.out.println(right.getComponent(row));
+        }
 
     }
 

@@ -138,7 +138,13 @@ public class MonsterScrollPanel extends JScrollPane{
         this.size = ref.size();
 //        System.out.println(parentPanel.monsterRuneMap);
 
+//        System.out.println("\n**********************\n");
+//        for (MonsterImageIcon monsterImageIcon : ref.keySet()){
+//            System.out.println(monsterImageIcon.summonId + " -------------------- " + parentPanel.monsterRuneMap.get(monsterImageIcon));;
+//        }
+//        System.out.println("\n**********************\n");
         for (MonsterImageIcon monsterImageIcon : ref.getSortedByBaseID()) {
+//            System.out.println(monsterImageIcon.summonId + " -------------------- " + parentPanel.monsterRuneMap.getBySummonId(monsterImageIcon.summonId));
                 MonsterBoxImage l = new MonsterBoxImage(monsterImageIcon, ICON_DIMENSION);
                 monsterPanel.add(l);
         }
