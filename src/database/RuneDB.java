@@ -6,6 +6,8 @@ import runes.Rune;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class RuneDB extends Database {
 //    public ArrayList<Rune> runes;
@@ -71,7 +73,7 @@ public class RuneDB extends Database {
 
         return s.toString();
     }
-    public int execEngraveRuneQuery(int user, Monster monster, Rune rune){
+    public int execEngraveRuneQuery(int user, Monster monster, Rune rune, boolean state){
         this.setTable("GameTool.Summon");
         int rowsUpdated1 = -1, rowsUpdated2 = -1;
         String sql = "";
@@ -93,6 +95,34 @@ public class RuneDB extends Database {
         }
         this.closeConnection();
         return rowsUpdated1;
+    }
+    public ArrayList<Object> setRuneEngravedState(int user, Rune rune, boolean state){
+        this.setTable("GameTool.Rune");
+        System.out.println("Setting rune " + rune.runeId + " 'Engraved' to " + state );
+        ArrayList<Object> updatedRows = new ArrayList<>();
+        HashMap<String, Object> map  = new HashMap<>();
+        String query = String.format("UPDATE %s SET Engraved = %d WHERE AccountId = %d AND RuneId = %d;", getTable(), state ? 1 : 0, user, rune.runeId);
+        map.put("query", query);
+        map.put("type", "rows");
+        updatedRows = this.execUpdate(map);
+        return updatedRows;
+    }
+    public ArrayList<Object> addOrRemoveRuneToSummon(int user, Monster monster, Rune rune, boolean state){
+        this.setTable("GameTool.Summon");
+        ArrayList<Object> updatedRows = new ArrayList<>();
+        HashMap<String, Object> map  = new HashMap<>();
+        String query;
+        if(state){
+            System.out.println("Adding rune " + rune.runeId + " to summon " + monster.getSummonId() );
+            query = String.format("UPDATE %s SET Rune%d = %d WHERE AccountId = %d AND SummonId = %d;", getTable(), rune.getPosInt(), rune.getId(), user, monster.getSummonId());
+        } else {
+            System.out.println("Removing rune " + rune.runeId + " from summon " + monster.getSummonId() );
+            query = String.format("UPDATE %s SET Rune%d = null WHERE AccountId = %d AND SummonId = %d;", getTable(), rune.getPosInt(), user, monster.getSummonId());
+        }
+        map.put("query", query);
+        map.put("type", "rows");
+        updatedRows = this.execUpdate(map);
+        return updatedRows;
     }
 //
     public RuneBag getUserRunes(int userid){
