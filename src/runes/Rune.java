@@ -1,5 +1,7 @@
 package runes;
 
+import classes.subclasses.MonsterImageIcon;
+
 import javax.swing.*;
 import java.util.ArrayList;
 
@@ -190,20 +192,18 @@ public class Rune implements Comparable<Rune> {
         return false;
     }
 
+    public void engrave(MonsterImageIcon monster){
 
+        this.isEquipped = true;
+        this.summonAlias = monster.alias;
+        this.summonId = monster.summonId;
 
-//    public String toStringDB(){
-//        String s =  this.getGradeString() +" " +
-//                this.getSetString() + " " +
-//                this.getPositionString() + " " +
-//                this.getInnateString() + " " +
-//                this.getMainstatString() + " ";
-//                //this.getSubstatString();
-//        if(!this.getRuneInnate()){
-//            s += this.subs.remove(0);
-//        }
-//        return s;
-//    }
+    }
+    public void remove(){
+        this.isEquipped = false;
+        this.summonAlias = null;
+        this.summonId = -1;
+    }
 
     public String toStringGUI(){
         StringBuilder b = new StringBuilder();
