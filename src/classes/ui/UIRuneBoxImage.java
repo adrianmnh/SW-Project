@@ -15,7 +15,7 @@ public class UIRuneBoxImage extends JLabel {
         super(imageIcon);
         this.rune = rune;
         this.setHorizontalTextPosition(JLabel.CENTER);
-        this.setFont(this.getFont().deriveFont(Font.BOLD, 18f));
+        this.setFont(this.getFont().deriveFont(Font.BOLD, 17f));
         this.updateDisplay();
     }
 

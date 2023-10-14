@@ -1,4 +1,4 @@
-package classes.subclasses;
+package classes.ui;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -6,10 +6,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class CustomImageButton extends JButton {
+public class UIImageButton extends JButton {
 
     JOptionPane optionPane;
-    public CustomImageButton(ImageIcon imageIcon, JOptionPane optionPane, int option){
+    public UIImageButton(ImageIcon imageIcon, JOptionPane optionPane, int option){
         super(imageIcon);
 
         this.optionPane = optionPane;

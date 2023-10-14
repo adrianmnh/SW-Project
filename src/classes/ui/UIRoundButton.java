@@ -1,25 +1,45 @@
-package classes.subclasses;
+package classes.ui;
+
+import panels.MainFrame;
 
 import javax.swing.*;
-import javax.swing.border.*;
 import java.awt.*;
 
-public class RoundButton extends JButton {
+public class UIRoundButton extends JButton {
 
-    public RoundButton(String text) {
+    MainFrame parentFrame;
+
+    public UIRoundButton() {
+        super();
+        setUp();
+    }
+    public UIRoundButton(String text) {
         super(text);
-//        setContentAreaFilled(false);
-//        setBorderPainted(false);
-//        setOpaque(false);
+        setUp();
+    }
+
+    public UIRoundButton(String text, MainFrame parentFrame) {
+        super(text);
+        setUp();
+        this.parentFrame = parentFrame;
+        setForeground(Color.ORANGE);
+        setBackground(parentFrame.baseRed);
+    }
+
+    private void setUp(){
+        setContentAreaFilled(false);
+        setBorderPainted(false);
+        setOpaque(false);
         setFocusPainted(false);
+
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         if (getModel().isArmed()) {
-            g.setColor(Color.lightGray);
+            g.setColor(parentFrame.baseRed);
         } else {
-            g.setColor(getBackground());
+            g.setColor(getBackground().brighter());
         }
         g.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 15, 15);
         super.paintComponent(g);
@@ -36,7 +56,7 @@ public class RoundButton extends JButton {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(300, 200);
 
-        RoundButton button = new RoundButton("Click me");
+        UIRoundButton button = new UIRoundButton("Click me");
         button.setBackground(Color.BLUE);
         button.setForeground(Color.WHITE);
 
