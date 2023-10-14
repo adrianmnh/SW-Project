@@ -1,4 +1,4 @@
-package classes.subclasses;
+package classes.ui;
 
 import runes.Rune;
 

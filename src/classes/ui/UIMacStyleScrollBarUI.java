@@ -1,10 +1,10 @@
-package classes.subclasses;
+package classes.ui;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
 
-public class MacStyleScrollBarUI extends BasicScrollBarUI {
+public class UIMacStyleScrollBarUI extends BasicScrollBarUI {
 
     private final int THUMB_SIZE = 30;
     private final int WIDTH = 15;

@@ -1,4 +1,4 @@
-package classes.subclasses;
+package classes.ui;
 
 import panels.MainFrame;
 import runes.Rune;

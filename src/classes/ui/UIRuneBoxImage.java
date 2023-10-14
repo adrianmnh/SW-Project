@@ -1,4 +1,4 @@
-package classes.subclasses;
+package classes.ui;
 
 import runes.Rune;
 
@@ -24,6 +24,7 @@ public class UIRuneBoxImage extends JLabel {
 //        this.setText(alias);
         String summonId = rune.summonId == -1 ? "" : rune.summonId + "";
         this.setText(rune.runeId + ":" + summonId);
+        this.setText(rune.summonAlias);
         if(rune.isEquipped){
             this.setForeground(Color.ORANGE);
         } else {

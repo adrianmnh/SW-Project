@@ -1,29 +1,29 @@
-package classes.subclasses;
+package classes.ui;
 
 import javax.swing.*;
 
-public class CenteredLabel extends JLabel {
-    public CenteredLabel(String text){
+public class UICenteredLabel extends JLabel {
+    public UICenteredLabel(String text){
         super(text);
         this.setHorizontalAlignment(SwingConstants.CENTER);
     }
-    public CenteredLabel(ImageIcon imageIcon){
+    public UICenteredLabel(ImageIcon imageIcon){
         super(imageIcon);
         this.setHorizontalAlignment(SwingConstants.CENTER);
     }
-    public CenteredLabel(String text, int horizontalAlignment){
+    public UICenteredLabel(String text, int horizontalAlignment){
         super(text, horizontalAlignment);
         this.setHorizontalAlignment(SwingConstants.CENTER);
     }
-    public CenteredLabel(Icon image){
+    public UICenteredLabel(Icon image){
         super(image);
         this.setHorizontalAlignment(SwingConstants.CENTER);
     }
-    public CenteredLabel(Icon image, int horizontalAlignment){
+    public UICenteredLabel(Icon image, int horizontalAlignment){
         super(image, horizontalAlignment);
         this.setHorizontalAlignment(SwingConstants.CENTER);
     }
-    public CenteredLabel(){
+    public UICenteredLabel(){
         super();
         this.setHorizontalAlignment(SwingConstants.CENTER);
     }
