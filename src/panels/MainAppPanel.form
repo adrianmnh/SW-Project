@@ -198,20 +198,19 @@
             <constraints>
               <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
                 <minimum-size width="120" height="60"/>
-                <maximum-size width="120" height="60"/>
+                <maximum-size width="-1" height="60"/>
               </grid>
             </constraints>
             <properties/>
             <border type="none"/>
             <children>
-              <component id="b5045" class="javax.swing.JButton" binding="addMonsterButton">
+              <component id="b5045" class="javax.swing.JButton" binding="addMonsterButton" custom-create="true">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <alignmentY value="0.0"/>
                   <iconTextGap value="0"/>
-                  <text value="Add Monsters"/>
                 </properties>
               </component>
             </children>
@@ -227,15 +226,13 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="ead94" class="javax.swing.JButton" binding="add_new_rune_button">
+              <component id="ead94" class="javax.swing.JButton" binding="add_new_rune_button" custom-create="true">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                     <minimum-size width="-1" height="50"/>
                   </grid>
                 </constraints>
-                <properties>
-                  <text value="Add New Rune"/>
-                </properties>
+                <properties/>
               </component>
               <component id="58ccc" class="javax.swing.JButton" binding="loadEverything">
                 <constraints>
@@ -264,7 +261,7 @@
               <component id="a4bf3" class="javax.swing.JButton" binding="loadMonstersButton" default-binding="true">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                    <maximum-size width="50" height="-1"/>
+                    <maximum-size width="100" height="-1"/>
                   </grid>
                 </constraints>
                 <properties>
@@ -352,41 +349,12 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="2f188" class="javax.swing.JButton" binding="findBestSetButton" default-binding="true">
-                <constraints>
-                  <grid row="0" column="1" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                    <minimum-size width="-1" height="50"/>
-                  </grid>
-                </constraints>
-                <properties>
-                  <text value="Find Best Set"/>
-                </properties>
-              </component>
               <component id="53ef" class="javax.swing.JLabel">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <text value="Optimizer"/>
-                </properties>
-              </component>
-              <component id="63a9d" class="javax.swing.JComboBox" binding="statPriority1">
-                <constraints>
-                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <font/>
-                  <model>
-                    <item value="--Priority 1--"/>
-                    <item value="SPD"/>
-                    <item value="ATK%"/>
-                    <item value="HP%"/>
-                    <item value="DEF%"/>
-                    <item value="CRte%"/>
-                    <item value="CDmg%"/>
-                    <item value="ACC%"/>
-                    <item value="RES%"/>
-                  </model>
                 </properties>
               </component>
               <component id="e8771" class="javax.swing.JComboBox" binding="statPrioritry2">
@@ -443,14 +411,6 @@
                   </model>
                 </properties>
               </component>
-              <component id="4da44" class="javax.swing.JButton" binding="runeMap">
-                <constraints>
-                  <grid row="2" column="1" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="Rune Map"/>
-                </properties>
-              </component>
               <component id="143b7" class="javax.swing.JButton" binding="removeAllButton" default-binding="true">
                 <constraints>
                   <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -458,6 +418,41 @@
                 <properties>
                   <text value="Remove All"/>
                 </properties>
+              </component>
+              <component id="63a9d" class="javax.swing.JComboBox" binding="statPriority1">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <font/>
+                  <model>
+                    <item value="--Priority 1--"/>
+                    <item value="SPD"/>
+                    <item value="ATK%"/>
+                    <item value="HP%"/>
+                    <item value="DEF%"/>
+                    <item value="CRte%"/>
+                    <item value="CDmg%"/>
+                    <item value="ACC%"/>
+                    <item value="RES%"/>
+                  </model>
+                </properties>
+              </component>
+              <component id="4da44" class="javax.swing.JButton" binding="runeMap">
+                <constraints>
+                  <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Rune Map"/>
+                </properties>
+              </component>
+              <component id="2f188" class="javax.swing.JButton" binding="findBestSetButton" custom-create="true" default-binding="true">
+                <constraints>
+                  <grid row="1" column="1" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <minimum-size width="-1" height="50"/>
+                  </grid>
+                </constraints>
+                <properties/>
               </component>
             </children>
           </grid>

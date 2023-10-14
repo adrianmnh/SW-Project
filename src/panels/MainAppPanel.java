@@ -2,6 +2,7 @@ package panels;
 
 import classes.Monster;
 import classes.subclasses.*;
+import classes.ui.UIRoundButton;
 import database.MonsterDB;
 import database.RuneDB;
 import runes.Rune;
@@ -228,7 +229,7 @@ public class MainAppPanel extends MyPanel {
 
         });
 
-        runeMap.addActionListener(e -> System.out.print(monsterRuneMapOld));
+        runeMap.addActionListener(e -> System.out.print(monsterRuneMap));
 
         addMonsterButton.addActionListener(e -> {
 
@@ -236,28 +237,28 @@ public class MainAppPanel extends MyPanel {
         });
         loadMonstersButton.addActionListener(e -> {
 
-            MonsterDB db = new MonsterDB();
-            ArrayList<Object> obj = db.selectUserSummon(frame.getCurrentUserID());
-
-            //SummonId, AccountId, MonsterId, Name, Rune1, Rune2, Rune3, Rune4, Rune5, Rune6
-            System.out.println(obj.get(0));
-
-            for(int i=1; i<obj.size(); i++){
-                List l = (List) obj.get(i);
-                System.out.println(l);
-                int summonId = (int) l.get(0);
-                int accountId = (int) l.get(1);
-                int baseId = (int) l.get(2);
-                String name = (String) l.get(3);
-                MonsterImageIcon monsterImageIcon = frame.baseMonsters.getBaseMonster(baseId).clone();
-                monsterImageIcon.setSummonId(summonId);
-                monsterImageIcon.setAlias(name);
-
-                RuneSet runes = new RuneSet();
-                monsterRuneMap.put(monsterImageIcon, runes);
-            }
-
-            System.out.println(monsterRuneMap);
+//            MonsterDB db = new MonsterDB();
+//            ArrayList<Object> obj = db.selectUserSummon(frame.getCurrentUserID());
+//
+//            //SummonId, AccountId, MonsterId, Name, Rune1, Rune2, Rune3, Rune4, Rune5, Rune6
+//            System.out.println(obj.get(0));
+//
+//            for(int i=1; i<obj.size(); i++){
+//                List l = (List) obj.get(i);
+//                System.out.println(l);
+//                int summonId = (int) l.get(0);
+//                int accountId = (int) l.get(1);
+//                int baseId = (int) l.get(2);
+//                String name = (String) l.get(3);
+//                MonsterImageIcon monsterImageIcon = frame.baseMonsters.getBaseMonster(baseId).clone();
+//                monsterImageIcon.setSummonId(summonId);
+//                monsterImageIcon.setAlias(name);
+//
+//                RuneSet runes = new RuneSet();
+//                monsterRuneMap.put(monsterImageIcon, runes);
+//            }
+//
+//            System.out.println(monsterRuneMap);
         });
     }
 
@@ -270,19 +271,18 @@ public class MainAppPanel extends MyPanel {
 //        System.out.println("Runedisplay updated");
     }
 
-    public void applyRune(int runeID, int runePosition) {
-        System.out.println("Applying rune " + runeID + " to monster " + currentMonster.getBaseId() + " rune position " + runePosition);
-        if (runePosition == 1) pos1.setIcon(runeon);
-        if (runePosition == 2) pos2.setIcon(runeon);
-        if (runePosition == 3) pos3.setIcon(runeon);
-        if (runePosition == 4) pos4.setIcon(runeon);
-        if (runePosition == 5) pos5.setIcon(runeon);
-        if (runePosition == 6) pos6.setIcon(runeon);
-
-        currentRunePosition = runePosition;
-        runesEngraved[currentRunePosition] = runeID;
-//        offlineRuneBag.get(runeID).setIsEquipped(true);
+    public void applyRune(Rune rune) {
+        System.out.println("Applying rune " + rune.runeId + " to monster " + currentMonster.getSummonId() + " rune position " + rune.getPosInt());
+        runePos[rune.getPosInt()].setIcon(runeon);
+        runesEngraved[rune.getPosInt()] = rune.runeId;
         updateStatDisplay(false);
+    }
+    public void removeRune(Rune rune){
+        System.out.println("Removing rune " + rune.runeId + " from monster " + currentMonster.getSummonId() + " rune position " + rune.getPosInt());
+        runePos[rune.getPosInt()].setIcon(runeoff);
+        runesEngraved[rune.getPosInt()] = -1;
+        updateStatDisplay(false);
+
     }
 
     private void setImagesNText(String s, ImageIcon i){
@@ -532,10 +532,7 @@ public class MainAppPanel extends MyPanel {
         }
     }
     private String subStatFormat(JComboBox j){
-        String s = j.getSelectedItem().toString().replace("%","");
-        if(s.equals("CRte")||s.equals("CDmg")||s.equals("RES")||s.equals("ACC")||s.equals("SPD"))
-            s = s.toLowerCase();
-        return s;
+        return j.getSelectedItem().toString();
     }
     public int monsterSelectedSummonId;
 
@@ -709,6 +706,11 @@ public class MainAppPanel extends MyPanel {
     private void createUIComponents() {
 //        System.out.println("Creating UI Components for MainAppPanel");
         // TODO: place custom component creation code here
+        findBestSetButton = new UIRoundButton("Find Best Set", frame);
+        addMonsterButton = new UIRoundButton("Create Summon", frame);
+        add_new_rune_button = new UIRoundButton("Create Rune", frame);
+
+
         monster_pane = new JPanel();
         abstract_monster_scroll_panel = new MonsterScrollPanel(this, monster_pane);
 
