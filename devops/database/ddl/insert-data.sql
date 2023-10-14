@@ -1,3 +1,7 @@
+SET QUOTED_IDENTIFIER ON
+go
+
+
 SET IDENTITY_INSERT GameTool.Account ON
 
 GO
@@ -6,7 +10,8 @@ INSERT INTO GameTool.Account
 (AccountId, AccountUserName, AccountPassword, AccountEmail)
 VALUES
 (1, 'adrian', 'password', 'anoa_apps@icloud.com'),
-(10, 'adrian2', 'password', 'email');
+(10, 'adrian2', 'password', 'email'),
+(19, 'adrian3', 'password', 'email2');
 
 GO
 
@@ -94,24 +99,25 @@ VALUES
 
 GO
 
-INSERT INTO GameTool.Summon (AccountId, MonsterId, Name, Rune1, Rune2, Rune3, Rune4, Rune5, Rune6)
+INSERT INTO GameTool.Summon
+(AccountId, MonsterId, Alias, Rune1, Rune2, Rune3, Rune4, Rune5, Rune6)
 VALUES
-    (1, 64, N'Zeratu', NULL, NULL, NULL, NULL, NULL, NULL),
-    (1, 62, N'Yeonhong', NULL, NULL, NULL, NULL, NULL, NULL),
-    (1, 43, N'Rica', NULL, NULL, NULL, NULL, NULL, NULL),
-    (1, 51, N'Theomars', NULL, NULL, NULL, NULL, NULL, NULL),
-    (1, 38, N'Okeanos', NULL, NULL, NULL, NULL, NULL, NULL),
-    (1, 37, N'Oberon', NULL, NULL, NULL, NULL, NULL, NULL),
-    (1, 20, N'Camilla', NULL, NULL, NULL, NULL, NULL, NULL),
-    (1, 21, N'Cadiz', NULL, NULL, NULL, NULL, NULL, NULL),
-    (1, 13, N'Artamiel', NULL, NULL, NULL, NULL, NULL, NULL),
-    (1, 14, N'Asima', NULL, NULL, NULL, NULL, NULL, NULL),
-    (1, 18, N'Bastet', NULL, NULL, NULL, NULL, NULL, NULL),
-    (1, 26, N'Elsharion', NULL, NULL, NULL, NULL, NULL, NULL),
-    (1, 27, N'Ethna', NULL, NULL, NULL, NULL, NULL, NULL),
-    (1, 45, N'Seara', NULL, NULL, NULL, NULL, NULL, NULL),
-    (1, 11, N'Akroma', NULL, NULL, NULL, NULL, NULL, NULL),
-    (1, 12, N'Amarna', NULL, NULL, NULL, NULL, NULL, NULL),
-    (1, 14, N'AsimaSPD', NULL, NULL, NULL, NULL, NULL, NULL);
+    (1, 64, 'Zeratu', NULL, NULL, NULL, NULL, NULL, NULL),
+    (1, 62, 'Yeonhong', NULL, NULL, NULL, NULL, NULL, NULL),
+    (1, 43, 'Rica', NULL, NULL, NULL, NULL, NULL, NULL),
+    (1, 51, 'Theomars', NULL, NULL, NULL, NULL, NULL, NULL),
+    (1, 38, 'Okeanos', NULL, NULL, NULL, NULL, NULL, NULL),
+    (1, 37, 'Oberon', NULL, NULL, NULL, NULL, NULL, NULL),
+    (1, 20, 'Camilla', NULL, NULL, NULL, NULL, NULL, NULL),
+    (1, 21, 'Cadiz', NULL, NULL, NULL, NULL, NULL, NULL),
+    (1, 13, 'Artamiel', NULL, NULL, NULL, NULL, NULL, NULL),
+    (1, 14, 'Asima', NULL, NULL, NULL, NULL, NULL, NULL),
+    (1, 18, 'Bastet', NULL, NULL, NULL, NULL, NULL, NULL),
+    (1, 26, 'Elsharion', NULL, NULL, NULL, NULL, NULL, NULL),
+    (1, 27, 'Ethna', NULL, NULL, NULL, NULL, NULL, NULL),
+    (1, 45, 'Seara', NULL, NULL, NULL, NULL, NULL, NULL),
+    (1, 11, 'Akroma', NULL, NULL, NULL, NULL, NULL, NULL),
+    (1, 12, 'Amarna', NULL, NULL, NULL, NULL, NULL, NULL),
+    (1, 14, 'AsimaSPD', NULL, NULL, NULL, NULL, NULL, NULL);
 
 GO

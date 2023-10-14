@@ -2,6 +2,9 @@
 USE [Master];
 GO
 
+SET QUOTED_IDENTIFIER ON
+go
+
 -- ALTER DATABASE [SummonersWar] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
 -- go
 --
@@ -17,16 +20,14 @@ MULTI_USER ,
 READ_WRITE
 go
 
+ALTER DATABASE [SummonersWar]
+SET ANSI_NULLS ON,
+QUOTED_IDENTIFIER ON
+go
 
 USE [SummonersWar]
 
 GO
-
-DROP LOGIN [adminlogin]
-go
-
-DROP LOGIN [guestlogin]
-go
 
 CREATE LOGIN adminlogin
 WITH PASSWORD = 'adminlogin$%#@33096$%#@',
@@ -263,7 +264,7 @@ CREATE TABLE [GameTool].[Summon]
     [SummonId]           [GameTool].[PrimaryKey3]  IDENTITY ( 3001,1 ) ,
     [AccountId]          [GameTool].[SurrogateKey]  NULL ,
     [MonsterId]          [GameTool].[PrimaryKey]  NOT NULL ,
-    [Name]               [GameTool].[MonsterName] ,
+    [Alias]              [GameTool].[MonsterName] ,
     [Rune1]              [GameTool].[SurrogateKey]  NULL ,
     [Rune2]              [GameTool].[SurrogateKey]  NULL ,
     [Rune3]              [GameTool].[SurrogateKey]  NULL ,
@@ -271,7 +272,7 @@ CREATE TABLE [GameTool].[Summon]
     [Rune5]              [GameTool].[SurrogateKey]  NULL ,
     [Rune6]              [GameTool].[SurrogateKey]  NULL ,
     CONSTRAINT [PK_Summon] PRIMARY KEY  CLUSTERED ([SummonId] ASC),
-    CONSTRAINT [AK_UniqueSummon] UNIQUE ([MonsterId]  ASC,[Name]  ASC,[AccountId]  ASC),
+    CONSTRAINT [AK_UniqueSummon] UNIQUE ([MonsterId]  ASC,[Alias]  ASC,[AccountId]  ASC),
     CONSTRAINT [Rune1] FOREIGN KEY ([Rune1]) REFERENCES [GameTool].[Rune]([RuneId])
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
@@ -343,18 +344,19 @@ go
 
 CREATE VIEW [GameTool].[UserSummons]([SummonId],[AccountId],[MonsterId],[MonsterName],[GivenName],[MonsterHP],[MonsterATK],[MonsterDEF],[MonsterSPD],[MonsterCRte],[MonsterCDmg],[MonsterRES],[MonsterACC],[Rune1],[Rune2],[Rune3],[Rune4],[Rune5],[Rune6])
 AS
-SELECT s.[SummonId],s.[AccountId],m.[MonsterId],m.[MonsterName],s.[Name],m.[MonsterHP],m.[MonsterATK],m.[MonsterDEF],m.[MonsterSPD],m.[MonsterCRte],m.[MonsterCDmg],m.[MonsterRES],m.[MonsterACC],s.[Rune1],s.[Rune2],s.[Rune3],s.[Rune4],s.[Rune5],s.[Rune6]
+SELECT s.[SummonId],s.[AccountId],m.[MonsterId],m.[MonsterName],s.[Alias],m.[MonsterHP],m.[MonsterATK],m.[MonsterDEF],m.[MonsterSPD],m.[MonsterCRte],m.[MonsterCDmg],m.[MonsterRES],m.[MonsterACC],s.[Rune1],s.[Rune2],s.[Rune3],s.[Rune4],s.[Rune5],s.[Rune6]
 FROM [GameTool].[Monster] m,[GameTool].[Summon] s
 WHERE m.MonsterId = s.MonsterId
     go
 
 
-DENY ALTER,DELETE
+
+    DENY ALTER,DELETE
 ON OBJECT :: [GameTool].[Monster]
 TO [public]
 go
 
- 
+
 
 DENY ALTER,DELETE
 ON OBJECT :: [GameTool].[Account]
@@ -362,14 +364,14 @@ TO [public]
 CASCADE
 go
 
- 
+
 
 DENY ALTER,DELETE
 ON OBJECT :: [GameTool].[Rune]
 TO [public]
 go
 
- 
+
 
 DENY ALTER,DELETE
 ON OBJECT :: [GameTool].[Summon]
