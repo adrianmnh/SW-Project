@@ -3,6 +3,7 @@ package runes;
 import classes.subclasses.MonsterImageIcon;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Rune implements Comparable<Rune> {
@@ -224,17 +225,24 @@ public class Rune implements Comparable<Rune> {
     }
 
     public JLabel[] toStringLabels(){
-        JLabel[] labels = new JLabel[6];
+        JLabel[] labels = new JLabel[7];
         labels[0] = new JLabel(String.format("%s %s ★", this.getSet().toString().toUpperCase(),
                 this.getGrade()));
         labels[1] = new JLabel(String.format("Slot %s %s", this.getPos(), this.getMainStat().toString().toUpperCase()));
         if(subs.size()>0){
+            labels[2] = new JLabel(String.format("%s",this.getSubStats().get(0)).toUpperCase());
+            labels[3] = new JLabel(String.format("%s",this.getSubStats().get(1)).toUpperCase());
+            labels[4] = new JLabel(String.format("%s",this.getSubStats().get(2)).toUpperCase());
+            labels[5] = new JLabel(String.format("%s",this.getSubStats().get(3)).toUpperCase());
             if(getRuneInnate()){
-                labels[2] = new JLabel(String.format("innate %s",this.getSubStats().get(4)));
+                labels[6] = new JLabel(String.format("%s",this.getSubStats().get(4)));
+                labels[6].setForeground(Color.GREEN);
             }
-            labels[3] = new JLabel(String.format("%s",this.getSubStats().get(0)).toUpperCase());
-            labels[4] = new JLabel(String.format("%s",this.getSubStats().get(1)).toUpperCase());
-            labels[5] = new JLabel(String.format("%s",this.getSubStats().get(2)).toUpperCase());
+        }
+        labels[0].setForeground(Color.ORANGE);
+        labels[1].setForeground(Color.ORANGE);
+        for (int i=2; i<6; i++) {
+            labels[i].setForeground(Color.PINK);
         }
         return labels;
     }
