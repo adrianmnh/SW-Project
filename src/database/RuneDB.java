@@ -73,28 +73,13 @@ public class RuneDB extends Database {
 
         return s.toString();
     }
-    public int execEngraveRuneQuery(int user, Monster monster, Rune rune, boolean state){
-        this.setTable("GameTool.Summon");
-        int rowsUpdated1 = -1, rowsUpdated2 = -1;
-        String sql = "";
-        try{
-            sql = String.format("UPDATE %s SET Rune%d = %d WHERE AccountId = %d AND SummonId = %d;",
-                    getTable(), rune.getPosInt(), rune.getId(), user, monster.getSummonId());
-            System.out.println(sql);
-            rowsUpdated1 = getStatement().executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
-            System.out.println("Engrave Rune Query " + rowsUpdated1 + "-> Rune Added To Summon: " + monster.getSummonId());
-            this.setTable("GameTool.Rune");
-            sql = String.format("UPDATE %s SET Engraved = 1 WHERE AccountId = %d AND RuneId = %d;",
-                    getTable(), user, rune.getId());
-            System.out.println(sql);
-            rowsUpdated2 = getStatement().executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
-            System.out.println("Engrave Rune Query " + rowsUpdated2 + "-> Rune engraved status updated: " + rune.runeId);
-
-        } catch (SQLException e) {
-            System.out.println("Error found: " + e);
-        }
-        this.closeConnection();
-        return rowsUpdated1;
+    public ArrayList<Object> execEngraveRuneQuery(int user, Monster monster, Rune rune, boolean state){
+        ArrayList<Object> data = new ArrayList<>();
+        data.addAll(this.setRuneEngravedState(user, rune, state));
+        this.initConnection();
+        data.addAll(this.addOrRemoveRuneToSummon(user, monster, rune, state));
+        System.out.println("::::Data: " + data);
+        return data;
     }
     public ArrayList<Object> setRuneEngravedState(int user, Rune rune, boolean state){
         this.setTable("GameTool.Rune");
@@ -102,6 +87,7 @@ public class RuneDB extends Database {
         ArrayList<Object> updatedRows = new ArrayList<>();
         HashMap<String, Object> map  = new HashMap<>();
         String query = String.format("UPDATE %s SET Engraved = %d WHERE AccountId = %d AND RuneId = %d;", getTable(), state ? 1 : 0, user, rune.runeId);
+        System.out.println(query);
         map.put("query", query);
         map.put("type", "rows");
         updatedRows = this.execUpdate(map);
@@ -115,9 +101,11 @@ public class RuneDB extends Database {
         if(state){
             System.out.println("Adding rune " + rune.runeId + " to summon " + monster.getSummonId() );
             query = String.format("UPDATE %s SET Rune%d = %d WHERE AccountId = %d AND SummonId = %d;", getTable(), rune.getPosInt(), rune.getId(), user, monster.getSummonId());
+            System.out.println(query);
         } else {
             System.out.println("Removing rune " + rune.runeId + " from summon " + monster.getSummonId() );
             query = String.format("UPDATE %s SET Rune%d = null WHERE AccountId = %d AND SummonId = %d;", getTable(), rune.getPosInt(), user, monster.getSummonId());
+            System.out.println(query);
         }
         map.put("query", query);
         map.put("type", "rows");
