@@ -7,8 +7,11 @@ import java.sql.*;
 import java.util.ArrayList;
 
 import java.sql.Connection;
-import java.util.Collection;
 import java.util.HashMap;
+
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public abstract class Database {
 
@@ -54,7 +57,7 @@ public abstract class Database {
                     System.out.println("Retrieved rows: " + data.size());
                     break;
 
-                case "row":
+                case "rows":
                     System.out.println("Executing select query: " + query);
                     ResultSet result2 = satement.executeQuery(query);
                     result2.next();
@@ -97,7 +100,6 @@ public abstract class Database {
 
             switch(updateType) {
                 case "rows":
-                    System.out.println("Executing update query: " + query);
                     System.out.println("Executing update query: " + query);
                     int rowsUpdated = satement.executeUpdate(query);
                     data.add(rowsUpdated);
@@ -154,7 +156,7 @@ public abstract class Database {
             connection = DriverManager.getConnection(connectionString);
 
 //            System.out.println("------- Connection established ------- :: Database:: " + connection.getCatalog() + " ClientInfo: " + connection.getClientInfo());
-//            System.out.println("------- Connection established -------");
+            System.out.println("------- Connection established -------");
 
             satement = connection.createStatement();
 
@@ -168,7 +170,7 @@ public abstract class Database {
         try{
             if(!connection.isClosed()){
                 connection.close();
-//                System.out.println("------- Connection Closed -----------");
+                System.out.println("------- Connection Closed -----------");
             }
         }catch(SQLException e) {
             System.out.println("No active connection to close");
